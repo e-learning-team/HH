@@ -1,0 +1,29 @@
+.p-button{
+    background: #29abe2;
+    border-color: #29abe2;
+    border-radius: 50px;
+}
+
+.p-button:enabled:hover, .p-button:not(button):not(a):not(.p-disabled):hover {
+    background: #088ab7;
+    color: #ffffff;
+    border-color: #088ab7;
+}
+
+.card-boder{
+    border-radius: 3% !important;
+}
+
+.p-inputtext{
+    border-radius: 50px;
+    padding-left: 4%;
+    padding-right: 4%;
+}
+
+.p-inputtext:enabled:focus{
+    border-color: #29abe2;
+}
+
+.p-inputtext:enabled:hover {
+    border-color: #29abe2;
+}
