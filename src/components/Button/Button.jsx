@@ -1,13 +1,13 @@
-import {memo}from 'react'
+import { memo } from 'react'
 import clsx from 'clsx'
-const Button = ({children, handleOnClick, style,type='button',buttonAdmin}) => {
+const Button = ({ label, handleOnClick, style, type = 'button', buttonAdmin }) => {
   return (
     <button
      type={type}
-     className={clsx('px-2 py-2 rounded-md text-white bg-rose-400 text-semibold', buttonAdmin && 'flex justify-end  ml-10 my-5')}
+     className={clsx('inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset', buttonAdmin && 'flex justify-end  ml-10 my-5', style)}
      onClick={()=>{handleOnClick && handleOnClick()}}
     >
-     {children}   
+     {label}   
     </button>
   )
 }

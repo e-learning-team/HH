@@ -4,9 +4,9 @@
 @tailwind utilities;
 
 body {
-    background-color: #EDF2F7;
-    font-family: 'Poppins', sans-serif;
-    color: #000000d1;
+    background-color: #f5f8ff;
+    font-family: 'Segoe', 'roboto';
+    color: #003a47;
     word-break: break-word;
     word-wrap: break-word;
     line-break: strict;

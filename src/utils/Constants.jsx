@@ -10,4 +10,14 @@ export const navigation=[
         value:'COURSES',
         path:`/${path.COURSES}`
     },
+    {
+        id:3,
+        value:'LOGIN',
+        path:`/${path.LOGIN}`
+    },
+    {
+        id:4,
+        value:'REGISTER',
+        path:`/${path.REGISTER}`
+    },
 ]
