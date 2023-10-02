@@ -3,6 +3,9 @@ import Input from "../Input/Input"
 import Button from '../Button/Button'
 import { NavLink } from 'react-router-dom';
 import ContentAlert from '../Alert/ContentAlert'
+import { useNavigate, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
 import logo from '../../assets/logo.svg'
 import { validate } from '../../utils/helper'
 import { apiLogin } from "../../apis/user";
@@ -15,25 +18,29 @@ import "./Login.css"
 
 
 const Login = () => {
+    const navigate = useNavigate()
+    // const dispatch= useDispatch()
     useEffect(() => {
         document.title = 'Đăng nhập';
     }, []);
     const [invalidFields, setInvalidFields] = useState([])
 
     const handleSubmit = useCallback(async () => {
-        const { email, password, ...data } = payload
-        // console.log(payload)
-        const invalids = validate(data, setInvalidFields)
+        // const { email, password, ...data } = payload
+        console.log(payload)
+        console.log(data)
+        const invalids = validate(payload, setInvalidFields)
         if (invalids === 0) {
             // console.log("1")
             const rs = await apiLogin(payload)
             console.log(rs)
-            if (rs.success) {
-                dispatch(login({
-                    isLoggedIn: true,
-                    token: rs.accessToken,
-                    userData: rs.userData
-                }))
+            if (rs.status === 1) {
+                // dispatch(login({
+                //     isLoggedIn: true,
+                //     token: rs.accessToken,
+                //     userData: rs.userData
+                // }))
+                resetPayload()
                 navigate(`/${Path.HOME}`)
             } else Swal.fire('Oops!', rs.message, 'error')
         }
@@ -50,14 +57,14 @@ const Login = () => {
     const [payload, setPayload] = useState({
         email: '',
         password: '',
-    })
+    });    
 
     const toast = useRef(null);
     const login = () => {
         toast.current.show({ severity: 'error', summary: 'Lỗi:', detail: 'Sai email hoặc mật khẩu' });
     };
     return (
-        <div className="flex items-center justify-center h-[90vh]">
+        <div className="flex items-center justify-center mt-[80px] h-auto">
             <div className="bg-white p-10 rounded-3xl shadow-lg ring-1 ring-gray-900/5 w-2/6" >
                 <div className="text-center jus mb-5">
                     <img src={logo} alt="hyper" height={150} className="mb-3 h-[35px] !w-[100%] flex justify-center" />
