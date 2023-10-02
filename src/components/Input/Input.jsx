@@ -12,6 +12,7 @@ const Input = ({value,setValue,nameKey, type, invalidFields, setInvalidFieds, st
                 placeholder={placeholder || nameKey?.slice(0,1).toUpperCase()+nameKey?.slice(1)}
                 value={value}
                 onChange={e=>setValue(prev=>({...prev,[nameKey]:e.target.value}))}
+                // onInput={e=>setValue(prev=>({...prev,[nameKey]:e.target.value}))}
                 onFocus={()=> setInvalidFieds && setInvalidFieds([])}
             />
            {invalidFields?.some(el=>el.name===nameKey) &&  

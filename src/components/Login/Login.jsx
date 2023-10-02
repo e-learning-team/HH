@@ -22,10 +22,11 @@ const Login = () => {
 
     const handleSubmit = useCallback(async () => {
         const { email, password, ...data } = payload
+        // console.log(payload)
         const invalids = validate(data, setInvalidFields)
         if (invalids === 0) {
             // console.log("1")
-            const rs = await apiLogin(data)
+            const rs = await apiLogin(payload)
             console.log(rs)
             if (rs.success) {
                 dispatch(login({
@@ -34,7 +35,7 @@ const Login = () => {
                     userData: rs.userData
                 }))
                 navigate(`/${Path.HOME}`)
-            } else Swal.fire('Oops!', rs.mes, 'error')
+            } else Swal.fire('Oops!', rs.message, 'error')
         }
 
     }, [])
@@ -90,7 +91,7 @@ const Login = () => {
                             <NavLink className="font-medium no-underline ml-2 text-blue-500 text-left cursor-pointer" to="/forgot">Quên mật khẩu</NavLink>
                             <NavLink className="font-medium no-underline ml-2 text-blue-500 text-left cursor-pointer" to={Path.REGISTER}>Đăng ký</NavLink>
                         </div>
-                        <ContentAlert content="Sai tên đăng nhập hoặc mật khẩu" style="mb-[10px]" />
+                        {/* <ContentAlert content="Sai tên đăng nhập hoặc mật khẩu" style="mb-[10px]" /> */}
 
                         <Button handleOnClick={handleSubmit} label="Đăng nhập" icon="pi pi-user primary-color" style="inline-block rounded-lg bg-[#29abe2] hover:bg-[#088ab7] px-5 py-3 text-sm font-medium text-white w-full" onClick={login} />
                     </div>

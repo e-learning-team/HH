@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import logo from '../../assets/logo.svg'
+import logo from '../../assets/logo-side.svg'
 import Input from '../Input/Input'
 import Button from '../Button/Button'
 import Path from '../../utils/path'
