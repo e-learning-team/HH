@@ -20,32 +20,14 @@ import "./Login.css"
 const Login = () => {
     const navigate = useNavigate()
     // const dispatch= useDispatch()
+    const [payload, setPayload] = useState({
+        email: '',
+        password: '',
+    });
     useEffect(() => {
         document.title = 'Đăng nhập';
     }, []);
     const [invalidFields, setInvalidFields] = useState([])
-
-    const handleSubmit = useCallback(async () => {
-        // const { email, password, ...data } = payload
-        console.log(payload)
-        console.log(data)
-        const invalids = validate(payload, setInvalidFields)
-        if (invalids === 0) {
-            // console.log("1")
-            const rs = await apiLogin(payload)
-            console.log(rs)
-            if (rs.status === 1) {
-                // dispatch(login({
-                //     isLoggedIn: true,
-                //     token: rs.accessToken,
-                //     userData: rs.userData
-                // }))
-                resetPayload()
-                navigate(`/${Path.HOME}`)
-            } else Swal.fire('Oops!', rs.message, 'error')
-        }
-
-    }, [])
 
     const resetPayload = () => {
         setPayload({
@@ -53,11 +35,20 @@ const Login = () => {
             password: '',
         })
     }
+    const handleSubmit = useCallback(async () => {
+        const { email, password } = payload
+        console.log(payload)
+        // const invalids = validate(payload, setInvalidFields)
+        // if (invalids === 0) {
 
-    const [payload, setPayload] = useState({
-        email: '',
-        password: '',
-    });    
+        const rs = await apiLogin(payload)
+        console.log(rs)
+        if (rs.status === 1) {
+            navigate(`/${Path.HOME}`)
+        } else Swal.fire('Oops!', rs.message, 'error')
+        // }
+
+    }, [payload])
 
     const toast = useRef(null);
     const login = () => {
