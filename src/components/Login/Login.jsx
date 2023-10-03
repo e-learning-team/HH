@@ -20,10 +20,11 @@ const Login = () => {
     }, []);
     const [invalidFields, setInvalidFields] = useState([])
 
-    const handleSubmit = useCallback(async () => {
+    const handleSubmit = async () => {
         const { email, password, ...data } = payload
-        // console.log(payload)
+        console.log(payload)
         const invalids = validate(data, setInvalidFields)
+        // console.log("Wrong")
         if (invalids === 0) {
             // console.log("1")
             const rs = await apiLogin(payload)
@@ -38,7 +39,7 @@ const Login = () => {
             } else Swal.fire('Oops!', rs.message, 'error')
         }
 
-    }, [])
+    }
 
     const resetPayload = () => {
         setPayload({
@@ -56,6 +57,7 @@ const Login = () => {
     const login = () => {
         toast.current.show({ severity: 'error', summary: 'Lỗi:', detail: 'Sai email hoặc mật khẩu' });
     };
+
     return (
         <div className="flex items-center justify-center h-[90vh]">
             <div className="bg-white p-10 rounded-3xl shadow-lg ring-1 ring-gray-900/5 w-2/6" >
@@ -65,12 +67,12 @@ const Login = () => {
                 </div>
                 <form>
                     <div>
-                        <label htmlFor="email" className="block text-900 font-medium mb-1">Email:</label>
+                        <label htmlFor="email" className="block text-900 font-medium mb-1">Email: </label>
                         <Input
                             type="email"
                             value={payload.email}
-                            setValue={setPayload}
-                            nameKey='email'
+                            setValue={(payload)=>setPayload(payload)}
+                            nameKey= "email"
                             invalidFields={invalidFields}
                             setInvalidFieds={setInvalidFields}
                             style="w-full rounded-lg border p-4 pe-12 text-sm shadow-sm focus:outline-gray-200"
@@ -80,7 +82,7 @@ const Login = () => {
                         <Input
                             type="password"
                             value={payload.password}
-                            setValue={setPayload}
+                            setValue={(payload)=>setPayload(payload)}
                             nameKey='password'
                             invalidFields={invalidFields}
                             setInvalidFieds={setInvalidFields}
@@ -93,7 +95,7 @@ const Login = () => {
                         </div>
                         {/* <ContentAlert content="Sai tên đăng nhập hoặc mật khẩu" style="mb-[10px]" /> */}
 
-                        <Button handleOnClick={handleSubmit} label="Đăng nhập" icon="pi pi-user primary-color" style="inline-block rounded-lg bg-[#29abe2] hover:bg-[#088ab7] px-5 py-3 text-sm font-medium text-white w-full" onClick={login} />
+                        <Button handleOnClick={()=>handleSubmit()} label="Đăng nhập" icon="pi pi-user primary-color" style="inline-block rounded-lg bg-[#29abe2] hover:bg-[#088ab7] px-5 py-3 text-sm font-medium text-white w-full" onClick={login} />
                     </div>
                 </form>
             </div>
