@@ -51,9 +51,9 @@ const Login = () => {
     }, [payload])
 
     const toast = useRef(null);
-    const login = () => {
-        toast.current.show({ severity: 'error', summary: 'Lỗi:', detail: 'Sai email hoặc mật khẩu' });
-    };
+    // const login = () => {
+    //     toast.current.show({ severity: 'error', summary: 'Lỗi:', detail: 'Sai email hoặc mật khẩu' });
+    // };
     return (
         <div className="flex items-center justify-center mt-[80px] h-auto">
             <div className="bg-white p-10 rounded-3xl shadow-lg ring-1 ring-gray-900/5 w-2/6" >
@@ -91,7 +91,7 @@ const Login = () => {
                         </div>
                         {/* <ContentAlert content="Sai tên đăng nhập hoặc mật khẩu" style="mb-[10px]" /> */}
 
-                        <Button handleOnClick={handleSubmit} label="Đăng nhập" icon="pi pi-user primary-color" style="inline-block rounded-lg bg-[#29abe2] hover:bg-[#088ab7] px-5 py-3 text-sm font-medium text-white w-full" onClick={login} />
+                        <Button handleOnClick={handleSubmit} label="Đăng nhập" icon="pi pi-user primary-color" style="inline-block rounded-lg bg-[#29abe2] hover:bg-[#088ab7] px-5 py-3 text-sm font-medium text-white w-full" />
                     </div>
                 </form>
             </div>
