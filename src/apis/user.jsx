@@ -10,5 +10,6 @@ export const apiResgister=(data)=>axios({
 export const apiLogin=(data)=>axios({
     url:'/auth/login',
     method:'post',
-    data
+    data,
+    withCredentials:true,
 })
