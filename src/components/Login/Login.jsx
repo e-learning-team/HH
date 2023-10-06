@@ -6,7 +6,8 @@ import ContentAlert from '../Alert/ContentAlert';
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from '../../store/User/userSlice';
-import logo from '../../assets/logo-side.svg';
+import logo_side from '../../assets/logo-side.svg';
+import logo from '../../assets/logo.svg';
 import { validate } from '../../utils/helper';
 import { apiLogin } from "../../apis/user";
 import Swal from 'sweetalert2';
@@ -116,7 +117,7 @@ const Login = () => {
                     <div className="max-w-xl lg:max-w-3xl">
                         <form action="#" className="grid grid-cols-6 gap-6 bg-white p-10 rounded-3xl shadow-lg ring-1 ring-gray-900/5">
                             <div className="col-span-12 text-center jus mb-5">
-                                <img src={logo} alt="hyper" height={150} className="mb-3 h-[35px] !w-[100%] flex justify-center" />
+                                <img src={logo_side} alt="hyper" height={150} className="mb-3 h-[50px] !w-[100%] flex justify-center" />
                                 <div className="text-900 text-3xl font-medium mb-3">Đăng Nhập</div>
                             </div>
 
