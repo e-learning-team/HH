@@ -7,7 +7,7 @@ const instance = axios.create({
 // Interceptor cho yêu cầu trước khi gửi đi
 instance.interceptors.request.use(function (config) {
     // Kiểm tra xem có dữ liệu từ local storage được lưu trữ với key 'persist:shop/user' không
-    let localStorageData = window.localStorage.getItem('persist:shop/user');
+    let localStorageData = window.localStorage.getItem('persist:learning/user');
     if (localStorageData && typeof localStorageData === 'string') {
         // Nếu có dữ liệu, chuyển đổi thành đối tượng JSON
         localStorageData = JSON.parse(localStorageData);
@@ -20,6 +20,7 @@ instance.interceptors.request.use(function (config) {
         return config; // Nếu không có dữ liệu, không thay đổi yêu cầu
     }
 }, function (error) {
+    
     return Promise.reject(error); // Xử lý lỗi nếu có
 });
 
