@@ -13,3 +13,9 @@ export const apiLogin=(data)=>axios({
     data,
     withCredentials:true,
 })
+
+export const apiSendEmailVerification=(data)=>axios({
+    url:'/auth/email/verify',
+    method:'post',
+    data
+})

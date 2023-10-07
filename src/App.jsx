@@ -3,9 +3,8 @@ import { Route, Routes } from 'react-router-dom'
 import Path from './utils/path'
 import Public from './pages/Public'
 import Home from './pages/Home'
-import Login from './components/Login/Login'
-import Register from './components/Register/Register'
-
+import Login from './pages/Login/Login'
+import Register from './pages/Register/Register'
 
 function App() {
   return (
