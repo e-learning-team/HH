@@ -9,12 +9,12 @@ instance.interceptors.request.use(function (config) {
     // Kiểm tra xem có dữ liệu từ local storage được lưu trữ với key 'persist:shop/user' không
     let localStorageData = window.localStorage.getItem('persist:learning/user');
     if (localStorageData && typeof localStorageData === 'string') {
-        // Nếu có dữ liệu, chuyển đổi thành đối tượng JSON
-        localStorageData = JSON.parse(localStorageData);
-        // Trích xuất accessToken từ dữ liệu local storage
-        const accessToken = JSON.parse(localStorageData?.token);
-        // Thêm header 'Authorization' vào yêu cầu HTTP với token
-        config.headers = { authorization: `Bearer ${accessToken}` };
+        // // Nếu có dữ liệu, chuyển đổi thành đối tượng JSON
+        // localStorageData = JSON.parse(localStorageData);
+        // // Trích xuất accessToken từ dữ liệu local storage
+        // const accessToken = JSON.parse(localStorageData?.token);
+        // // Thêm header 'Authorization' vào yêu cầu HTTP với token
+        // config.headers = { authorization: `Bearer ${accessToken}` };
         return config;
     } else {
         return config; // Nếu không có dữ liệu, không thay đổi yêu cầu
