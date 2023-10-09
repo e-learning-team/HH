@@ -3,6 +3,7 @@ import { apiCategory } from "../../apis/category";
 
 // Define a recursive functional component
 function HoverableTree({data}) {
+    
     const loadCategory = async () => {
         const res = await apiCategory({ build_type: 'TREE' });
         if (res && res.data != null) {
@@ -23,7 +24,7 @@ function HoverableTree({data}) {
     };
     return (
         <ul>
-            {data.map((node) => (
+            {/* {data.map((node) => (
                 <li
                     key={node.id}
                     onMouseEnter={() => handleMouseEnter(node.id)}
@@ -34,7 +35,7 @@ function HoverableTree({data}) {
                         <HoverableTree data={node.children} />
                     )}
                 </li>
-            ))}
+            ))} */}
         </ul>
     );
 }

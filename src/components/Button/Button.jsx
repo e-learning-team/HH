@@ -5,8 +5,10 @@ const Button = ({ label, handleOnClick, style, type = 'button', disable, isLoadi
     <button
       type={type}
       className={clsx('inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset',
-        style, disable && "cursor-no-drop bg-blue-300 focus:outline-none hover:!bg-blue-300 hover:!border-blue-300",
-        isLoading && "cursor-no-drop bg-blue-300 focus:outline-none hover:!bg-blue-300 hover:!border-blue-300")}
+        style, 
+        disable && "cursor-no-drop bg-blue-300 focus:outline-none hover:!bg-blue-300 hover:!border-blue-300",
+        isLoading && "cursor-no-drop bg-blue-300 focus:outline-none hover:!bg-blue-300 hover:!border-blue-300"
+        )}
       onClick={() => { handleOnClick && handleOnClick() }}
       disabled={disable}
     >

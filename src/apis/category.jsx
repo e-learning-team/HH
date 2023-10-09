@@ -4,5 +4,5 @@ export const apiCategory=(params)=>axios({
     url:'/category',
     method:'get',
     params,
-    withCredentials: true
+    // withCredentials: true
 })

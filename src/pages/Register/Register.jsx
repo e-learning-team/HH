@@ -8,7 +8,7 @@ import logo_side from '../../assets/logo-side.svg';
 import { apiSendEmailVerification, apiResgister } from "../../apis/user";
 import Path from '../../utils/path';
 import { toast } from 'react-toastify';
-
+import { login } from '../../store/User/userSlice';
 const Register = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -48,11 +48,11 @@ const Register = () => {
             toast.success(`Đăng ký thành công`, {
                 position: toast.POSITION.TOP_RIGHT,
             });
-            // dispatch(login({
-            //     isLoggedIn: true,
-            //     userData: rs.data.user,
-            //     token: rs.data.token,
-            // }));
+            dispatch(login({
+                isLoggedIn: true,
+                userData: rs.data.user,
+                token: rs.data.token,
+            }));
             navigate(`/${Path.HOME}`);
         } else toast.error(rs.message, {
             position: toast.POSITION.TOP_RIGHT,

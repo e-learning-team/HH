@@ -5,7 +5,7 @@ import Public from './pages/Public'
 import Home from './pages/Home'
 import Login from './pages/Login/Login'
 import Register from './pages/Register/Register'
-
+import Page404 from './pages/PageNotFound'
 function App() {
   return (
     <div className=''>
@@ -15,6 +15,7 @@ function App() {
           <Route path={Path.LOGIN} element={<Login />} />
           <Route path={Path.REGISTER} element={<Register />} />
         </Route>
+        <Route path="*" element={<Page404 />} />
       </Routes>
     </div>
   )

@@ -99,7 +99,12 @@ const Login = () => {
                                 <NavLink className="font-medium no-underline ml-2 text-blue-500 text-left cursor-pointer" to="/forgot">Quên mật khẩu</NavLink>
                                 <NavLink className="font-medium no-underline ml-2 text-blue-500 text-left cursor-pointer" to={Path.REGISTER}>Đăng ký</NavLink>
                             </div>
-                            <div className="col-span-12"><Button handleOnClick={handleSubmit} label="Đăng nhập" icon="pi pi-user primary-color" style="inline-block rounded-lg bg-[#29abe2] hover:bg-[#088ab7] px-5 py-3 text-sm font-medium text-white w-full" onClick={login} />
+                            <div className="col-span-12">
+                                <Button 
+                                handleOnClick={handleSubmit} 
+                                label="Đăng nhập" icon="pi pi-user primary-color" 
+                                style="inline-block rounded-lg bg-[#29abe2] hover:bg-[#088ab7] px-5 py-3 text-sm font-medium text-white w-full" 
+                                onClick={login} />
                             </div>
                             
                             <div className="col-span-12 h-[0px] invisible">

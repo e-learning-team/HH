@@ -5,7 +5,7 @@ import Navbar from '../components/Navbar/Navbar'
 const Public = () => {
   return (
     <div>
-        <Navbar/>
+        <Navbar/> 
         <Outlet/>
     </div>
   )
