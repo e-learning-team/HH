@@ -20,7 +20,7 @@ export const apiLogOut = () => axios({
     url: '/auth/logout',
     method: 'post',
     withCredentials: true,
-}).then(store.dispatch(logout()));
+}).then(()=>store.dispatch(logout()));
 
 export const apiSendEmailVerification = (data) => axios({
     url: '/auth/email/verify',
