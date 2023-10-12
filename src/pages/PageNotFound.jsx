@@ -8,9 +8,9 @@ const PageNotFound = () => {
     });
     return (
         <>
-            <section className="relative z-10 bg-primary py-[120px] h-screen">
-                <div className="container">
-                    <div className="flex -mx-4">
+            <section className="relative z-10 bg-primary">
+                <div className="container contents">
+                    <div className="flex items-center h-screen w-screen ">
                         <div className="w-full px-4">
                             <div className="mx-auto max-w-[700px] text-center">
                                 <h2 className="mb-2 text-[50px] font-bold leading-none text-white sm:text-[80px] md:text-[100px]">
