@@ -7,7 +7,7 @@ import axios from 'axios';
 const Home = () => {
   const [courseData, setCourseData] = useState([]);
   const loadCourseData = async () => {
-    console.log(await apiCategory({build_type: 'TREE'}).then(res => {return res}));
+    console.log(await apiCategory({ build_type: 'TREE' }).then(res => { return res; }));
 
   };
   useEffect(() => {
@@ -18,25 +18,27 @@ const Home = () => {
         const res = await apiCategory({
           build_type: 'TREE'
         });
-        console.log(res);
-        return res;
+        console.log(res.data);
+        setCourseData(res.data);
+        return res.data;
         // setData(res.data)
       } catch (error) {
         console.error(error);
       }
+
     };
-    setCourseData(categoryDt())
+    categoryDt();
   }, []);
 
   return (
     <div>
       {/* <HoverableTree /> */}
       {/* ${courseData} */}
-      {Array.apply(courseData).map((c, index) => (
-                <div key={index}>
-                    <span>{c.id}</span>
-                </div>
-            ))}
+      {courseData.map((c, index) => (
+        <div key={index}>
+          <span>{c.id}</span>
+        </div>
+      ))}
     </div>
   );
 };
