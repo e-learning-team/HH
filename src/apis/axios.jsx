@@ -24,19 +24,21 @@ instance.interceptors.request.use(function (config) {
 instance.interceptors.response.use(function (response) {
 
     return response?.data;
-}, function (error) {
+}, async function (error) {
 
     console.log("response status code---" + error.response.status);
     console.log("response config---" + error.config);
     const prevRequest = error?.config;
     if (error.response && error?.response?.status === 401 && !prevRequest?.sent) {
         prevRequest.sent = true;
-        apiRefreshToken()
-            .then(res => {
-                store.dispatch(updateToken(res?.data?.token));
-                // prevRequest.headers['authorization'] = 'Bearer ' + res?.data?.token;
-                return instance(prevRequest);
-            });
+        const resp =  await apiRefreshToken();
+        store.dispatch(updateToken(resp?.data?.token));
+        return instance(prevRequest);
+            // .then(res => {
+            //     store.dispatch(updateToken(res?.data?.token));
+            //     // prevRequest.headers['authorization'] = 'Bearer ' + res?.data?.token;
+            //     return instance(prevRequest);
+            // });
     }
 
     return Promise.reject(error);
