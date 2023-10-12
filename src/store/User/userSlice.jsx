@@ -6,7 +6,7 @@ const initialState = {
     token: null,
     // isLoading: false,
     message: ''
-}
+};
 export const userSlice = createSlice({
     name: 'user',
     initialState,
@@ -16,6 +16,10 @@ export const userSlice = createSlice({
             state.userData = action.payload.userData;
             state.token = action.payload.token;
         },
+        // Add a new reducer to update the token
+        updateToken: (state, action) => {
+            state.token = action.payload;
+        },
         logout: (state, action) => {
             state.isLoggedIn = false;
             state.token = null;
@@ -24,5 +28,6 @@ export const userSlice = createSlice({
         },
     }
 });
-export const { login, logout } = userSlice.actions;
+export const { login, updateToken, logout } = userSlice.actions;
 export default userSlice.reducer;
+export const selectUserToken = (state) => state.user.token;

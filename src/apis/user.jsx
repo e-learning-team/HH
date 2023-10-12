@@ -1,3 +1,5 @@
+import { logout } from "../store/User/userSlice";
+import { store } from "../store/configureStore";
 import axios from "./axios";
 
 export const apiResgister = (data) => axios({
@@ -18,7 +20,7 @@ export const apiLogOut = () => axios({
     url: '/auth/logout',
     method: 'post',
     withCredentials: true,
-});
+}).then(()=>store.dispatch(logout()));
 
 export const apiSendEmailVerification = (data) => axios({
     url: '/auth/email/verify',

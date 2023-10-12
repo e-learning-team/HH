@@ -25,13 +25,18 @@ const Home = () => {
         console.error(error);
       }
     };
-    categoryDt()
+    setCourseData(categoryDt())
   }, []);
 
   return (
     <div>
       {/* <HoverableTree /> */}
       {/* ${courseData} */}
+      {Array.apply(courseData).map((c, index) => (
+                <div key={index}>
+                    <span>{c.id}</span>
+                </div>
+            ))}
     </div>
   );
 };

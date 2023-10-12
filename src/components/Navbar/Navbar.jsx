@@ -27,7 +27,7 @@ const Navbar = () => {
     const handleLogout = (() => {
         console.log("logout")
         apiLogOut().then(() => {
-            dispatch(logout());
+            // dispatch(logout());
             navigate(`/${Path.HOME}`);
             toast.success(`Đăng xuất thành công`, {
                 position: toast.POSITION.TOP_RIGHT,
