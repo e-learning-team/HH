@@ -20,4 +20,9 @@ export const navigation=[
         value:'REGISTER',
         path:`/${path.REGISTER}`
     },
+    {
+        id:5,
+        value:'FORGET_PASSWORD',
+        path:`/${path.FORGET_PASSWORD}`
+    }
 ]

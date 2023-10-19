@@ -26,26 +26,19 @@ instance.interceptors.response.use(function (response) {
 
     return response?.data;
 }, async function (error) {
+
     console.log("response status code---" + error.response.status);
     console.log("response config---" + error.config);
     const prevRequest = error?.config;
-
     if (error.response && error?.response?.status === 401 && !prevRequest?.sent) {
         prevRequest.sent = true;
         const resp =  await apiRefreshToken();
         store.dispatch(updateToken(resp?.data?.token));
         return instance(prevRequest);
     }
-    try{
-        await apiLogOut();
-        store.dispatch(logout())
-        prevRequest.headers['authorization'] = null
-        return instance(prevRequest);
-    }catch(err){
-        return Promise.reject(error);
-
-    }
-
+    // store.dispatch(logout())
+    // await apiLogOut()
+    return Promise.reject(error);
 });
 
 export default instance;

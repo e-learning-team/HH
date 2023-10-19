@@ -28,3 +28,14 @@ export const apiSendEmailVerification = (data) => axios({
     data
 })
 
+export const apiSendForgetPassword = (data) => axios({
+    url: '/user/password/reset',
+    method:'post',
+    data
+})
+export const apiConfirmForgetPassword = (data) => axios({
+    url: '/user/password/reset',
+    method:'patch',
+    data
+})
+

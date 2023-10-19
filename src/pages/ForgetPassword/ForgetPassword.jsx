@@ -5,64 +5,60 @@ import { NavLink } from 'react-router-dom';
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import logo_side from '../../assets/logo-side.svg';
-import { apiSendEmailVerification, apiResgister } from "../../apis/user";
+import { apiSendForgetPassword, apiConfirmForgetPassword } from "../../apis/user";
 import Path from '../../utils/path';
 import { toast } from 'react-toastify';
 import { login } from '../../store/User/userSlice';
-const Register = () => {
+const ForgetPasword = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { isLoggedIn, userData, token, message } = useSelector((state) => state.user);
     const [payload, setPayload] = useState({
         email: "",
-        password: "",
+        new_password: "",
         code: "",
-        full_name: "",
+        confirm_password: "",
     });
-    const [nullEmail, setNullEmail] = useState(true)
-    const [isRegister, setIsRegister] = useState(true)
-    const [isLoadingSendMail, setIsLoadingSendMail] = useState(false)
-    const [isLoadingRegister, setIsLoadingRegister] = useState(false)
+    const [nullEmail, setNullEmail] = useState(true);
+    const [isRegister, setIsRegister] = useState(true);
+    const [isLoadingSendMail, setIsLoadingSendMail] = useState(false);
+    const [isLoadingRegister, setIsLoadingRegister] = useState(false);
 
     useEffect(() => {
-        document.title = 'Đăng ký';
+        document.title = 'Quên mật khẩu';
         if (isLoggedIn && isLoggedIn == true) {
             navigate(`/${Path.HOME}`);
         }
         isValidEmail(payload.email) ? setNullEmail(false) : setNullEmail(true);
-        payload.email !== "" && payload.full_name !== "" && payload.code !== "" && payload.password !== "" ? (setIsRegister(false)) : setIsRegister(true);
+        payload.email !== "" && payload.confirm_password !== "" && payload.code !== "" && payload.new_password !== "" ? (setIsRegister(false)) : setIsRegister(true);
     }, [nullEmail, payload]);
 
     const isValidEmail = (email) => {
         return /\S+@\S+\.\S+/.test(email);
-    }
+    };
 
     const handleSubmit = useCallback(async () => {
         setIsLoadingRegister(true)
-        const rs = await apiResgister(payload);
+        const rs = await apiConfirmForgetPassword(payload);
         setIsLoadingRegister(false)
         console.log(rs)
         if (rs.status === 1) {
-            console.log(rs.data)
-            console.log(rs.data.token)
-            toast.success(`Đăng ký thành công`, {
+            // console.log(rs.data)
+            // console.log(rs.data.token)
+            toast.success(`Đổi mật khẩu thành công\nVui lòng đăng nhập lại.`, {
                 position: toast.POSITION.TOP_RIGHT,
             });
-            dispatch(login({
-                isLoggedIn: true,
-                userData: rs.data.user,
-                token: rs.data.token,
-            }));
-            navigate(`/${Path.HOME}`);
+
+            navigate(`/${Path.LOGIN}`);
         } else toast.error(rs.message, {
             position: toast.POSITION.TOP_RIGHT,
         });
     }, [payload]);
 
     const handleSendEmail = useCallback(async () => {
-        setIsLoadingSendMail(true)
-        const rs = await apiSendEmailVerification(payload)
-        setIsLoadingSendMail(false)
+        setIsLoadingSendMail(true);
+        const rs = await apiSendForgetPassword(payload);
+        setIsLoadingSendMail(false);
         if (rs.status === 1) {
             toast.success(`Đã gửi email xác nhận - vui lòng kiểm tra email của bạn!`, {
                 position: toast.POSITION.TOP_RIGHT,
@@ -72,7 +68,7 @@ const Register = () => {
                 position: toast.POSITION.TOP_RIGHT,
             });
         }
-    }, [payload])
+    }, [payload]);
     return (
         <section>
             <div className="w-full">
@@ -83,21 +79,8 @@ const Register = () => {
                                 <NavLink to={"/"}>
                                     <img src={logo_side} alt="hyper" height={150} className="mb-3 h-[50px] !w-[100%] flex justify-center" />
                                 </NavLink>
-                                <div className="text-900 text-3xl font-medium mb-3">Đăng Ký</div>
+                                <div className="text-900 text-3xl font-medium mb-3">Quên mật khẩu</div>
                             </div>
-                            <div className="col-span-12">
-                                <label className="block text-sm font-medium text-gray-700">Họ Và Tên:</label>
-                                <Input
-                                    id="full_name"
-                                    type="text"
-                                    value={payload.full_name}
-                                    setValue={setPayload}
-                                    nameKey='full_name'
-                                    style="w-full rounded-lg border p-4 pe-12 text-sm shadow-sm focus:outline-gray-200"
-                                    placeholder="Họ Và Tên"
-                                />
-                            </div>
-
                             <div className="col-span-12">
                                 <label className="block text-sm font-medium text-gray-700">Email:</label>
                                 <Input
@@ -137,23 +120,34 @@ const Register = () => {
                                 <label className="block text-sm font-medium text-gray-700">Mật khẩu:</label>
                                 <Input
                                     type="password"
-                                    value={payload.password}
+                                    value={payload.new_password}
                                     setValue={setPayload}
-                                    nameKey='password'
+                                    nameKey='new_password'
+                                    style="w-full rounded-lg border p-4 pe-12 text-sm shadow-sm focus:outline-gray-200"
+                                    placeholder="Mật khẩu"
+                                />
+                            </div>
+                            <div className="col-span-12">
+                                <label className="block text-sm font-medium text-gray-700">Xác nhận Mật khẩu:</label>
+                                <Input
+                                    type="password"
+                                    value={payload.confirm_password}
+                                    setValue={setPayload}
+                                    nameKey='confirm_password'
                                     style="w-full rounded-lg border p-4 pe-12 text-sm shadow-sm focus:outline-gray-200"
                                     placeholder="Mật khẩu"
                                 />
                             </div>
                             <div className="col-span-12">
                                 <Button handleOnClick={handleSubmit}
-                                    label="Đăng ký" icon="pi pi-user primary-color"
+                                    label="Xác Nhận" icon="pi pi-user primary-color"
                                     disable={isRegister}
                                     isLoading={isLoadingRegister}
                                     style="inline-block rounded-lg px-5 py-3 text-sm font-medium bg-[#29abe2] hover:bg-[#088ab7] text-white w-full" />
                             </div>
                             <div className="w-[50px] invisible"></div>
                             <div className="col-span-12 text-center flex justify-center">
-                                Bạn đã có tài khoản!
+                                Quay lại đăng nhập ?
                                 <NavLink className="font-medium no-underline ml-2 text-blue-500 text-left cursor-pointer" to={'/'+Path.LOGIN}>Đăng nhập</NavLink>
                             </div>
                         </form>
@@ -162,7 +156,7 @@ const Register = () => {
             </div>
         </section>
     );
-}
+};
 
-export default Register
+export default ForgetPasword
 
