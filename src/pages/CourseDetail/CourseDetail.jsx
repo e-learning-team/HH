@@ -1,10 +1,9 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import CourseAccordion from '../../components/Accordion/CourseDetailAccordion';
+import CourseAccordion from '../../components/Accordion/CourseAccordion';
 import { Breadcrumbs } from "@material-tailwind/react";
 import { RatingBar } from '../../components/RatingBar/RatingBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import {
     faCirclePlay,
     faPenToSquare,
@@ -463,7 +462,10 @@ const CourseDeTail = () => {
                                 </div>
                                 <div>
                                     <Button style="w-full h-[60px] shadow-lg bg-white ring-gray-300 hover:bg-gray-100" label={'Chia sẻ'} severity="info" rounded />
-                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                             </div>
                         </div>
                     </div>
