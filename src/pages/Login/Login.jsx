@@ -64,7 +64,9 @@ const Login = () => {
                     <div className="max-w-xl lg:max-w-3xl">
                         <form action="#" className="grid grid-cols-6 gap-6 bg-white p-10 rounded-3xl shadow-lg ring-1 ring-gray-900/5">
                             <div className="col-span-12 text-center jus mb-5">
-                                <img src={logo_side} alt="hyper" height={150} className="mb-3 h-[50px] !w-[100%] flex justify-center" />
+                                <NavLink to={"/"}>
+                                    <img src={logo_side} alt="hyper" height={150} className="mb-3 h-[50px] !w-[100%] flex justify-center" />
+                                </NavLink>
                                 <div className="text-900 text-3xl font-medium mb-3">Đăng Nhập</div>
                             </div>
 
@@ -96,8 +98,8 @@ const Login = () => {
                                 />
                             </div>
                             <div className="col-span-12 flex align-items-center justify-content-between">
-                                <NavLink className="font-medium no-underline ml-2 text-blue-500 text-left cursor-pointer" to="/forgot">Quên mật khẩu</NavLink>
-                                <NavLink className="font-medium no-underline ml-2 text-blue-500 text-left cursor-pointer" to={Path.REGISTER}>Đăng ký</NavLink>
+                                <NavLink className="font-medium no-underline ml-2 text-blue-500 text-left cursor-pointer" to={'/'+Path.FORGET_PASSWORD}>Quên mật khẩu</NavLink>
+                                <NavLink className="font-medium no-underline ml-2 text-blue-500 text-left cursor-pointer" to={'/'+Path.REGISTER}>Đăng ký</NavLink>
                             </div>
                             <div className="col-span-12">
                                 <Button 

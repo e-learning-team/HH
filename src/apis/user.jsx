@@ -20,11 +20,22 @@ export const apiLogOut = () => axios({
     url: '/auth/logout',
     method: 'post',
     withCredentials: true,
-}).then(()=>store.dispatch(logout()));
+});
 
 export const apiSendEmailVerification = (data) => axios({
     url: '/auth/email/verify',
     method: 'post',
+    data
+})
+
+export const apiSendForgetPassword = (data) => axios({
+    url: '/user/password/reset',
+    method:'post',
+    data
+})
+export const apiConfirmForgetPassword = (data) => axios({
+    url: '/user/password/reset',
+    method:'patch',
     data
 })
 

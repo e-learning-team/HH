@@ -18,6 +18,7 @@ export const userSlice = createSlice({
         },
         // Add a new reducer to update the token
         updateToken: (state, action) => {
+            console.log("---update token---")
             state.token = action.payload;
         },
         logout: (state, action) => {

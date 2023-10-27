@@ -4,13 +4,14 @@ const Button = ({ label, handleOnClick, style, type = 'button', disable, isLoadi
   return (
     <button
       type={type}
-      className={clsx('inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset',
+      className={clsx(
         style, 
         disable && "cursor-no-drop bg-blue-300 focus:outline-none hover:!bg-blue-300 hover:!border-blue-300",
-        isLoading && "cursor-no-drop bg-blue-300 focus:outline-none hover:!bg-blue-300 hover:!border-blue-300"
+        isLoading && "cursor-no-drop bg-blue-300 focus:outline-none hover:!bg-blue-300 hover:!border-blue-300",
+        'inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold ring-1 ring-inset'
         )}
       onClick={() => { handleOnClick && handleOnClick() }}
-      disabled={disable}
+      disabled={isLoading||disable}
     >
       {isLoading &&(
         <svg aria-hidden="true" role="status" className="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
