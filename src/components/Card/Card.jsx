@@ -1,9 +1,17 @@
 import Path from '../../utils/path';
 import { NavLink } from 'react-router-dom';
+import { useNavigate, Link } from "react-router-dom";
+
 const Card = () => {
+    const navigate = useNavigate();
+    
+    const actionOnclick = (() =>{
+        navigate(`/detail`);
+    })
+
     return (
         <div className="grid justify-center">
-            <div className="w-[245px] h-[290px] shadow rounded border-gray-200 bg-white cursor-pointer hover:-translate-y-0.5 hover:shadow-lg group/item">
+            <div className="w-[245px] h-[290] shadow rounded border-gray-200 bg-white cursor-pointer hover:-translate-y-0.5 hover:shadow-lg group/item" onClick={actionOnclick}>
                 <div id="image">
                     <img
                         alt="Home"
@@ -12,11 +20,11 @@ const Card = () => {
                 </div>
                 <div id="card-content">
                     <div className="mx-1 mt-1.5">
-                        <h3 className="font-bold line-clamp-2">
+                        <h3 className="font-bold line-clamp-2 group-hover/item:underline">
                             Javascript cho người mới bắt đầu Javascript cho người mới bắt đầu Javascript cho người mới bắt đầu
                         </h3>
                     </div>
-                    <div className="mx-1">
+                    <div className="mx-1 mt-2 mb-1">
                         <div className="text-sm line-clamp-1">Linh Nguyen</div>
                     </div>
                     <div className="flex items-center mx-1">
@@ -27,7 +35,7 @@ const Card = () => {
                         <span className="w-1 h-1 mx-1.5 bg-gray-500 rounded-full dark:bg-gray-400"></span>
                         <span class="text-sm font-medium text-gray-900 underline dark:text-white">73 người học</span>
                     </div>
-                    <div className="flex items-center mx-1">
+                    <div className="flex items-center mx-3 my-2">
                         <span className="text-lg font-semibold">₫ 279.000</span>
                         <span className="text-sm font-light line-through ml-3">₫ 279.000</span>
                     </div>
