@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, Link, useParams } from "react-router-dom";
 import CourseAccordion from '../../components/Accordion/CourseDetailAccordion';
 import { Breadcrumbs } from "@material-tailwind/react";
 import { RatingBar } from '../../components/RatingBar/RatingBar';
@@ -19,9 +19,12 @@ import {
 
 import Button from '../../components/Button/Button';
 import { VideoReviewDialog } from '../../components/Dialog/VideoReviewDialog';
+import { getVideoGoogleGDriveUrl, getVideoThumbnailGoogleGDriveUrl } from '../../utils/Constants';
+import { extractVideoGoogleGDriveUrlId } from '../../utils/helper';
 
 const CourseDeTail = () => {
     const { slug } = useParams();
+    const navigate = useNavigate();
     const course = {
         "data": [
             {
@@ -368,8 +371,15 @@ const CourseDeTail = () => {
         ]
     };
     useEffect(() => {
-        if (course.data.length > 0)
+        console.log(slug)
+        if (course  && course.data && course.data.length > 0) {
+            console.log('Success')
             document.title = course.data[0].name;
+        }
+        else {
+            console.log('error')
+            navigate(`/error`);
+        }
     }, []);
     const [openVideoReviewDialog, setOpenVideoReviewDialog] = React.useState(false);
     const handleOpenVideoReviewDialog = () => setOpenVideoReviewDialog(!openVideoReviewDialog);
@@ -430,8 +440,8 @@ const CourseDeTail = () => {
                                     <span className='absolute h-full w-full bg-gradient-to-b from-transparent to-black  '>
                                     </span>
 
-                                    <img className='h-full w-full bg-cover' src='https://ethicalads.blob.core.windows.net/media/images/2023/08/CSPR_Acquisition_Ad-set1_Ethical_240x180.jpg' />
-
+                                    <img className='h-full w-full bg-cover' src={getVideoThumbnailGoogleGDriveUrl(extractVideoGoogleGDriveUrlId(course.data[0].video_path))} />
+                                    {console.log(getVideoThumbnailGoogleGDriveUrl(extractVideoGoogleGDriveUrlId(course.data[0].video_path)))}
                                 </div>
                             </div>
                             <div className='p-6  bg-white'>
