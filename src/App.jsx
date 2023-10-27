@@ -7,7 +7,6 @@ import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import Page404 from './pages/PageNotFound';
 import ForgetPasword from './pages/ForgetPassword/ForgetPassword';
-import CourseDeTail from './pages/CourseDetail/CourseDetail'
 function App() {
   return (
     <div className=''>
