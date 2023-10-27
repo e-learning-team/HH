@@ -18,7 +18,7 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 
 import Button from '../../components/Button/Button';
-import { VideoReviewDialog } from '../Dialog/VideoReviewDialog';
+import { VideoReviewDialog } from '../../components/Dialog/VideoReviewDialog';
 
 const CourseDeTail = () => {
     const { slug } = useParams();
