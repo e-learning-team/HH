@@ -12,7 +12,7 @@ const Home = () => {
   };
   useEffect(() => {
     document.title = 'Trang chủ';
-    // loadCourseData()
+    loadCourseData()
     const categoryDt = async () => {
       try {
         const res = await apiCategory({
@@ -30,24 +30,20 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
-      {/* <HoverableTree /> */}
-      {/* ${courseData} */}
-      {(courseData).map((c, index) => (
-        <div key={index}>
-          <span>{c.id}</span>
+    <div className="flex justify-center">
+        <div className="container flex flex-row sm:grid-colz s-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-12 mt-12">
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+          <Card />
         </div>
-      ))}
-
-      {/* <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 lg:gap-8 mt-10 w-screen">
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-      </div> */}
     </div>
   );
 };

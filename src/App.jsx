@@ -12,9 +12,9 @@ function App() {
       <Routes>
         <Route path={Path.PUBLIC} element={<Public />}>
           <Route path={Path.HOME} element={<Home />} />
-          <Route path={Path.LOGIN} element={<Login />} />
-          <Route path={Path.REGISTER} element={<Register />} />
         </Route>
+        <Route path={Path.LOGIN} element={<Login />} />
+        <Route path={Path.REGISTER} element={<Register />} />
         <Route path="*" element={<Page404 />} />
       </Routes>
     </div>
