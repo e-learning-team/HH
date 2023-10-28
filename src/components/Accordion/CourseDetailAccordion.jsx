@@ -30,9 +30,9 @@ export default function CustomAccordion({ title, content }) {
         <div className="shadow-md">
             {content.length > 0 && (
                 <div>
-                    <Accordion open={alwaysOpen} className="border border-gray-400 "
+                    <Accordion open={alwaysOpen} className="w-full text-ellipsis border border-gray-400 "
                         icon={
-                            <span className="text-sm font-normal flex items-center gap-3">
+                            <span className="text-sm min-w-[5rem] font-normal flex items-center gap-3">
                                 <span>{content.length} bài học</span>
                                 <span>•</span>
                                 {/* <span>15 phút</span> */}
@@ -42,9 +42,12 @@ export default function CustomAccordion({ title, content }) {
                             onClick={() => handleAlwaysOpen()}
                             className={`bg-zinc-100 border-b border-gray-300 px-4 transition-colors ${alwaysOpen ? "text-[#003a47]" : ""}`}>
                             {
-                                <span className="flex items-center gap-4">
+                                <span className="max-w-[34rem] max-h-[5rem] truncate flex items-center gap-4">
                                     <Icon open={alwaysOpen} />
-                                    {title}
+                                    <span className="truncate hover:text-clip">
+                                        {title}
+                                    </span>
+
                                 </span>
                             }
                         </AccordionHeader>
@@ -54,7 +57,7 @@ export default function CustomAccordion({ title, content }) {
                                     <div key={ct.id} className="text-sm my-2 flex items-center justify-between">
                                         <div className="flex items-center gap-3">
                                             <FontAwesomeIcon className="text-lg" icon={faFileVideo} />
-                                            <div>{ct.name}</div>
+                                            <div className="max-w-[34rem] truncate hover:text-clip">{ct.name}</div>
                                         </div>
                                         <div>
                                             <span>15 phút</span>

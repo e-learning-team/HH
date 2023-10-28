@@ -9,7 +9,25 @@ export function extractVideoGoogleGDriveUrlId(videoUrl) {
     const match = videoUrl.match(/\/file\/d\/(.+?)\//);
     return match ? match[1] : null;
 }
+export function formatTimeStampTo_DDMMYYY(timeStamp) {
+    // Create a new Date object using the timestamp
+    var date = new Date(timeStamp);
 
+    // Extract the components of the date
+    var day = date.getDate();
+    var month = date.getMonth() + 1; // Months are zero-based
+    var year = date.getFullYear();
+
+    // Pad single-digit day and month with leading zeros
+    var formattedDay = (day < 10) ? '0' + day : day;
+    var formattedMonth = (month < 10) ? '0' + month : month;
+
+    // Format the date as 'DD/MM/YYYY'
+    var formattedDate = formattedDay + '/' + formattedMonth + '/' + year;
+
+    // Return the formatted date
+    return formattedDate;
+}
 export const renderStarFromNumber = (number, size) => {
     //4=>[1,1,1,1,0]
     const starts = [];

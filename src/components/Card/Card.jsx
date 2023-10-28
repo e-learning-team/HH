@@ -5,15 +5,12 @@ import { useNavigate, Link } from "react-router-dom";
 const Card = () => {
     const navigate = useNavigate();
 
-    const actionOnclick = (() => {
-        navigate(`/detail`);
-    });
 
     return (
         <NavLink to={`${Path.COURSES}/khoa`}>
 
             <div className="grid justify-center">
-                <div className="w-[245px] h-[290] shadow rounded border-gray-200 bg-white cursor-pointer hover:-translate-y-0.5 hover:shadow-lg group/item" onClick={actionOnclick}>
+                <div className="w-[245px] h-[290] shadow rounded border-gray-200 bg-white cursor-pointer hover:-translate-y-0.5 hover:shadow-lg group/item" >
                     <div id="image">
                         <img
                             alt="Home"

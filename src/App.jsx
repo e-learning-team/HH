@@ -16,8 +16,11 @@ function App() {
           <Route path={Path.HOME} element={<Home />} />
           <Route path={Path.COURSES_DETAIL} element={<CourseDeTail/>}/>
         </Route>
+        
         <Route path={Path.LOGIN} element={<Login />} />
         <Route path={Path.REGISTER} element={<Register />} />
+        <Route path={Path.FORGET_PASSWORD} element={<ForgetPasword />} />
+
         <Route path="*" element={<Page404 />} />
       </Routes>
     </div>
