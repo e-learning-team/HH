@@ -4,7 +4,10 @@ import { useNavigate, Link } from "react-router-dom";
 
 const Card = () => {
     const navigate = useNavigate();
-
+    
+    const actionOnclick = (() =>{
+        navigate(`/courses/detail`);
+    })
 
     return (
         <div className="grid justify-center">
