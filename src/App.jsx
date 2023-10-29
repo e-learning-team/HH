@@ -8,6 +8,7 @@ import Register from './pages/Register/Register';
 import Page404 from './pages/PageNotFound';
 import ForgetPasword from './pages/ForgetPassword/ForgetPassword';
 import CourseDeTail from './pages/CourseDetail/CourseDetail'
+import Courses from './pages/Courses/Courses';
 function App() {
   return (
     <div className=''>
@@ -15,6 +16,7 @@ function App() {
         <Route path={Path.PUBLIC} element={<Public />}>
           <Route path={Path.HOME} element={<Home />} />
           <Route path={Path.COURSES_DETAIL} element={<CourseDeTail/>}/>
+          <Route path={Path.COURSES} element={<Courses/>}/>
         </Route>
         <Route path={Path.LOGIN} element={<Login />} />
         <Route path={Path.REGISTER} element={<Register />} />

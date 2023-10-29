@@ -6,17 +6,17 @@ const Card = () => {
     const navigate = useNavigate();
     
     const actionOnclick = (() =>{
-        navigate(`/detail`);
+        navigate(`/courses/detail`);
     })
 
     return (
         <div className="grid justify-center">
-            <div className="w-[245px] h-[290] shadow rounded border-gray-200 bg-white cursor-pointer hover:-translate-y-0.5 hover:shadow-lg group/item" onClick={actionOnclick}>
+            <div className="sm:w-[245px] sm:h-[290] m-5 shadow rounded border-gray-200 bg-white cursor-pointer hover:-translate-y-0.5 hover:shadow-lg group/item" onClick={actionOnclick}>
                 <div id="image">
                     <img
                         alt="Home"
                         src="https://img-c.udemycdn.com/course/240x135/5246952_37c4.jpg"
-                        className="rounded-t transition group-hover/item:opacity-90 h-[140px] w-full" />
+                        className="rounded-t transition group-hover/item:opacity-90 h-[140px] w-full"/>
                 </div>
                 <div id="card-content">
                     <div className="mx-1 mt-1.5">
@@ -33,7 +33,7 @@ const Card = () => {
                         </svg>
                         <p className="text-sm font-bold text-gray-900 dark:text-white">4.95</p>
                         <span className="w-1 h-1 mx-1.5 bg-gray-500 rounded-full dark:bg-gray-400"></span>
-                        <span class="text-sm font-medium text-gray-900 underline dark:text-white">73 người học</span>
+                        <span className="text-sm font-medium text-gray-900 underline dark:text-white">73 người học</span>
                     </div>
                     <div className="flex items-center mx-3 my-2">
                         <span className="text-lg font-semibold">₫ 279.000</span>
