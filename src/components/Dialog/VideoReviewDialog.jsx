@@ -53,6 +53,7 @@ export function VideoReviewDialog({ videoTitle, videoPath, open, setOpen }) {
                                 src={videoPath}
                                 width="640"
                                 height="480"
+                                allowFullScreen
                                 allow="autoplay">
                             </iframe>
                             {/* <video width="560" height="560" controls>
