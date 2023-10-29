@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import CourseAccordion from '../../components/Accordion/CourseDetailAccordion';
+import CourseAccordion from '../../components/Accordion/AccordionCourseDetail';
 import { Breadcrumbs } from "@material-tailwind/react";
 import { RatingBar } from '../../components/RatingBar/RatingBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
