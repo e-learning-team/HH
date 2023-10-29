@@ -24,6 +24,8 @@ export function VideoReviewDialog({ videoTitle, videoPath, open, setOpen }) {
                 className=''
                 open={open}
                 scroll={scroll}
+                maxWidth={'sm'}
+                fullWidth={true}
                 aria-labelledby="scroll-dialog-title"
                 aria-describedby="scroll-dialog-description"
                 TransitionComponent={Transition}
@@ -32,7 +34,11 @@ export function VideoReviewDialog({ videoTitle, videoPath, open, setOpen }) {
                 <DialogTitle className='min-w-[15rem] ' id='scroll-dialog-title ' >
                     {
                         <span className='flex items-center justify-between '>
-                            {'videoTitle'}
+                            
+                            <div>
+                                Giới thiệu về khóa học: 
+                                <div className='font-bold text-2xl'>{videoTitle}</div>
+                            </div>
                             <span onClick={handleClose} className='cursor-pointer'>
                                 <FontAwesomeIcon className='p-1' icon={faXmark} />
                             </span>
@@ -40,11 +46,11 @@ export function VideoReviewDialog({ videoTitle, videoPath, open, setOpen }) {
                     }
                 </DialogTitle>
                 <DialogContent className=' border-b border-gray-400' dividers={scroll === 'paper'} >
-                    <DialogContentText className=' min-h-[34rem]' tabIndex={-1} id="scroll-dialog-description">
+                    <DialogContentText className='' tabIndex={-1} id="scroll-dialog-description">
                         <span className='relative h-0 pb-[56.25%] flex justify-center mb-6'>
                             <iframe
                                 className='absolute top-0 left-0 w-full h-full'
-                                src="https://drive.google.com/file/d/1giM4L6MBKP2709OaVT1umBK-oHKPUAaL/preview"
+                                src={videoPath}
                                 width="640"
                                 height="480"
                                 allow="autoplay">
@@ -54,14 +60,14 @@ export function VideoReviewDialog({ videoTitle, videoPath, open, setOpen }) {
                                 oops
                             </video> */}
                         </span>
-                        {[...new Array(50)]
+                        {/* {[...new Array(50)]
                             .map(
                                 () => `Cras mattis consectetur purus sit amet fermentum.
                                 Cras justo odio, dapibus ac facilisis in, egestas eget quam.
                                 Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
                                 Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
                             )
-                            .join('\n')}
+                            .join('\n')} */}
                     </DialogContentText>
                 </DialogContent>
                 {/* <DialogActions>

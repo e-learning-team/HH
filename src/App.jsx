@@ -18,8 +18,11 @@ function App() {
           <Route path={Path.COURSES_DETAIL} element={<CourseDeTail/>}/>
           <Route path={Path.COURSES} element={<Courses/>}/>
         </Route>
+        
         <Route path={Path.LOGIN} element={<Login />} />
         <Route path={Path.REGISTER} element={<Register />} />
+        <Route path={Path.FORGET_PASSWORD} element={<ForgetPasword />} />
+
         <Route path="*" element={<Page404 />} />
       </Routes>
     </div>

@@ -1,4 +1,7 @@
 import path from './path'
+export const getVideoGoogleGDriveUrl = (videoId) => `https://drive.google.com/file/d/${videoId}/preview`;
+export const getVideoThumbnailGoogleGDriveUrl = (videoId) => `https://drive.google.com/thumbnail?id=${videoId}`;
+// import path from './path'
 // export const navigation=[
 //     {
 //         id:1,
@@ -25,5 +28,4 @@ import path from './path'
 //         value:'FORGET_PASSWORD',
 //         path:`/${path.FORGET_PASSWORD}`
 //     },
-
 // ]

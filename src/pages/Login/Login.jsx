@@ -21,7 +21,7 @@ import { toast } from 'react-toastify';
 const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { isLoggedIn,  userData, token, isLoading, message } = useSelector((state) => state.user);
+    const { isLoggedIn, userData, token, isLoading, message } = useSelector((state) => state.user);
     const [payload, setPayload] = useState({
         email: '',
         password: '',
@@ -51,10 +51,10 @@ const Login = () => {
             navigate(`/${Path.HOME}`);
             toast.success(`Đăng nhập thành công`, {
                 position: toast.POSITION.TOP_RIGHT,
-              });
+            });
         } else toast.error(rs.message, {
             position: toast.POSITION.TOP_RIGHT,
-          });
+        });
 
     }, [payload]);
     return (
@@ -98,17 +98,17 @@ const Login = () => {
                                 />
                             </div>
                             <div className="col-span-12 flex align-items-center justify-content-between">
-                                <NavLink className="font-medium no-underline ml-2 text-blue-500 text-left cursor-pointer" to={'/'+Path.FORGET_PASSWORD}>Quên mật khẩu</NavLink>
-                                <NavLink className="font-medium no-underline ml-2 text-blue-500 text-left cursor-pointer" to={'/'+Path.REGISTER}>Đăng ký</NavLink>
+                                <NavLink className="font-medium no-underline ml-2 text-blue-500 text-left cursor-pointer" to={'/' + Path.FORGET_PASSWORD}>Quên mật khẩu</NavLink>
+                                <NavLink className="font-medium no-underline ml-2 text-blue-500 text-left cursor-pointer" to={'/' + Path.REGISTER}>Đăng ký</NavLink>
                             </div>
                             <div className="col-span-12">
-                                <Button 
-                                handleOnClick={handleSubmit} 
-                                label="Đăng nhập" icon="pi pi-user primary-color" 
-                                style="inline-block rounded-lg bg-[#29abe2] hover:bg-[#088ab7] px-5 py-3 text-sm font-medium text-white w-full" 
-                                onClick={login} />
+                                <Button
+                                    handleOnClick={handleSubmit}
+                                    label="Đăng nhập" icon="pi pi-user primary-color"
+                                    style="inline-block rounded-lg bg-[#29abe2] hover:bg-[#088ab7] px-5 py-3 text-sm font-medium text-white w-full"
+                                    onClick={login} />
                             </div>
-                            
+
                             <div className="col-span-12 h-[0px] invisible">
                                 mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
                             </div>
