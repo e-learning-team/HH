@@ -37,7 +37,6 @@ const Navbar = () => {
         return (
             <Dropdown.Item key={category.id} position='right'>
                 {
-
                     <span className='flex justify-between w-full'>
                         <span>
                             {category.title}
@@ -77,7 +76,7 @@ const Navbar = () => {
 
     });
     return (
-        <div className='fixed z-50 truncate '>
+        <div className='fixed z-50'>
             <div className='w-main  flex items-center gap-5  shadow-lg transition bg-white justify-between px-[20px]'>
                 <div className="flex items-center flex-1">
                     <div className='px-7 py-5 flex justify-center'>

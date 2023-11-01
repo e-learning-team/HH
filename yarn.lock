@@ -1511,11 +1511,6 @@
   dependencies:
     prop-types "^15.8.1"
 
-"@heroicons/react@^2.0.18":
-  version "2.0.18"
-  resolved "https://registry.npmjs.org/@heroicons/react/-/react-2.0.18.tgz"
-  integrity sha512-7TyMjRrZZMBPa+/5Y8lN0iyvUU/01PeMGX2+RE7cQWpEUIcb4QotzUObFkJDejj/HUH4qjP/eQ0gzzKs2f+6Yw==
-
 "@humanwhocodes/config-array@^0.11.11":
   version "0.11.11"
   resolved "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.11.11.tgz"
@@ -8323,6 +8318,11 @@ react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.npmjs.org/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
+
+react-loading-skeleton@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.npmjs.org/react-loading-skeleton/-/react-loading-skeleton-3.3.1.tgz"
+  integrity sha512-NilqqwMh2v9omN7LteiDloEVpFyMIa0VGqF+ukqp0ncVlYu1sKYbYGX9JEl+GtOT9TKsh04zCHAbavnQ2USldA==
 
 react-multilevel-dropdown@^4.0.0:
   version "4.0.0"
