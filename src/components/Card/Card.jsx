@@ -4,19 +4,19 @@ import { useNavigate, Link } from "react-router-dom";
 
 const Card = () => {
     const navigate = useNavigate();
-    
-    const actionOnclick = (() =>{
+
+    const actionOnclick = (() => {
         navigate(`/courses/detail`);
     })
 
     return (
-        <div className="grid justify-center">
-            <div className="sm:w-[245px] sm:h-[290] m-5 shadow rounded border-gray-200 bg-white cursor-pointer hover:-translate-y-0.5 hover:shadow-lg group/item" onClick={actionOnclick}>
+        <div className="justify-center">
+            <div className="shadow rounded border-gray-200 bg-white cursor-pointer hover:-translate-y-0.5 hover:shadow-lg group/item" onClick={actionOnclick}>
                 <div id="image">
                     <img
                         alt="Home"
-                        src="https://img-c.udemycdn.com/course/240x135/5246952_37c4.jpg"
-                        className="rounded-t transition group-hover/item:opacity-90 h-[140px] w-full"/>
+                        src="https://static-images.vnncdn.net/files/publish/2022/9/3/bien-vo-cuc-thai-binh-346.jpeg"
+                        className="aspect-video rounded-t transition group-hover/item:opacity-90 w-full object-cover"/>
                 </div>
                 <div id="card-content">
                     <div className="mx-1 mt-1.5">
