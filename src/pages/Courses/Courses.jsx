@@ -13,14 +13,13 @@ import HorizontalSkeletonCard from '../../components/Skeleton/HorizontalSkeleton
 const Courses = () => {
     const [courseList, setCourseList] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
     useEffect(() => {
         const searchCourse = async () => {
             try {
-                const response = await apiGetCourse({ multi_value: "asd" });
+                const response = await apiGetCourse();
+                setLoading(false);
                 if (response.data && response.data.data && response.data.data?.length > 0) {
-                    console.log(response.data.data.length);
-                    console.log("has value");
-                    console.log(response.data);
                     setCourseList(response.data);
                 }
                 else {
@@ -28,13 +27,14 @@ const Courses = () => {
                 }
             } catch (error) {
                 console.error("Error fetching course data", error);
+                setLoading(true);
                 // navigate(`/error`);
             } finally {
-                setLoading(false);
             }
         };
         searchCourse();
     }, []);
+    // const indexOfLastPage = currentPage * 
     return (
         <div className="pt-[90px] mb-[80px] justify-center">
             <div className="container mx-auto md:max-w-6xl">
@@ -57,17 +57,22 @@ const Courses = () => {
                                 <HorizontalSkeletonCard />
                                 <HorizontalSkeletonCard />
                             </>
-                        ) : (
+                        ) : (courseList.data?.length > 0 ?
                             <>
                                 {courseList.data.map((course, index) => (
-                                    <HorizontalCard key={index} />
+                                    <HorizontalCard key={index} content={course} />
                                 ))}
                             </>
+                            : (
+                                <>
+                                    Không có kết quả!
+                                </>
+                            )
                         )}
 
                     </div>
                 </div>
-                {!loading && (
+                {!loading && courseList.data.length > 0 && (
                     <Pagination />
                 )}
             </div>
