@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-
-const initialState = {
+import defaultAvatar from '../../assets/user_img.png';
+export const initialState = {
     isLoggedIn: false,
     userData: null,
-    token: null,
+    token: "",
+    avatarURL: defaultAvatar,
     // isLoading: false,
     message: ''
 };
@@ -12,23 +13,34 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         login: (state, action) => {
-            state.isLoggedIn = action.payload.isLoggedIn;
-            state.userData = action.payload.userData;
-            state.token = action.payload.token;
+            return {
+                ...state,
+                isLoggedIn: action.payload.isLoggedIn,
+                userData: action.payload.userData,
+                token: action.payload.token,
+                avatarURL: action.payload.avatarURL || defaultAvatar,
+            };
         },
         // Add a new reducer to update the token
         updateToken: (state, action) => {
-            console.log("---update token---")
+            console.log("---update token---");
+            console.log(`---${action.payload}---`);
             state.token = action.payload;
         },
+        updateAvatarURL: (state, action) => {
+            console.log("---update avatar---");
+            console.log(`---${action.payload.avatarURL}---`);
+            state.avatarURL = action.payload.avatarURL;
+        },
         logout: (state, action) => {
+            state.avatarURL = defaultAvatar;
             state.isLoggedIn = false;
-            state.token = null;
+            state.token = "";
             state.userData = null;
             state.message = '';
         },
     }
 });
-export const { login, updateToken, logout } = userSlice.actions;
+export const { login, updateToken, updateAvatarURL, logout } = userSlice.actions;
 export default userSlice.reducer;
 export const selectUserToken = (state) => state.user.token;

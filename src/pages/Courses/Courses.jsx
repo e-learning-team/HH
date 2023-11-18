@@ -52,10 +52,9 @@ const Courses = () => {
                     <div className="rounded-lg lg:col-span-3 my-5">
                         {loading ? (
                             <>
-                                <HorizontalSkeletonCard />
-                                <HorizontalSkeletonCard />
-                                <HorizontalSkeletonCard />
-                                <HorizontalSkeletonCard />
+                                {Array.from({ length: 4 }).map(
+                                    (_, index) => <HorizontalSkeletonCard key={index} />
+                                )}
                             </>
                         ) : (courseList.data?.length > 0 ?
                             <>

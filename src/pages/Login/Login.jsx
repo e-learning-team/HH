@@ -28,7 +28,7 @@ const Login = () => {
     });
     useEffect(() => {
         document.title = 'Đăng nhập';
-        if (isLoggedIn && isLoggedIn == true) {
+        if (isLoggedIn) {
             navigate(`/${Path.HOME}`);
         }
     }, []);
@@ -43,18 +43,22 @@ const Login = () => {
     const handleSubmit = useCallback(async () => {
         const rs = await apiLogin(payload);
         if (rs.status === 1) {
+            // console.log(rs.data?.user?.avatar)
             dispatch(login({
                 isLoggedIn: true,
                 userData: rs.data.user,
                 token: rs.data.token,
+                avatarURL: rs.data?.user?.avatar,
             }));
             navigate(`/${Path.HOME}`);
             toast.success(`Đăng nhập thành công`, {
                 position: toast.POSITION.TOP_RIGHT,
             });
-        } else toast.error(rs.message, {
-            position: toast.POSITION.TOP_RIGHT,
-        });
+        } else {
+            toast.error(rs.message, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
 
     }, [payload]);
     return (

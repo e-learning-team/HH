@@ -1,10 +1,9 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { useNavigate, Link, useParams } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams, NavLink } from "react-router-dom";
 import CourseAccordion from '../../components/Accordion/AccordionCourseDetail';
-import { Breadcrumbs } from "@material-tailwind/react";
 import { RatingBar } from '../../components/RatingBar/RatingBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Spinner } from "@material-tailwind/react";
+import { Spinner, Typography } from "@material-tailwind/react";
 import {
     faCirclePlay,
     faPenToSquare,
@@ -16,57 +15,85 @@ import {
     faFileAudio,
 
 } from '@fortawesome/free-regular-svg-icons';
-import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-
 import Button from '../../components/Button/Button';
 import { VideoReviewDialog } from '../../components/Dialog/VideoReviewDialog';
-import { getVideoGoogleGDriveUrl, getVideoThumbnailGoogleGDriveUrl } from '../../utils/Constants';
+import { getVideoThumbnailGoogleGDriveUrl } from '../../utils/Constants';
 import { extractVideoGoogleGDriveUrlId, formatTimeStampTo_DDMMYYY } from '../../utils/helper';
 import { apiGetCourse } from '../../apis/course';
+import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
+import { apiCheckEnrollment } from '../../apis/enrollment';
+
 const CourseDeTail = () => {
+    const { isLoggedIn, userData, token, isLoading, message } = useSelector((state) => state.user);
     const { slug } = useParams();
     const [course, setCourse] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isError, setIsError] = useState(false);
+    const [isEnrolled, setIsEnrolled] = useState(false);
     const navigate = useNavigate();
     const getCurrentCourse = async () => {
         try {
             const response = await apiGetCourse({ slug: slug });
             if (!response.data && !response.data && response.data.data?.length === 0 || response.data?.data[0]?.level != 1) {
-                console.log("error");
-                navigate(`/error`);
+                toast.error("Đã xảy ra lỗi", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+                setIsError(true);
+                // navigate(`/error`);
+                return;
             }
             setCourse(response.data);
+            if (isLoggedIn) {
+                checkEnroll(response.data?.data[0]?.id);
+            }
+            document.title = response.data?.data[0].name;
         } catch (error) {
+            toast.error("Đã xảy ra lỗi", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            setIsError(true);
             console.error("Error fetching course data", error);
-            navigate(`/error`);
+            // return
+            // navigate(`/error`);
         } finally {
             setLoading(false);
         }
     };
+    const checkEnroll = async (course_id) => {
+        const res = await apiCheckEnrollment(course_id);
+        if (res && res.data) {
+            setIsEnrolled(res.data);
+        }
+    };
+
     useEffect(() => {
         getCurrentCourse();
-
-
     }, [slug]);
 
     const [openVideoReviewDialog, setOpenVideoReviewDialog] = React.useState(false);
     const handleOpenVideoReviewDialog = () => setOpenVideoReviewDialog(!openVideoReviewDialog);
     return (
         <>
-            {
-                loading ? (
-                    <div className='pt-[80px] flex justify-center h-screen items-center'>
-                        <Spinner className='w-20 h-auto' color="blue" />
-
-                    </div>
-                ) :
-                    // (course && course.data && course.data.length > 0) &&
-                    (
+            {loading ? (
+                <div className='pt-[80px] flex justify-center h-screen items-center'>
+                    <Spinner className='w-20 h-auto' color="teal" />
+                </div>
+            ) :
+                // (course && course.data && course.data.length > 0) &&
+                (
+                    isError ? (
+                        <div className='pt-[80px] absolute top-0 bottom-0 left-0 right-0 m-auto w-full h-full'>
+                            <Typography className='flex justify-center'>
+                                Đã xãy ra lỗi
+                            </Typography>
+                        </div>
+                    ) : (
                         <div>
                             <div className='pt-[80px] mb-[80px]'>
                                 <div className='h-auto  bg-[#003a47]'>
-                                    <div className='my-0 mx-auto py-12 max-w-6xl '>
+                                    <div className='my-0 mx-auto py-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6'>
                                         <div className='max-w-[46rem]'>
                                             <div className=' text-white '>
                                                 <div className=''>
@@ -104,9 +131,9 @@ const CourseDeTail = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className='my-0 mx-auto max-w-6xl'>
-                                    <div className='ml-[50rem] shadow-lg transition border-solid border stroke-white w-[22rem] absolute top-28'>
-                                        <div className='w-full'>
+                                <div className='my-0 mx-auto max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6 '>
+                                    <div className='shadow-lg  !bg-none rounded-lg transition border-solid border bg-[#003a47] stroke-white lg:w-[22rem] lg:absolute sm:relative lg:ml-[50rem] sm:ml-0 lg:top-28'>
+                                        <div className='w-full rounded-lg overflow-hidden'>
                                             <div className=''>
                                                 <div className='relative border-solid border-b stroke-white'>
                                                     <span onClick={handleOpenVideoReviewDialog} className='cursor-pointer absolute z-10 flex  justify-center items-center mx-auto my-0 w-full h-full'>
@@ -119,18 +146,23 @@ const CourseDeTail = () => {
                                                     <span className='absolute h-full w-full bg-gradient-to-b from-transparent to-black  '>
                                                     </span>
 
-                                                    <img className='h-full w-full bg-cover' src={course.data[0].video_path
+                                                    <img className='h-full w-full bg-cover object-contain' src={course.data[0].video_path
                                                         ? getVideoThumbnailGoogleGDriveUrl(extractVideoGoogleGDriveUrlId(course.data[0].video_path))
                                                         : "https://img-c.udemycdn.com/course/240x135/5246952_37c4.jpg"} />
                                                 </div>
                                             </div>
-                                            <div className='p-6  bg-white'>
+                                            <div className='p-6  bg-white rounded-b-lg'>
                                                 <div className=' mb-6 text-[#003a47] text-[2.2rem]'>
-                                                    <span className='font-mono font-semibold'>266.666</span>
-                                                    <span className=' underline  decoration-solid '>đ</span>
+
+                                                    <span className='font-mono font-semibold'>{course.data[0].price_sell ? course.data[0].price_sell.toLocaleString() + "₫" : (<>Miễn phí</>)}</span>
+                                                    {/* <span className=' underline  decoration-solid '>đ</span> */}
                                                 </div>
                                                 <div className='mb-6 flex gap-2'>
-                                                    <Button style="flex-1 bg-[#29abe2] shadow-lg w-full h-[60px] hover:bg-[#088ab7] font-bold text-white" label="Đăng kí học" severity="info" rounded />
+                                                    {isEnrolled ? (
+                                                        <NavLink to={`/courses/learn/${slug}`} className="flex-1 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm ring-1 ring-inset bg-[#29abe2] shadow-lg w-full h-[60px] hover:bg-[#088ab7] font-bold text-white">Học ngay</NavLink>
+                                                    ) : (
+                                                        <Button style="flex-1 bg-[#29abe2] shadow-lg w-full h-[60px] hover:bg-[#088ab7] font-bold text-white" label="Đăng kí học" severity="info" rounded />
+                                                    )}
                                                     <Button style="w-[60px] h-[60px] shadow-lg bg-white ring-gray-300 hover:bg-gray-100" label={<FontAwesomeIcon icon={faBookmark} />} severity="info" rounded />
                                                 </div>
 
@@ -158,7 +190,7 @@ const CourseDeTail = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className='my-0 mx-auto py-12 max-w-6xl'>
+                                <div className='my-0 mx-auto py-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6'>
                                     <div className='max-w-[46rem] '>
                                         <h1 className='font-bold text-2xl'>
                                             TÓM TẮT
@@ -172,7 +204,7 @@ const CourseDeTail = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className='my-0 mx-auto pb-12 max-w-6xl '>
+                                <div className='my-0 mx-auto pb-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6'>
                                     <div className='max-w-[46rem] '>
                                         <h1 className='font-bold text-2xl'>
                                             NỘI DUNG KHÓA HỌC
@@ -189,7 +221,7 @@ const CourseDeTail = () => {
                                     </div>
                                 </div>
 
-                                <div className='my-0 mx-auto pb-12 max-w-6xl'>
+                                <div className='my-0 mx-auto pb-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6'>
                                     <div className='max-w-[46rem] '>
                                         <h1 className='font-bold text-2xl'>
                                             YÊU CẦU KHÓA HỌC
@@ -210,8 +242,8 @@ const CourseDeTail = () => {
                                     <VideoReviewDialog videoTitle={course.data[0].name} videoPath={course.data[0].video_path} open={openVideoReviewDialog} setOpen={handleOpenVideoReviewDialog} />
                                 )
                             }
-                        </div>
-                    )}
+                        </div>)
+                )}
         </>
     );
 };

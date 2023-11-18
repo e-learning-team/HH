@@ -4,16 +4,29 @@
 @tailwind utilities;
 
 body {
-    background-color: #f5f8ff;
-    font-family: 'Segoe', 'roboto';
-    /* font-family: 'ui-sans-serif', 'system-ui', '-apple-system' , "Segoe UI", 'Roboto', "Helvetica Neue", 'Arial', "Noto Sans", 'sans-serif', "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; */
-    /* font-family: 'Roboto', sans-serif; */
+  background-color: #f5f8ff;
+  font-family: 'Segoe', 'roboto';
+  /* font-family: 'ui-sans-serif', 'system-ui', '-apple-system' , "Segoe UI", 'Roboto', "Helvetica Neue", 'Arial', "Noto Sans", 'sans-serif', "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; */
+  /* font-family: 'Roboto', sans-serif; */
 
-    /* color: #003a47; */
-    word-break: break-word;
-    word-wrap: break-word;
-    line-break: strict;
-    text-size-adjust: none;
-  }
+  /* color: #003a47; */
+  word-break: break-word;
+  word-wrap: break-word;
+  line-break: strict;
+  text-size-adjust: none;
+}
 
-  
+progress {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+}
+
+progress::-webkit-progress-bar {
+  background: rgb(206, 204, 204);
+}
+
+progress::-webkit-progress-value {
+  background-color: #7cacf8;
+}

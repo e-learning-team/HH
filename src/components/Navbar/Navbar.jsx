@@ -13,6 +13,7 @@ import { NavLink } from 'react-router-dom';
 import { logout } from '../../store/User/userSlice';
 import { toast } from 'react-toastify';
 import { apiCategory } from '../../apis/category';
+import { ProfileMenu } from '../ProfileMenu/ProfileMenu';
 
 const Navbar = () => {
     const { isLoggedIn, userData, token, isLoading, message } = useSelector((state) => state.user);
@@ -56,24 +57,14 @@ const Navbar = () => {
     const handleLogout = (() => {
         console.log("logout");
         apiLogOut().then(() => {
-            dispatch(logout());
             navigate(`/${Path.HOME}`);
+            
+            dispatch(logout());
             toast.success(`Đăng xuất thành công`, {
                 position: toast.POSITION.TOP_RIGHT,
             });
         }
         );
-        // if (rs.status === 1) {
-        //     dispatch(login({
-        //         isLoggedIn: true,
-        //         userData: rs.data.user,
-        //         token: rs.data.token,
-        //     }));
-
-        // } else toast.error(rs.message, {
-        //     position: toast.POSITION.TOP_RIGHT,
-        // });
-
     });
     return (
         <div className='fixed z-50'>
@@ -120,11 +111,14 @@ const Navbar = () => {
                             Giảng dạy trên Wisdom
                         </div>
                     </div>
-                    <div className={clsx('flex justify-center items-center gap-5 ml-[10px]')}>
+                    <div className={clsx('flex justify-center items-center gap-5 ml-[10px]  mr-4')}>
                         {isLoggedIn ? (
-                            <NavLink>
-                                <Button type="button" handleOnClick={handleLogout} children="Đăng xuất" style="bg-white w-[100px] h-[40px] ring-gray-300 hover:bg-gray-100" label="Đăng xuất" severity="secondary" outlined />
-                            </NavLink>
+                            <div className=''>
+                                <ProfileMenu handleLogout={() => handleLogout()} />
+                                {/* <NavLink>
+                                    <Button type="button" handleOnClick={handleLogout} children="Đăng xuất" style="bg-white w-[100px] h-[40px] ring-gray-300 hover:bg-gray-100" label="Đăng xuất" severity="secondary" outlined />
+                                </NavLink> */}
+                            </div>
                         ) : (
                             <>
                                 <NavLink to={Path.LOGIN}>
