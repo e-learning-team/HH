@@ -1,39 +1,44 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import CourseAccordion from '../../components/Accordion/AccordionCourseDetail';
-import { Breadcrumbs, Spinner } from "@material-tailwind/react";
-import { RatingBar } from '../../components/RatingBar/RatingBar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import HorizontalCard from '../../components/Card/HorizontalCard';
 import AccordionCourseFilter from '../../components/Accordion/AccordionCourseFilter';
 import Pagination from '../../components/Pagination/Pagination';
 import { apiGetCourse } from '../../apis/course';
-import { Skeleton } from '@mui/material';
 import HorizontalSkeletonCard from '../../components/Skeleton/HorizontalSkeletonCard';
 const Courses = () => {
     const [courseList, setCourseList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
+    const { keyword } = useParams();
     useEffect(() => {
+        console.log("Keyword", keyword);
+        document.title = "Tìm kiếm";
+        setLoading(true);
         const searchCourse = async () => {
             try {
-                const response = await apiGetCourse();
-                setLoading(false);
+                const params = {
+                    multi_value: keyword || ''
+                };
+                const response = await apiGetCourse(params);
                 if (response.data && response.data.data && response.data.data?.length > 0) {
                     setCourseList(response.data);
                 }
                 else {
-                    console.log("empty");
+                    // console.log("empty");
+                    setCourseList([]);
                 }
+                setLoading(false);
             } catch (error) {
                 console.error("Error fetching course data", error);
-                setLoading(true);
+                // setLoading(true);
+                setCourseList([]);
+
                 // navigate(`/error`);
             } finally {
             }
         };
         searchCourse();
-    }, []);
+    }, [keyword]);
     // const indexOfLastPage = currentPage * 
     return (
         <div className="pt-[90px] mb-[80px] justify-center">
@@ -56,9 +61,9 @@ const Courses = () => {
                                     (_, index) => <HorizontalSkeletonCard key={index} />
                                 )}
                             </>
-                        ) : (courseList.data?.length > 0 ?
+                        ) : (courseList?.data?.length > 0 ?
                             <>
-                                {courseList.data.map((course, index) => (
+                                {courseList?.data.map((course, index) => (
                                     <HorizontalCard key={index} content={course} />
                                 ))}
                             </>
@@ -71,8 +76,8 @@ const Courses = () => {
 
                     </div>
                 </div>
-                {!loading && courseList.data.length > 0 && (
-                    <Pagination />
+                {!loading && courseList?.data?.length > 0 && (
+                    <Pagination totalPages={10} />
                 )}
             </div>
         </div>

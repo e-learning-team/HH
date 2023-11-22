@@ -39,25 +39,25 @@ export function VideoReviewDialog({ videoTitle, videoPath, open, setOpen }) {
                 onClose={handleClose}>
                 <DialogTitle className='min-w-[15rem] ' id='scroll-dialog-title ' >
                     {
-                        <div className='flex items-center justify-between '>
-                            <div>
+                        <span className='flex items-center justify-between '>
+                            <span>
                                 Giới thiệu về khóa học:
-                                <div className='font-bold text-2xl'>{videoTitle}</div>
-                            </div>
-                            <div onClick={handleClose} className='cursor-pointer'>
+                                <span className='font-bold block text-2xl'>{videoTitle}</span>
+                            </span>
+                            <span onClick={handleClose} className='cursor-pointer'>
                                 <FontAwesomeIcon className='p-1' icon={faXmark} />
-                            </div>
-                        </div>
+                            </span>
+                        </span>
                     }
                 </DialogTitle>
                 <DialogContent className=' border-b border-gray-400' dividers={scroll === 'paper'} >
                     <DialogContentText className='' tabIndex={-1} id="scroll-dialog-description">
-                        <div className='relative h-0 pb-[56.25%] flex justify-center mb-6'>
-                            {loadingVideo && (
-                                <div className='absolute flex justify-center items-center top-0 left-0 w-full h-full'>
+                        <span className='relative h-0 pb-[56.25%] flex justify-center mb-6'>
+                            {loadingVideo ? (
+                                <span className='absolute flex justify-center items-center top-0 left-0 w-full h-full'>
                                     <Spinner className='w-20 h-auto' color="teal" />
-                                </div>
-                            )}
+                                </span>
+                            ) : (<></>)}
                             <iframe
                                 className='absolute top-0 left-0 w-full h-full'
                                 src={videoPath}
@@ -68,7 +68,7 @@ export function VideoReviewDialog({ videoTitle, videoPath, open, setOpen }) {
                                 allow="autoplay"
                                 autoPlay>
                             </iframe>
-                        </div>
+                        </span>
                     </DialogContentText>
                 </DialogContent>
             </Dialog>

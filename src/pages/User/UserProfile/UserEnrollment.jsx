@@ -1,8 +1,5 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import HorizontalSkeletonCard from "../../../components/Skeleton/HorizontalSkeletonCard";
-import SkeletonCard from "../../../components/Skeleton/SkeletonCard";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Path from '../../../utils/path';
@@ -19,11 +16,12 @@ const UserEnrollment = () => {
         setLoading(true);
         try {
             const params = {
-
+                build_course_child: false
             };
             const res = await apiMyEnrollment(params);
-            if (res && res.data && res.data.data) {
-                setEnrollmentData(res.data.data);
+            if (res?.data?.data) {
+                setEnrollmentData(res.data?.data);
+                console.log(res.data?.data);
             }
 
         } catch (e) {

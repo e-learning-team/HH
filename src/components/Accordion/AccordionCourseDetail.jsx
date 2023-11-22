@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     Accordion,
     AccordionHeader,
     AccordionBody,
+    Typography,
 } from "@material-tailwind/react";
+import Checkbox from '@mui/material/Checkbox';
 import { faFileVideo } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Tooltip } from "@mui/material";
+import { toast } from "react-toastify";
+import { apiMarkCompleteCourseEnrollment, apiUnMarkCompleteCourseEnrollment } from "../../apis/enrollment";
 function Icon({ open }) {
     return (
         <svg
@@ -20,55 +25,119 @@ function Icon({ open }) {
         </svg>
     );
 }
-export default function CustomAccordion({ title, content }) {
-    const [alwaysOpen, setAlwaysOpen] = React.useState(false);
+const CourseAccordion = React.memo(
+    ({ isEnrolled, title, content, onContentClick, onContentCheck, currentCourse, completeCourse, enrollmentId }) => {
+        const [alwaysOpen, setAlwaysOpen] = React.useState(false);
+        const [activeIndex, setActiveIndex] = useState(null);
+        const contentRefs = useRef([]);
 
-    const handleAlwaysOpen = () => setAlwaysOpen((cur) => !cur);
+        const handleAlwaysOpen = () => setAlwaysOpen((cur) => !cur);
 
-    return (
 
-        <div className="shadow-md">
-            {content.length > 0 && (
-                <div>
-                    <Accordion open={alwaysOpen} className="w-full text-ellipsis border border-gray-400 "
-                        icon={
-                            <span className="text-sm min-w-[5rem] font-normal flex items-center gap-3">
-                                <span>{content.length} bài học</span>
-                                <span>•</span>
-                                {/* <span>15 phút</span> */}
-                            </span>
-                        }>
-                        <AccordionHeader
-                            onClick={() => handleAlwaysOpen()}
-                            className={`bg-zinc-100 border-b border-gray-300 px-4 transition-colors ${alwaysOpen ? "text-[#003a47]" : ""}`}>
-                            {
-                                <span className="max-w-[34rem] max-h-[5rem] truncate flex items-center gap-4">
-                                    <Icon open={alwaysOpen} />
-                                    <span className="truncate hover:text-clip">
-                                        {title}
+        const handleContentClick = async (clickedContent, index) => {
+            onContentClick && onContentClick(clickedContent);
+            setActiveIndex(index);
+
+            await new Promise((resolve) => {setTimeout(()=>{resolve()},500)})
+            if(index !== -1){
+                contentRefs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        };
+        const handleCheckComplete = async (e, content) => {
+            e.stopPropagation();
+            const check = e.target.checked;
+            try {
+                if (check) {
+                    onContentCheck && onContentCheck(content.id, check);
+                    await apiMarkCompleteCourseEnrollment(enrollmentId, content.id);
+                    // toast.success("Đã đánh dấu hoàn thành", {
+                    //     position: toast.POSITION.TOP_RIGHT,
+                    // });
+                } else {
+                    onContentCheck && onContentCheck(content.id, check);
+                    await apiUnMarkCompleteCourseEnrollment(enrollmentId, content.id);
+                }
+            } catch (er) {
+                toast.error("Đã có lỗi xảy ra: " + er.message, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+        };
+        useEffect(() => {
+            if (isEnrolled && currentCourse) {
+                const currentIndex = content.findIndex((ct) => ct.id == currentCourse);
+
+                if (currentIndex !== -1) {
+                    setAlwaysOpen(true);
+                    setActiveIndex(currentIndex);
+                    handleContentClick(content[currentIndex], currentIndex);
+                }
+            }
+        }, []);
+        return (
+
+            <div className="shadow-md">
+                {content.length > 0 && (
+                    <div>
+                        <Accordion open={alwaysOpen} className={`w-full text-ellipsis border border-gray-400 ${isEnrolled && 'border-none'}`}
+                            icon={
+                                <Typography>
+                                    <span className="min-w-[4rem] text-xs line-clamp-1 flex justify-between items-center gap-1 font-normal">
+                                        {content.length} bài học
                                     </span>
+                                </Typography>
+                            }>
+                            <AccordionHeader
+                                onClick={() => handleAlwaysOpen()}
+                                className={`bg-zinc-100 border-b border-gray-300 px-4 transition-colors ${alwaysOpen ? "text-[#003a47]" : ""}`}>
+                                {
+                                    <span className="max-w-[34rem] max-h-[5rem] line-clamp-2 flex items-center gap-4">
+                                        <Icon open={alwaysOpen} />
+                                        <span className="line-clamp-2 hover:text-clip uppercase text-[16px]" title={title}>
+                                            {title}
+                                        </span>
 
-                                </span>
-                            }
-                        </AccordionHeader>
-                        <AccordionBody className="px-4 text-base font-normal">
-                            {
-                                content.map((ct) => (
-                                    <div key={ct.id} className="text-sm my-2 flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <FontAwesomeIcon className="text-lg" icon={faFileVideo} />
-                                            <div className="max-w-[34rem] truncate hover:text-clip">{ct.name}</div>
+                                    </span>
+                                }
+                            </AccordionHeader>
+                            <AccordionBody
+                                className="text-base font-normal p-0 m-0">
+                                {
+                                    content.map((ct, index) => (
+                                        <div key={ct.id}
+                                            ref={(ref) => (contentRefs.current[index] = ref)}
+                                            className={`${isEnrolled && "hover:bg-slate-200 cursor-pointer py-2"} 
+                                                        ${(index % 2 == 0 && !isEnrolled) ? "bg-slate-200" : ""} 
+                                                        ${index === activeIndex ? "bg-slate-200" : ""}
+                                                        text-sm flex items-center justify-between p-4`}
+                                            onClick={() => isEnrolled && handleContentClick(ct, index)}>
+                                            <div className="flex w-full justify-between items-center py-2">
+                                                <div className="flex gap-3">
+                                                    <FontAwesomeIcon className="text-lg" icon={faFileVideo} />
+                                                    <div
+                                                        className="max-w-[16rem]  line-clamp-1 hover:text-clip text-[14px]"
+                                                        title={ct.name}>
+                                                        {ct.name}
+                                                    </div>
+
+                                                </div>
+                                                {(isEnrolled && completeCourse) && (
+                                                    <div className="">
+                                                        <Tooltip title="Đánh dấu đã hoàn thành" placement="left">
+                                                            <Checkbox color="success" defaultChecked={completeCourse.includes(ct.id)} onClick={(e) => handleCheckComplete(e, ct)} />
+                                                        </Tooltip>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
-                                        <div>
-                                            <span>15 phút</span>
-                                        </div>
-                                    </div>
-                                ))
-                            }
-                        </AccordionBody>
-                    </Accordion>
-                </div>
-            )}
-        </div>
-    );
-}
+                                    ))
+                                }
+                            </AccordionBody>
+                        </Accordion>
+                    </div>
+                )}
+            </div>
+        );
+    });
+
+export default CourseAccordion;

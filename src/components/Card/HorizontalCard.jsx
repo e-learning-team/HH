@@ -1,10 +1,12 @@
 import { NavLink } from "react-router-dom";
 import { getVideoThumbnailGoogleGDriveUrl } from "../../utils/Constants";
-import { extractVideoGoogleGDriveUrlId } from "../../utils/helper";
+import { calcRating, extractVideoGoogleGDriveUrlId } from "../../utils/helper";
 import { RatingBar } from "../RatingBar/RatingBar";
+import noImg from '../../assets/no-image-icon.jpg';
 
 const HorizontalCard = ({ className, content }) => {
-
+    // const totalRatings = calcRating(content?.ratings);
+    const totalRatings = content?.course_ratings;
     // console.log(extractVideoGoogleGDriveUrlId(content.video_path));
     return (
         <NavLink to={`/courses/${content.slug}`}>
@@ -12,12 +14,10 @@ const HorizontalCard = ({ className, content }) => {
                 <div className="cursor-pointer group/item grid sm:grid-cols-1 lg:grid-cols-4 md:grid-cols-4 pb-4 border-b border-b-[#d1d7dc]">
                     <div id="image lg:col-span-1 md:col-span-1 sm:col-span-1">
                         {/* <img className='h-full w-full bg-cover' src={getVideoThumbnailGoogleGDriveUrl(extractVideoGoogleGDriveUrlId(content.video_path))} /> */}
-                        <img 
-                            alt="Home"
-                            src={content.video_path
-                                ? getVideoThumbnailGoogleGDriveUrl(extractVideoGoogleGDriveUrlId(content.video_path))
-                                : "https://img-c.udemycdn.com/course/240x135/5246952_37c4.jpg"}
-                            className="transition group-hover/item:opacity-90" />
+                        <img
+                            alt={content.name}
+                            src={content.video_path ? getVideoThumbnailGoogleGDriveUrl(extractVideoGoogleGDriveUrlId(content.video_path)) : noImg}
+                            className="transition w-full h-full group-hover/item:opacity-90 object-cover" />
                     </div>
                     <div className="lg:col-span-3 md:col-span-3 sm:col-span-3">
                         <div className="flex h-full">
@@ -41,10 +41,12 @@ const HorizontalCard = ({ className, content }) => {
 
                                     </p>
                                     <div className="mt-2 mb-1">
-                                        <div className="text-sm line-clamp-1">{content.create_by}</div>
+                                        <div className="text-sm line-clamp-1">
+                                            {content.created_user_info[content.created_by]}
+                                        </div>
                                     </div>
                                     <div className="flex items-center gap-3 mx-1">
-                                        <RatingBar value={4.2} totalReview={245} />
+                                        <RatingBar value={totalRatings.averageRate.toFixed(1)} totalReview={totalRatings.totalRatings} />
                                         {/* <span className="w-1 h-1 mx-1.5 bg-gray-500 rounded-full dark:bg-gray-400"></span> */}
                                         <span>•</span>
                                         <span className="text-sm">{content.subscriptions || 0} đã đăng kí.</span>
