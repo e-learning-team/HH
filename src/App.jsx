@@ -15,6 +15,7 @@ import UserBookmark from './pages/User/UserProfile/UserBookmark';
 import PaymentHistory from './pages/User/UserProfile/PaymentHistory';
 import { Sidebar } from './components/Navbar/Sidebar';
 import CourseLearn from './pages/Courses/CourseLearn';
+import { User } from './pages/User/User';
 function App() {
   return (
     <div className=''>
@@ -23,8 +24,9 @@ function App() {
           <Route path={Path.HOME} element={<Home />} />
           <Route path={Path.COURSES_DETAIL} element={<CourseDeTail />} />
           <Route path={Path.COURSES} element={<Courses />} />
+          {/* <Route path={Path.COURSES_CATEGORY} element={<Courses />} /> */}
 
-          <Route path={Path.USER_P} element={<Sidebar />}>
+          <Route path={Path.USER_P} element={<User />}>
             <Route path={Path.USER_P + Path.USER_PROFILE} element={<UserProfile />} />
             <Route path={Path.USER_P + Path.USER_ENROLLMENT} element={<UserEnrollment />} />
             <Route path={Path.USER_P + Path.USER_BOOKMARK} element={<UserBookmark />} />

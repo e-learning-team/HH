@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import logo from '../../assets/logo-side.svg';
 import Button from '../Button/Button';
 import Path from '../../utils/path';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Dropdown from 'react-multilevel-dropdown';
 import { useDispatch, useSelector } from "react-redux";
 import clsx from 'clsx';
@@ -20,20 +20,47 @@ const Navbar = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
-
     const [category, setCategory] = useState([]);
     const [payload, setPayload] = useState({
         keyword: "",
     });
+
     const handleEnter = (event) => {
         if (event.key === 'Enter') {
             const trimmedKeyword = payload.keyword.trim();
-            const newPath = `/courses/search/${trimmedKeyword}`;
-            // If already on the search path, force re-render by changing key
-            // navigate('/a', { state: { key: 'empty' } });
+            const params = new URLSearchParams(window.location.search);
+            params.set('keyword', trimmedKeyword);
+            if (!payload.keyword) {
+                params.delete('keyword');
+                params.delete('category');
+                params.delete('subcategory');
+            } else {
+                setPayload({ keyword: trimmedKeyword });
+            }
+
+            const newPath = `${Path.COURSES_CATEGORY}?${params.toString()}`;
             navigate(newPath);
         }
     };
+    const handleCategory = (category) => {
+        const params = new URLSearchParams(window.location.search);
+        params.delete('subcategory');
+        params.set('category', category.id);
+        if (params.get('keyword')) {
+            setPayload({ keyword: '' });
+            params.delete('keyword');
+        }
+        const newPath = `${Path.COURSES_CATEGORY}?${params.toString()}`;
+        navigate(newPath);
+    };
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const keywordParam = urlParams.get('keyword');
+
+        if (keywordParam !== null) {
+            setPayload({ keyword: keywordParam });
+        }
+    }, []);
     useEffect(() => {
         const fetchCategory = async () => {
             try {
@@ -43,14 +70,14 @@ const Navbar = () => {
                 console.error('Error fetching categories:', error);
             }
         };
-
         fetchCategory();
-    }, [token]);
+    }, [isLoggedIn]);
+
     const renderCategory = (category) => {
         return (
             <Dropdown.Item key={category.id} position='right'>
                 {
-                    <span className='flex justify-between w-full'>
+                    <span onClick={() => handleCategory(category)} className='flex justify-between w-full'>
                         <span>
                             {category.title}
                         </span>
@@ -119,12 +146,12 @@ const Navbar = () => {
                             value={payload.keyword}
                             className='rounded-[50px] border-[#003a47] px-4 py-2 border w-full'
                             onChange={e => setPayload(prev => ({ ...prev, keyword: e.target.value }))}
-                            onKeyDown={handleEnter}
+                            onKeyDown={(e) => handleEnter(e)}
                         />
                     </div>
                 </div>
-                <div className="flex items-center flex-2">
-                    <div>
+                <div className="flex h-full items-center gap-6  flex-2">
+                    <div className='h-full hover:underline cursor-pointer py-5 px-2'>
                         <div className='text-gray-800 font-semibold '>
                             Giảng dạy trên Wisdom
                         </div>
@@ -133,9 +160,6 @@ const Navbar = () => {
                         {isLoggedIn ? (
                             <div className=''>
                                 <ProfileMenu handleLogout={() => handleLogout()} />
-                                {/* <NavLink>
-                                    <Button type="button" handleOnClick={handleLogout} children="Đăng xuất" style="bg-white w-[100px] h-[40px] ring-gray-300 hover:bg-gray-100" label="Đăng xuất" severity="secondary" outlined />
-                                </NavLink> */}
                             </div>
                         ) : (
                             <>

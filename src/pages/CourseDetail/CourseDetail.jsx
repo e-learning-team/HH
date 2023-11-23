@@ -69,6 +69,7 @@ const CourseDeTail = () => {
             toast.warning(`Vui lòng đăng nhập trước`, {
                 position: toast.POSITION.TOP_RIGHT,
             });
+            return;
         }
         const data = {
             user_id: userData.id,
@@ -76,16 +77,11 @@ const CourseDeTail = () => {
         };
         const res = await apiSaveEnrollment(data);
         if (res.status == 1) {
-            toast.success(`Đăng kí thành công\n Sẽ chuyển hướng đến trang học sau 5s`, {
+            toast.success(`Đăng kí thành công\nChuyển hướng đến trang học`, {
                 position: toast.POSITION.TOP_RIGHT,
             });
             setIsEnrolled(true);
-            await new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve();
-                    navigate(`/courses/learn/${slug}`);
-                }, 5000);
-            });
+            navigate(`/courses/learn/${slug}`);
         } else {
             toast.error(`${res.message}`, {
                 position: toast.POSITION.TOP_RIGHT,
@@ -101,41 +97,30 @@ const CourseDeTail = () => {
 
     useEffect(() => {
         getCurrentCourse();
-    }, [slug]);
+    }, [slug, isLoggedIn]);
 
     const [openVideoReviewDialog, setOpenVideoReviewDialog] = React.useState(false);
     const handleOpenVideoReviewDialog = () => setOpenVideoReviewDialog(!openVideoReviewDialog);
     return (
         <>
             {loading ? (
-                <div className='pt-[80px] flex justify-center h-screen items-center'>
+                <div className=' flex justify-center h-screen items-center'>
                     <Spinner className='w-20 h-auto' color="teal" />
                 </div>
-            ) :
-                // (course && course.data && course.data.length > 0) &&
-                (isError ? (
-                    <div className='pt-[80px] absolute top-0 bottom-0 left-0 right-0 m-auto w-full h-full'>
+            ) : (isError ? (
+                    <div className=' absolute top-0 bottom-0 left-0 right-0 m-auto w-full h-full'>
                         <Typography className='flex justify-center'>
                             Đã xảy ra lỗi
                         </Typography>
                     </div>
                 ) : (
                     <div>
-                        <div className='pt-[80px] mb-[80px]'>
+                        <div className=' mb-[80px]'>
                             <div className='h-auto  bg-[#003a47]'>
                                 <div className='my-0 mx-auto py-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6'>
                                     <div className='max-w-[46rem]'>
                                         <div className=' text-white '>
                                             <div className=''>
-                                                {/* <Breadcrumbs separator='>' className='p-0 mb-4 text-[#87CEEB] text-2xl font-bold'>
-                                            <a href="#" className="opacity-100 hover:opacity-60">
-                                                Docs
-                                            </a>
-                                            <a href="#" className="opacity-100 hover:opacity-60">
-                                                Components
-                                            </a>
-                                            <a href="#">Breadcrumbs</a>
-                                        </Breadcrumbs> */}
                                                 <h1 className='text-3xl font-bold  mb-4'>{course.data[0].name}</h1>
                                                 <div className='text-1xl mb-4'>{course.data[0].name_mode}</div>
                                                 <div className='mb-2 flex gap-2 text-sm'>
@@ -183,9 +168,7 @@ const CourseDeTail = () => {
                                         </div>
                                         <div className='p-6  bg-white rounded-b-lg'>
                                             <div className=' mb-6 text-[#003a47] text-[2.2rem]'>
-
                                                 <span className='font-mono font-semibold'>{course.data[0].price_sell ? course.data[0].price_sell.toLocaleString() + "₫" : (<>Miễn phí</>)}</span>
-                                                {/* <span className=' underline  decoration-solid '>đ</span> */}
                                             </div>
                                             <div className='mb-6 flex gap-2'>
                                                 {isEnrolled ? (

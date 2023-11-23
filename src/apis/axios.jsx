@@ -36,8 +36,8 @@ instance.interceptors.response.use(function (response) {
         store.dispatch(updateToken(resp?.data?.token));
         return instance(prevRequest);
     }
-    // store.dispatch(logout())
-    // await apiLogOut()
+    await apiLogOut()
+    store.dispatch(logout())
     return Promise.reject(error);
 });
 

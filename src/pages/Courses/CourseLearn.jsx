@@ -156,7 +156,7 @@ const CourseLearn = () => {
         if (checkEnroll(extractIdSlug(slug))) {
             getMyEnrollment();
         }
-    }, []);
+    }, [isLoggedIn]);
     return (
         <>
             {loading ? (

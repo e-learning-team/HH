@@ -3,6 +3,7 @@ import { getVideoThumbnailGoogleGDriveUrl } from "../../utils/Constants";
 import { calcRating, extractVideoGoogleGDriveUrlId } from "../../utils/helper";
 import { RatingBar } from "../RatingBar/RatingBar";
 import noImg from '../../assets/no-image-icon.jpg';
+import { Typography } from "@mui/material";
 
 const HorizontalCard = ({ className, content }) => {
     // const totalRatings = calcRating(content?.ratings);
@@ -41,8 +42,11 @@ const HorizontalCard = ({ className, content }) => {
 
                                     </p>
                                     <div className="mt-2 mb-1">
-                                        <div className="text-sm line-clamp-1">
-                                            {content.created_user_info[content.created_by]}
+                                        <div className="text-sm flex justify-start items-center line-clamp-1">
+                                            <Typography className='font-bold text-sm'>Tác giả </Typography>&nbsp;&nbsp;
+                                            <Typography className='text-sm'>
+                                                {content.created_user_info[content.created_by]}
+                                            </Typography>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3 mx-1">

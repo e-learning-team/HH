@@ -48,6 +48,7 @@ const Login = () => {
                 isLoggedIn: true,
                 userData: rs.data.user,
                 token: rs.data.token,
+                roles: rs.data.roles,
                 avatarURL: rs.data?.user?.avatar,
             }));
             navigate(`/${Path.HOME}`);

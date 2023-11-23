@@ -41,8 +41,8 @@ const Card = ({ content, isEnrolled, enrollmentContent }) => {
                         e.stopPropagation();
                         navigate(isEnrolled ? `/courses/learn/${content.slug}` : `/courses/${content.slug}`);
                     }}>
-                        <div className="shadow-lg justify-center h-auto">
-                            <div className=" rounded border-gray-200 bg-white cursor-pointer hover:-translate-y-0.5 hover:shadow-lg group/item">
+                        <div className="justify-center h-auto">
+                            <div className="shadow-lg  rounded-md border-gray-200 bg-white cursor-pointer hover:-translate-y-0.5 hover:shadow-lg group/item">
                                 <div id="image" className='bg-[#f3f3f3]'>
                                     <img
                                         alt={content.name}
@@ -66,8 +66,9 @@ const Card = ({ content, isEnrolled, enrollmentContent }) => {
                                     </div>
                                     {!enrollmentContent && (
                                         <div className='flex mx-1 items-center gap-1'>
-                                            <Typography className='font-bold text-[#faaf00]'>{totalRatings?.averageRate.toFixed(1)}</Typography>
+                                            <Typography className='font-bold text-[#faaf00] text-sm'>{totalRatings?.averageRate.toFixed(1)}</Typography>
                                             <Rating readOnly value={totalRatings.averageRate} precision={0.5} size='small'></Rating>
+                                            <Typography className='font-light text-sm underline text-gray-500'>({totalRatings?.totalRatings})</Typography>
                                         </div>
 
                                     )}

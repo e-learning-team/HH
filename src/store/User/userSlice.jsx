@@ -5,6 +5,7 @@ export const initialState = {
     userData: null,
     token: "",
     avatarURL: defaultAvatar,
+    roles: [],
     // isLoading: false,
     message: ''
 };
@@ -18,13 +19,14 @@ export const userSlice = createSlice({
                 isLoggedIn: action.payload.isLoggedIn,
                 userData: action.payload.userData,
                 token: action.payload.token,
+                roles: action.payload.roles,
                 avatarURL: action.payload.avatarURL || defaultAvatar,
             };
         },
         // Add a new reducer to update the token
         updateToken: (state, action) => {
             console.log("---update token---");
-            console.log(`---${action.payload}---`);
+            // console.log(`---${action.payload}---`);
             state.token = action.payload;
         },
         updateAvatarURL: (state, action) => {
@@ -37,6 +39,7 @@ export const userSlice = createSlice({
             state.isLoggedIn = false;
             state.token = "";
             state.userData = null;
+            state.roles = [];
             state.message = '';
         },
     }

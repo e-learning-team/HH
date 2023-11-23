@@ -31,14 +31,15 @@ const UserEnrollment = () => {
     };
     useEffect(() => {
         document.title = "Khóa học đã đăng kí";
-        if (!isLoggedIn) {
-            toast.error("Bạn cần phải đăng nhập trước", {
-                position: toast.POSITION.TOP_RIGHT,
-            });
-            navigate(`/${Path.HOME}`);
-            return;
+        if (isLoggedIn) {
+            //     toast.error("Bạn cần phải đăng nhập trước", {
+            //         position: toast.POSITION.TOP_RIGHT,
+            //     });
+            //     navigate(`/${Path.HOME}`);
+            //     return;
+            // }
+            getMyEnrollment();
         }
-        getMyEnrollment();
     }, []);
     return (
         <div>
@@ -53,11 +54,11 @@ const UserEnrollment = () => {
                                 </div>
                             ) : ((enrollmentData.length > 0) ? (
                                 <>
-                                    {enrollmentData.map((enrollment) => (
-                                        <div key={enrollment.id} className='grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 '>
-                                            <Card content={enrollment.course} isEnrolled={true} enrollmentContent={enrollment} />
-                                        </div>
-                                    ))}
+                                    <div className='container grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mx-4'>
+                                        {enrollmentData.map((enrollment) => (
+                                            <Card key={enrollment.id} content={enrollment.course} isEnrolled={true} enrollmentContent={enrollment} />
+                                        ))}
+                                    </div>
                                 </>
                             ) : (
                                 <div></div>

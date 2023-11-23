@@ -1,7 +1,8 @@
 const Path={
     PUBLIC:'/',
     HOME:'',
-    COURSES:'courses/search/:keyword?',
+    COURSES:'courses/search/:keyword?/:categoryId?',
+    COURSES_CATEGORY:'courses/search/',
     COURSES_DETAIL: `courses/:slug`,
     LOGIN:'login',
     REGISTER:'register',

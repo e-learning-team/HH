@@ -103,7 +103,6 @@ const UserProfile = () => {
     };
     const handleUploadImg = async () => {
         if (isLoggedIn && userData && userData.id) {
-
             if (img) {
                 setImgLoading(true);
 
@@ -115,7 +114,6 @@ const UserProfile = () => {
             } else {
                 console.warn('No image selected for upload.');
             }
-
         }
     };
 
@@ -127,23 +125,22 @@ const UserProfile = () => {
     });
     useEffect(() => {
         document.title = "Thông tin cá nhân";
-
-        if (!isLoggedIn) {
-            toast.error("Bạn cần phải đăng nhập trước", {
-                position: toast.POSITION.TOP_RIGHT,
+        // if (!isLoggedIn) {
+        //     toast.error("Bạn cần phải đăng nhập trước", {
+        //         position: toast.POSITION.TOP_RIGHT,
+        //     });
+        //     navigate(`/${Path.HOME}`);
+        // } else {
+        if (userData) {
+            setProfilePayload({
+                email: userData.email || "",
+                full_name: userData.full_name || "",
+                address: userData.address || "",
+                phone_number: userData.phone_number || ""
             });
-            navigate(`/${Path.HOME}`);
-        } else {
-            if (userData) {
-                setProfilePayload({
-                    email: userData.email || "",
-                    full_name: userData.full_name || "",
-                    address: userData.address || "",
-                    phone_number: userData.phone_number || ""
-                });
-            }
-            setprofileLoading(false);
         }
+        setprofileLoading(false);
+        // }
     }, []);
     return (
         <>

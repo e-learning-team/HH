@@ -9,7 +9,10 @@ const Home = () => {
 
   const searchCourse = async () => {
     try {
-      const response = await apiGetCourse();
+      const params = {
+        search_type: "OFFICIAL"
+      };
+      const response = await apiGetCourse(params);
       if (response.data && response.data.data && response.data.data?.length > 0) {
         setCourseList(response.data);
         console.log(response.data);
@@ -29,7 +32,7 @@ const Home = () => {
     searchCourse();
   }, []);
   return (
-    <div className="pt-[120px] mb-[80px] flex justify-center">
+    <div className="pt-[40px] mb-[80px] flex justify-center">
       <div className="container grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mx-4">
         {loading ? (
           <>
@@ -40,7 +43,7 @@ const Home = () => {
         ) : (courseList.data?.length > 0 ?
           <>
             {courseList.data.map((course, index) => (
-              <Card key={index} content={course}  />
+              <Card key={index} content={course} />
             ))}
           </>
           : (
