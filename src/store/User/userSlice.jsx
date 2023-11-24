@@ -26,8 +26,11 @@ export const userSlice = createSlice({
         // Add a new reducer to update the token
         updateToken: (state, action) => {
             console.log("---update token---");
-            // console.log(`---${action.payload}---`);
-            state.token = action.payload;
+            console.log(`---${action.payload}---`);
+            return {
+                ...state,
+                token: action.payload && action.payload,
+            };
         },
         updateAvatarURL: (state, action) => {
             console.log("---update avatar---");
@@ -35,6 +38,7 @@ export const userSlice = createSlice({
             state.avatarURL = action.payload.avatarURL;
         },
         logout: (state, action) => {
+            console.log("---Logout---");
             state.avatarURL = defaultAvatar;
             state.isLoggedIn = false;
             state.token = "";

@@ -19,13 +19,16 @@ export function User() {
     const navigate = useNavigate();
     useEffect(() => {
         if (!isLoggedIn) {
-            toast.error("Bạn cần phải đăng nhập trước", {
+            toast.error("Vui lòng đăng nhập", {
                 position: toast.POSITION.TOP_RIGHT,
             });
             navigate(`/${Path.HOME}`);
             return;
         }
-    }, [isLoggedIn]);
+        return () => {
+            // Any cleanup code you want to run when the component is unmounted
+        };
+    }, []);
     return (
         <div className="flex relative w-full">
             <div className="fixed w-60 z-10 ">

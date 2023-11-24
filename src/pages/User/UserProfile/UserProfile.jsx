@@ -126,7 +126,7 @@ const UserProfile = () => {
     useEffect(() => {
         document.title = "Thông tin cá nhân";
         // if (!isLoggedIn) {
-        //     toast.error("Bạn cần phải đăng nhập trước", {
+        //     toast.error("Vui lòng đăng nhập", {
         //         position: toast.POSITION.TOP_RIGHT,
         //     });
         //     navigate(`/${Path.HOME}`);

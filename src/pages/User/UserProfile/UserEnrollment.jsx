@@ -32,7 +32,7 @@ const UserEnrollment = () => {
     useEffect(() => {
         document.title = "Khóa học đã đăng kí";
         if (isLoggedIn) {
-            //     toast.error("Bạn cần phải đăng nhập trước", {
+            //     toast.error("Vui lòng đăng nhập", {
             //         position: toast.POSITION.TOP_RIGHT,
             //     });
             //     navigate(`/${Path.HOME}`);

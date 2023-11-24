@@ -48,7 +48,6 @@ export const CourseRatingDialog = ({ open, setOpen, course, changeRate }) => {
                     });
                     setShowText(true);
                 }
-
             }
         } catch (e) {
             toast.error(`Đã có lỗi xảy ra`, {
@@ -59,7 +58,7 @@ export const CourseRatingDialog = ({ open, setOpen, course, changeRate }) => {
     };
     useEffect(() => {
         if (!isLoggedIn) {
-            toast.error("Bạn cần phải đăng nhập trước", {
+            toast.error("Vui lòng đăng nhập", {
                 position: toast.POSITION.TOP_RIGHT,
             });
             // navigate(`/${Path.HOME}`);

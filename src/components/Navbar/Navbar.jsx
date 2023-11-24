@@ -71,7 +71,7 @@ const Navbar = () => {
             }
         };
         fetchCategory();
-    }, [isLoggedIn]);
+    }, []);
 
     const renderCategory = (category) => {
         return (
@@ -93,18 +93,20 @@ const Navbar = () => {
             </Dropdown.Item>
         );
     };
-    const handleLogout = (() => {
+    const handleLogout = async () => {
         console.log("logout");
-        apiLogOut().then(() => {
+        try {
+            await apiLogOut();
             navigate(`/${Path.HOME}`);
-
             dispatch(logout());
             toast.success(`Đăng xuất thành công`, {
                 position: toast.POSITION.TOP_RIGHT,
             });
+        } catch (error) {
+            console.error("Logout failed:", error);
+            // Handle logout failure if needed
         }
-        );
-    });
+    };
     return (
         <div className='fixed z-50'>
             <div className='w-main  flex items-center gap-5  shadow-lg transition bg-white justify-between px-[20px]'>

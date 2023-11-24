@@ -144,7 +144,11 @@ const Courses = () => {
                         {!loading && (
                             <>
                                 <Typography className='font-bold text-base underline text-[#585b5e]'>
-                                    {`${(courseList?.data?.length)?.toLocaleString()} trên ${(courseList?.total)?.toLocaleString()}`}
+                                    {courseList?.data?.length ? (
+                                        <>
+                                            {`${(courseList?.data?.length)?.toLocaleString()} trên ${(courseList?.total)?.toLocaleString()}`}
+                                        </>
+                                    ): ('Không có')}
                                 </Typography>
                                 <Typography className='font-bold text-base text-[#8c9196]'>
                                     {` Kết quả`}
