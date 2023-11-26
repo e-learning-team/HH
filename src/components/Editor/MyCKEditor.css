@@ -4,5 +4,6 @@
 }
 .ck-editor__editable_inline:not(.ck-comment__input *) {
     height: 350px;
+    background-color: #f5f8ff;
     /* overflow-y: auto; */
 }

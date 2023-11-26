@@ -35,8 +35,6 @@ const LectureRegister = () => {
                 </div>
                 <div className='mb-5'>
                     <Typography className='font-normal text-base mb-2'>Mô tả về bản thân</Typography>
-                    {/* <Editor onTextChange={(e) => { }} style={{ height: '320px' }} /> */}
-                    {/* <MyQuillEditor/> */}
                     <MyCKEditor className={'max-w-[635px]'}/>
                 </div>
                 <span className='w-full bg-slate-300 h-[1px] my-4'></span>
