@@ -27,6 +27,7 @@
     "@reduxjs/toolkit": "^1.9.6",
     "autoprefixer": "^10.4.16",
     "axios": "^0.24.0",
+    "ckeditor5-custom-build": "file:./ckeditor5",
     "clsx": "^2.0.0",
     "cors": "^2.8.5",
     "primeflex": "^3.3.1",

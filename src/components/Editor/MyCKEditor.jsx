@@ -1,18 +1,19 @@
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { CKEditor,  } from '@ckeditor/ckeditor5-react';
-import React, { useState } from 'react';
+import React, { Component } from 'react';
+import Editor from 'ckeditor5-custom-build/build/ckeditor';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 import './MyCKEditor.css';
 export const MyCKEditor = () => {
-    
+
     return (
-        <div className='ckeditor-wrapper max-w-[635px]'>
+        <div className='ckeditor-wrapper max-w-[735px]'>
             <CKEditor
-                editor={ClassicEditor}
+                editor={Editor}
                 data=""
                 onReady={editor => {
                 }}
                 onChange={(event, editor) => {
                     const data = editor.getData();
+                    console.log(data)
                 }}
                 onBlur={(event, editor) => {
                 }}
