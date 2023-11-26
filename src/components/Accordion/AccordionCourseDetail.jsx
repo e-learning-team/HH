@@ -49,6 +49,7 @@ const CourseAccordion = React.memo(
             try {
                 if (check) {
                     onContentCheck && onContentCheck(content.id, check);
+                    console.log(content.id)
                     await apiMarkCompleteCourseEnrollment(enrollmentId, content.id);
                     // toast.success("Đã đánh dấu hoàn thành", {
                     //     position: toast.POSITION.TOP_RIGHT,

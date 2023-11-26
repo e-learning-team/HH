@@ -11,10 +11,10 @@ export const apiSaveEnrollment = (data) => axios({
     }
 });
 
-export const apiMarkCompleteCourseEnrollment = (enrollment_id, courseId) => axios({
-    url: `/enrollment/mark-completed/${enrollment_id}`,
+export const apiMarkCompleteCourseEnrollment = (enrollment_id, course_id) => axios({
+    url: `/enrollment/mark-completed/${enrollment_id}/${course_id}`,
     method: 'post',
-    data: courseId, 
+    // data: courseId, 
     headers: {
         'Authorization': ``,
     }

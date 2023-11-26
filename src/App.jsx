@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Path from './utils/path';
 import Public from './pages/Public';
@@ -13,9 +12,13 @@ import UserProfile from './pages/User/UserProfile/UserProfile';
 import UserEnrollment from './pages/User/UserProfile/UserEnrollment';
 import UserBookmark from './pages/User/UserProfile/UserBookmark';
 import PaymentHistory from './pages/User/UserProfile/PaymentHistory';
-import { Sidebar } from './components/Navbar/Sidebar';
 import CourseLearn from './pages/Courses/CourseLearn';
 import { User } from './pages/User/User';
+import LectureRegister from './pages/Lecturer/Lecturer/LectureRegister';
+import Lecture from './pages/Lecturer/Lecture';
+import LectureCourse from './pages/Lecturer/Lecturer/LectureCourse';
+
+
 function App() {
   return (
     <div className=''>
@@ -33,6 +36,13 @@ function App() {
             <Route path={Path.USER_P + Path.USER_HISTORY} element={<PaymentHistory />} />
           </Route>
         </Route>
+
+        <Route path={Path.LECTURE_P} element={<Lecture />}>
+          <Route path={Path.LECTURE_P + Path.LECTURE_COURSE} element={<LectureCourse />}/>
+          <Route path={Path.LECTURE_P + Path.LECTURE_REGISTER} element={<LectureRegister />} />
+          <Route path={Path.LECTURE_P + Path.LECTURE_SAVE_COURSE} />
+        </Route>
+
 
         <Route path={Path.COURSE_LEARN} element={<CourseLearn />} />
 

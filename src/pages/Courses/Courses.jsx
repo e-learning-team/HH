@@ -52,6 +52,9 @@ const Courses = () => {
             subcategoryIds.forEach(categoryId => {
                 paramsAPI.append('categories_ids', categoryId);
             });
+            categoryIds.forEach(categoryId => {
+                paramsAPI.delete('categories_ids', categoryId)
+            })
         }
         // setLoading(false)
         return paramsAPI;
@@ -112,7 +115,7 @@ const Courses = () => {
 
 
     return (
-        <div className={`pt-[40px] relative mb-[80px] h-screen justify-center ${loading ? 'pointer-events-none bg-slate-200 opacity-60 ' : ''}`}>
+        <div className={`pt-[40px] relative pb-[80px] h-screen justify-center ${loading ? 'pointer-events-none bg-slate-200 opacity-60 ' : ''}`}>
             <div className="container mx-auto md:max-w-6xl">
                 {/* {loading || ( */}
                 <div className='flex w-full ml-3 justify-between mb-8 pb-3'>
@@ -188,12 +191,12 @@ const Courses = () => {
 
                     </div>
                 </div>
-                {courseList?.totalPage > 0 && (
-                    <div className='flex justify-center'>
-                        <Pagination size='large' className='text-xl' onChange={handleChangePage} count={courseList?.totalPage} showFirstButton showLastButton />
+                {courseList?.total_page > 0 && (
+                    <div className='flex justify-center mb-[40px]'>
+                        <Pagination size='large' className='text-xl' onChange={handleChangePage} count={courseList?.total_page} showFirstButton showLastButton />
                     </div>
 
-                    // <Pagination totalPages={courseList?.totalPage} />
+                    // <Pagination total_pages={courseList?.totalPage} />
                 )}
             </div>
             {loading && (

@@ -121,26 +121,6 @@ const Navbar = () => {
                         <Dropdown title='Danh mục' openOnHover={true} position='right'>
                             {category.map((category) => renderCategory(category))}
                         </Dropdown>
-                        {/* <div className=' absolute top-[4.3rem] min-h-[20rem] min-w-[10rem] shadow-lg'>
-                        <div className='absolute w-[10rem] h-[20px] top-[-1rem] right-0'></div>
-                        <ul>
-                            <li className='px-5 py-2'>
-                                c-1
-                            </li>
-                            <li className='px-5 py-2'>
-                                c-2
-                            </li>
-                            <li className='px-5 py-2'>
-                                c-3
-                            </li>
-                            <li className='px-5 py-2'>
-                                c-4
-                            </li>
-                            <li className='px-5 py-2'>
-                                c-5
-                            </li>
-                        </ul>
-                    </div> */}
                     </div>
                     <div className='flex items-center w-1/2'>
                         <input

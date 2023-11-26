@@ -39,9 +39,9 @@ const CourseDeTail = () => {
         try {
             const response = await apiGetCourse({ slug: slug, build_child: true });
             if (!response.data && !response.data && response.data.data?.length === 0 || response.data?.data[0]?.level != 1) {
-                toast.error("Đã xảy ra lỗi", {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                // toast.error("Đã xảy ra lỗi", {
+                //     position: toast.POSITION.TOP_RIGHT,
+                // });
                 setIsError(true);
                 return;
             }
@@ -52,9 +52,9 @@ const CourseDeTail = () => {
             }
             document.title = response.data?.data[0].name;
         } catch (error) {
-            toast.error("Đã xảy ra lỗi", {
-                position: toast.POSITION.TOP_RIGHT,
-            });
+            // toast.error("Đã xảy ra lỗi", {
+            //     position: toast.POSITION.TOP_RIGHT,
+            // });
             setIsError(true);
             console.error("Error fetching course data", error);
             // return

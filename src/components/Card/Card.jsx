@@ -51,7 +51,7 @@ const Card = ({ content, isEnrolled, enrollmentContent }) => {
                                 </div>
                                 <div id="card-content" className='h-auto pb-1'>
                                     <div className="mx-1 mt-1.5">
-                                        <h3 className="font-bold line-clamp-2 group-hover/item:underline" title={content.name}>
+                                        <h3 className="font-bold line-clamp-1 group-hover/item:underline" title={content.name}>
                                             {content.name}
                                         </h3>
                                     </div>

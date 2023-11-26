@@ -24,6 +24,8 @@ export function User() {
             });
             navigate(`/${Path.HOME}`);
             return;
+        }else{
+            navigate(`${Path.USER_P}${Path.USER_PROFILE}`);
         }
         return () => {
             // Any cleanup code you want to run when the component is unmounted

@@ -17,7 +17,6 @@ import "primereact/resources/primereact.min.css";
 import "/node_modules/primeflex/primeflex.css";
 import userReducer from '../../store/User/userSlice';
 import { toast } from 'react-toastify';
-
 const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -29,9 +28,9 @@ const Login = () => {
     useEffect(() => {
         document.title = 'Đăng nhập';
         if (isLoggedIn) {
-            navigate(`/${Path.HOME}`);
+            navigate(-1)
         }
-    }, []);
+    }, [isLoggedIn]);
     const [invalidFields, setInvalidFields] = useState([]);
 
     const resetPayload = () => {
@@ -51,7 +50,7 @@ const Login = () => {
                 roles: rs.data.roles,
                 avatarURL: rs.data?.user?.avatar,
             }));
-            navigate(`/${Path.HOME}`);
+            // navigate(`/${Path.HOME}`);
             toast.success(`Đăng nhập thành công`, {
                 position: toast.POSITION.TOP_RIGHT,
             });

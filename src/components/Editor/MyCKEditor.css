@@ -1,0 +1,7 @@
+.ckeditor-wrapper {
+    height: 370px;
+}
+.ck-editor__editable_inline:not(.ck-comment__input *) {
+    height: 350px;
+    /* overflow-y: auto; */
+}
