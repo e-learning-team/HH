@@ -10,9 +10,9 @@ export const LectureSidebar = ({ handleHover }) => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const Menus = [
-        { title: "Khóa học", src: faTv, path: Path.LECTURE_P + Path.LECTURE_COURSE },
-        { title: "Số liệu", src: faArrowTrendUp, path: Path.LECTURE_P + "1" },
-        { title: "Học viên", src: faUsers, path: Path.LECTURE_P + "2" },
+        { title: "Khóa học", src: faTv, path: Path.LECTURER_P + Path.LECTURER_COURSE },
+        { title: "Số liệu", src: faArrowTrendUp, path: Path.LECTURER_P + "1" },
+        { title: "Học viên", src: faUsers, path: Path.LECTURER_P + "2" },
         // { title: "Accounts", src: "User", gap: true },
         // { title: "Schedule ", src: "Calendar" },
         // { title: "Search", src: "Search" },
@@ -35,7 +35,7 @@ export const LectureSidebar = ({ handleHover }) => {
                     className={` absolute cursor-pointer text-white font-bold text-lg -right-5 top-[18px] p-3 w-3 h-3 bg-slate-500 border-dark-purple border-2 rounded-full duration-300 ${open && "rotate-180"}`}
                 />
 
-                <div className="flex px-5 gap-x-4 py-3 items-center hover:bg-[#3e4143]" onClick={() => navigate(`${Path.LECTURE_P}`)}>
+                <div className="flex px-5 gap-x-4 py-3 items-center hover:bg-[#3e4143]" onClick={() => navigate(`${Path.LECTURER_P}`)}>
                     <img src={open ? fullLogoText : logoText} className={`cursor-pointer h-[55px]  ${!open && " "}`} />
                 </div>
                 <ul className="">

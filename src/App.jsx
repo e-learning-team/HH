@@ -37,10 +37,10 @@ function App() {
           </Route>
         </Route>
 
-        <Route path={Path.LECTURE_P} element={<Lecture />}>
-          <Route path={Path.LECTURE_P + Path.LECTURE_COURSE} element={<LectureCourse />}/>
-          <Route path={Path.LECTURE_P + Path.LECTURE_REGISTER} element={<LectureRegister />} />
-          <Route path={Path.LECTURE_P + Path.LECTURE_SAVE_COURSE} />
+        <Route path={Path.LECTURER_P} element={<Lecture />}>
+          <Route path={Path.LECTURER_P + Path.LECTURER_COURSE} element={<LectureCourse />}/>
+          <Route path={Path.LECTURER_P + Path.LECTURER_REGISTER} element={<LectureRegister />} />
+          <Route path={Path.LECTURER_P + Path.LECTURER_SAVE_COURSE} />
         </Route>
 
 

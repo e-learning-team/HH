@@ -19,11 +19,11 @@ const Path={
 
 
     //lecture
-    LECTURE_P: "/lecture/",
-    LECTURE_FIRST:'teach-header',
-    LECTURE_REGISTER:'register',
-    LECTURE_HOME: "",
-    LECTURE_COURSE: "course",
-    LECTURE_SAVE_COURSE: "save-course",
+    LECTURER_P: "/lecturer/",
+    LECTURER_FIRST:'teach-header',
+    LECTURER_REGISTER:'register',
+    LECTURER_HOME: "",
+    LECTURER_COURSE: "course",
+    LECTURER_SAVE_COURSE: "save-course",
 }
 export default Path

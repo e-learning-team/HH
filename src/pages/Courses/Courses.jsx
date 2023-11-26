@@ -41,7 +41,7 @@ const Courses = () => {
         paramsAPI.set('multi_value', searchParams.get('keyword') || '');
         paramsAPI.set('search_type', 'OFFICIAL');
         // paramsAPI.set('current_page', searchParams.get('page') || 1)
-        paramsAPI.set('max_result', 10);
+        paramsAPI.set('max_result', 3);
         paramsAPI.set('current_page', pageIndex || 1);
         if (categoryIds.length > 0) {
             categoryIds.forEach(categoryId => {
@@ -78,12 +78,13 @@ const Courses = () => {
         }
     };
     const handleChangePage = (event, value) => {
+        setCurrentPage(value)
         searchCourse(value);
     };
     const handleDeleteFilters = () => {
         console.log("Delete Filters");
         setLoading(true);
-
+        setCurrentPage(1)
         setSearchParams((currentSearchParams) => {
             const newSearchParams = new URLSearchParams(currentSearchParams.toString());
             const keywordValue = newSearchParams.get('keyword');
@@ -105,6 +106,8 @@ const Courses = () => {
     };
     useEffect(() => {
         setLoading(true);
+        setCurrentPage(1)
+        
         if (searchParams.get('category')) {
             setParentCategory(searchParams.get('category'));
         }
@@ -192,8 +195,8 @@ const Courses = () => {
                     </div>
                 </div>
                 {courseList?.total_page > 0 && (
-                    <div className='flex justify-center mb-[40px]'>
-                        <Pagination size='large' className='text-xl' onChange={handleChangePage} count={courseList?.total_page} showFirstButton showLastButton />
+                    <div className='flex justify-center mb-[40px] pb-[40px]'>
+                        <Pagination size='large' className='text-xl' page={currentPage} onChange={handleChangePage} count={courseList?.total_page} showFirstButton showLastButton />
                     </div>
 
                     // <Pagination total_pages={courseList?.totalPage} />

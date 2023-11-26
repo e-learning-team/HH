@@ -33,14 +33,15 @@ const LectureRegister = () => {
                             className="rounded-l-none p-3 outline-none duration-150 focus:bg-white border-gray-300 focus:!border-gray-900" />
                     </div>
                 </div>
-                <div className='mb-9'>
+                <div className='mb-5'>
                     <Typography className='font-normal text-base mb-2'>Mô tả về bản thân</Typography>
                     {/* <Editor onTextChange={(e) => { }} style={{ height: '320px' }} /> */}
                     {/* <MyQuillEditor/> */}
                     <MyCKEditor className={'max-w-[635px]'}/>
                 </div>
-                <div className='h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer border-[#829093] flex justify-center items-center'>
-                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                <span className='w-full bg-slate-300 h-[1px] my-4'></span>
+                <div className='h-[50px] border group/sort duration-200 hover:opacity-75 bg-[#3366cc] text-white cursor-pointer border-[#829093] flex justify-center items-center'>
+                    <Typography className='font-semibold text-base text-white duration-200 '>
                         Đăng kí
                     </Typography>
                 </div>
