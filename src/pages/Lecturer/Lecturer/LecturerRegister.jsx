@@ -1,10 +1,47 @@
-import { Input, Typography } from '@material-tailwind/react';
+import { Input, Spinner, Typography } from '@material-tailwind/react';
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Editor } from "primereact/editor";
 import { MyCKEditor } from '../../../components/Editor/MyCKEditor';
+import { apiLecturerRegister } from '../../../apis/user';
 // import {MyQuillEditor} from '../../../components/Editor/QuillEditor';
-const LectureRegister = () => {
+const LecturerRegister = () => {
+    const [loading, setLoading] = useState(false);
 
+    const [payload, setPayload] = useState({
+        phone_number: '',
+        profile_link: '',
+        description: ''
+    });
+
+    const handlePhoneNumberChange = (phoneNumber) => {
+        setPayload((prevPayload) => ({
+            ...prevPayload,
+            phone_number: phoneNumber,
+        }));
+        // console.log("---phoneNumber---", phoneNumber)
+
+    };
+
+    const handleProfileLinkChange = (profileLink) => {
+        setPayload((prevPayload) => ({
+            ...prevPayload,
+            profile_link: profileLink,
+        }));
+        // console.log("---profileLink---", profileLink)
+    };
+    const handleEditorData = (editorData) => {
+        setPayload((prevPayload) => ({
+            ...prevPayload,
+            description: editorData,
+        }));
+        // console.log("---editorData---", editorData)
+    };
+    const handleRegister = async () => {
+        setLoading(true);
+        await apiLecturerRegister(payload).finally(() => {
+            setLoading(false);
+        });
+    };
     return (
         // <form action='#'>
         <div className='h-full w-full flex justify-center items-center  min-w-[500px]'>
@@ -23,25 +60,32 @@ const LectureRegister = () => {
                         <Input
                             type="tel"
                             placeholder="Số điện thoại"
+                            onChange={(e) => handlePhoneNumberChange(e.target.value)}
                             className="rounded-l-none p-3 outline-none duration-150 focus:bg-white border-gray-300 focus:!border-gray-900" />
                     </div>
                     <div className='flex-1'>
                         <Typography className='font-normal text-base mb-2'>Link</Typography>
                         <Input
-                            type="tel"
+                            type="text"
                             placeholder="LinkedIn/Facebook/..."
+                            onChange={(e) => handleProfileLinkChange(e.target.value)}
                             className="rounded-l-none p-3 outline-none duration-150 focus:bg-white border-gray-300 focus:!border-gray-900" />
                     </div>
                 </div>
                 <div className='mb-5'>
                     <Typography className='font-normal text-base mb-2'>Mô tả về bản thân</Typography>
-                    <MyCKEditor className={'max-w-[635px]'}/>
+                    <MyCKEditor className={'max-w-[635px]'} handleData={handleEditorData} />
                 </div>
                 <span className='w-full bg-slate-300 h-[1px] my-4'></span>
-                <div className='h-[50px] border group/sort duration-200 hover:opacity-75 bg-[#3366cc] text-white cursor-pointer border-[#829093] flex justify-center items-center'>
+                <div onClick={()=>handleRegister()} className='h-[50px] relative border group/sort duration-200 hover:opacity-75 bg-[#3366cc] text-white cursor-pointer border-[#829093] flex justify-center items-center'>
                     <Typography className='font-semibold text-base text-white duration-200 '>
                         Đăng kí
                     </Typography>
+                    {loading && (
+                        <span className='bg-slate-400 absolute top-0 right-0 bottom-0 left-0 flex justify-center items-center'>
+                            <Spinner className='h-auto text-[#fff]' color="cyan" />
+                        </span>
+                    )}
                 </div>
             </div>
         </div>
@@ -49,5 +93,5 @@ const LectureRegister = () => {
     );
 };
 
-export default LectureRegister
+export default LecturerRegister
 

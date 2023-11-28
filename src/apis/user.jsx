@@ -38,4 +38,12 @@ export const apiConfirmForgetPassword = (data) => axios({
     method:'patch',
     data
 })
+export const apiLecturerRegister = (data) => axios({
+    url: '/user/lecturer/register',
+    method: 'post',
+    data,
+    headers: {
+        'Authorization': ``,
+    }
+})
 

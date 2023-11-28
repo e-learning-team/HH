@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { LectureSidebar } from '../../components/Navbar/LectureSidebar';
+import { LectureSidebar } from '../../components/Navbar/LecturerSidebar';
 import { Outlet } from 'react-router-dom';
 import { ProfileMenu } from '../../components/ProfileMenu/ProfileMenu';
 
-const Lecture = () => {
+const Lecturer = () => {
     const [isHover, setIsHover] = useState(false);
     const handleHover = (hover) => {
         setIsHover(hover);
@@ -35,5 +35,5 @@ const Lecture = () => {
     );
 };
 
-export default Lecture
+export default Lecturer
 

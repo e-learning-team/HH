@@ -20,6 +20,7 @@ const Path={
 
     //lecture
     LECTURER_P: "/lecturer/",
+    LECTURER_PROFILE:"profile",
     LECTURER_FIRST:'teach-header',
     LECTURER_REGISTER:'register',
     LECTURER_HOME: "",

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import './MyCKEditor.css';
 import { toast } from 'react-toastify';
 import { apiUploadFile } from '../../apis/fileRelationship';
-export const MyCKEditor = () => {
+export const MyCKEditor = ({handleData}) => {
     const { isLoggedIn, avatarURL, userData, token, isLoading, message } = useSelector((state) => state.user);
     const uploadAdapter = (loader) => {
         return {
@@ -37,7 +37,7 @@ export const MyCKEditor = () => {
         }
     }
     return (
-        <div className='ckeditor-wrapper max-w-[735px]'>
+        <div className='ckeditor-wrapper min-w-[735px] max-w-[735px]'>
             <CKEditor
                 editor={Editor}
                 config={{
@@ -48,7 +48,8 @@ export const MyCKEditor = () => {
                 }}
                 onChange={(event, editor) => {
                     const data = editor.getData();
-                    console.log(data);
+                    handleData && handleData(data)
+                    // console.log(data.toString());
                 }}
                 onBlur={(event, editor) => {
                 }}

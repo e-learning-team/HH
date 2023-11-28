@@ -14,9 +14,10 @@ import UserBookmark from './pages/User/UserProfile/UserBookmark';
 import PaymentHistory from './pages/User/UserProfile/PaymentHistory';
 import CourseLearn from './pages/Courses/CourseLearn';
 import { User } from './pages/User/User';
-import LectureRegister from './pages/Lecturer/Lecturer/LectureRegister';
-import Lecture from './pages/Lecturer/Lecture';
-import LectureCourse from './pages/Lecturer/Lecturer/LectureCourse';
+import LecturerRegister from './pages/Lecturer/Lecturer/LecturerRegister';
+import LecturerCourse from './pages/Lecturer/Lecturer/LecturerCourse';
+import LecturerProfile from './pages/Lecturer/Lecturer/LecturerProfile';
+import Lecturer from './pages/Lecturer/Lecturer';
 
 
 function App() {
@@ -37,9 +38,10 @@ function App() {
           </Route>
         </Route>
 
-        <Route path={Path.LECTURER_P} element={<Lecture />}>
-          <Route path={Path.LECTURER_P + Path.LECTURER_COURSE} element={<LectureCourse />}/>
-          <Route path={Path.LECTURER_P + Path.LECTURER_REGISTER} element={<LectureRegister />} />
+        <Route path={Path.LECTURER_P} element={<Lecturer />}>
+          <Route path={Path.LECTURER_P + Path.LECTURER_COURSE} element={<LecturerCourse />}/>
+          <Route path={Path.LECTURER_P + Path.LECTURER_PROFILE} element={<LecturerProfile />}/>
+          <Route path={Path.LECTURER_P + Path.LECTURER_REGISTER} element={<LecturerRegister />} />
           <Route path={Path.LECTURER_P + Path.LECTURER_SAVE_COURSE} />
         </Route>
 
