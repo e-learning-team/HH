@@ -133,11 +133,13 @@ const Navbar = () => {
                     </div>
                 </div>
                 <div className="flex h-full items-center gap-6  flex-2">
-                    <div className='h-full hover:underline cursor-pointer py-5 px-2'>
-                        <div className='text-gray-800 font-semibold '>
-                            Giảng dạy trên Wisdom
+                    <NavLink to={Path.LECTURER_P}>
+                        <div className='h-full hover:underline cursor-pointer py-5 px-2'>
+                            <div className='text-gray-800 font-semibold '>
+                                Giảng dạy trên Wisdom
+                            </div>
                         </div>
-                    </div>
+                    </NavLink>
                     <div className={clsx('flex justify-center items-center gap-5 ml-[10px]  mr-4')}>
                         {isLoggedIn ? (
                             <div className=''>

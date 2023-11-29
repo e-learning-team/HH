@@ -38,6 +38,14 @@ export const apiConfirmForgetPassword = (data) => axios({
     method:'patch',
     data
 })
+export const apiProfileUpdate = (data) => axios({
+    url: '/user/profile/update',
+    method: 'patch',
+    data,
+    headers: {
+        'Authorization': ``,
+    }
+})
 export const apiLecturerRegister = (data) => axios({
     url: '/user/lecturer/register',
     method: 'post',
@@ -45,5 +53,10 @@ export const apiLecturerRegister = (data) => axios({
     headers: {
         'Authorization': ``,
     }
+})
+export const apiUserDetail = (userId) => axios({
+    url: `/user/detail/${userId}`,
+    method: 'get',
+    // data,
 })
 

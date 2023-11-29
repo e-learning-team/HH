@@ -23,6 +23,19 @@ export const userSlice = createSlice({
                 avatarURL: action.payload.avatarURL || defaultAvatar,
             };
         },
+        lectureRegister: (state, action) => {
+            return {
+                ...state,
+                userData: action.payload.userData,
+                roles: action.payload.roles,
+            };
+        },
+        updateUser: (state, action) => {
+            return {
+                ...state,
+                userData: action.payload.userData,
+            };
+        },
         // Add a new reducer to update the token
         updateToken: (state, action) => {
             console.log("---update token---");
@@ -48,6 +61,6 @@ export const userSlice = createSlice({
         },
     }
 });
-export const { login, updateToken, updateAvatarURL, logout } = userSlice.actions;
+export const { login, lectureRegister, updateUser, updateToken, updateAvatarURL, logout } = userSlice.actions;
 export default userSlice.reducer;
 export const selectUserToken = (state) => state.user.token;

@@ -3,8 +3,15 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Editor } from "primereact/editor";
 import { MyCKEditor } from '../../../components/Editor/MyCKEditor';
 import { apiLecturerRegister } from '../../../apis/user';
+import { lectureRegister, login } from '../../../store/User/userSlice';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Path from '../../../utils/path';
 // import {MyQuillEditor} from '../../../components/Editor/QuillEditor';
 const LecturerRegister = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
     const [payload, setPayload] = useState({
@@ -34,17 +41,33 @@ const LecturerRegister = () => {
             ...prevPayload,
             description: editorData,
         }));
-        // console.log("---editorData---", editorData)
     };
     const handleRegister = async () => {
         setLoading(true);
-        await apiLecturerRegister(payload).finally(() => {
-            setLoading(false);
-        });
+        const rs = await apiLecturerRegister(payload);
+        console.log("---lecter data----", rs.data);
+        if (rs.status === 1) {
+            // console.log(rs.data?.user?.avatar)
+            dispatch(lectureRegister({
+                // isLoggedIn: true,
+                userData: rs.data,
+                // token: rs.data.token,
+                roles: rs.data.roles,
+                // avatarURL: rs.data?.user?.avatar,
+            }));
+            toast.success(`Đăng kí tài khoản giảng viên thành công`, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            navigate(`${Path.LECTURER_P + Path.LECTURER_COURSE}`);
+        } else {
+            toast.error(rs.message, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
     };
     return (
         // <form action='#'>
-        <div className='h-full w-full flex justify-center items-center  min-w-[500px]'>
+        <div className='h-full w-full flex justify-center items-center my-8 min-w-[500px]'>
             <div className='shadow-md border flex flex-col rounded-md  min-w-[500px]  p-10'>
                 <div className='flex mb-4 min-w-[500px] justify-center'>
                     <Typography className='font-medium text-lg'>Trở thành giảng viên ở </Typography> &nbsp;
@@ -77,7 +100,7 @@ const LecturerRegister = () => {
                     <MyCKEditor className={'max-w-[635px]'} handleData={handleEditorData} />
                 </div>
                 <span className='w-full bg-slate-300 h-[1px] my-4'></span>
-                <div onClick={()=>handleRegister()} className='h-[50px] relative border group/sort duration-200 hover:opacity-75 bg-[#3366cc] text-white cursor-pointer border-[#829093] flex justify-center items-center'>
+                <div onClick={() => handleRegister()} className='h-[50px] relative border group/sort duration-200 hover:opacity-75 bg-[#3366cc] text-white cursor-pointer border-[#829093] flex justify-center items-center'>
                     <Typography className='font-semibold text-base text-white duration-200 '>
                         Đăng kí
                     </Typography>

@@ -24,8 +24,11 @@ export function User() {
             });
             navigate(`/${Path.HOME}`);
             return;
-        }else{
-            navigate(`${Path.USER_P}${Path.USER_PROFILE}`);
+        } else {
+            const currentPath = window.location.pathname;
+            // console.log(currentPath)
+            if (currentPath === `/${Path.USER_P}`)
+                navigate(`${Path.USER_P}${Path.USER_PROFILE}`);
         }
         return () => {
             // Any cleanup code you want to run when the component is unmounted

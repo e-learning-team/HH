@@ -15,6 +15,19 @@ export function extractIdSlug(inputString) {
         return null; // Return null if no match is found
     }
 }
+export function htmlToJsx(htmlString) {
+    // Regular expression to match class and style attributes in HTML
+    const classRegex = /class\s*=\s*["']([^"']+)["']/g;
+    const styleRegex = /style\s*=\s*["']([^"']+)["']/g;
+
+    // Convert class attribute to className
+    const jsxStringWithClassName = htmlString.replace(classRegex, 'className={{ $1 }}');
+
+    // Convert style attribute to style object
+    const jsxStringWithStyle = jsxStringWithClassName.replace(styleRegex, 'style={{ $1 }}');
+
+    return jsxStringWithStyle;
+}
 export function calcRating(ratings) {
     if (ratings) {
         let totalRating = 0;
@@ -29,7 +42,7 @@ export function calcRating(ratings) {
         ratings.forEach(rating => {
             totalRating += rating.rate;
             ratingCounts[rating.rate]++;
-            totalRatings++
+            totalRatings++;
         });
         const averageRating = (ratings.length > 0 ? totalRating / ratings.length : 0).toFixed(1);
         const result = {
@@ -39,7 +52,7 @@ export function calcRating(ratings) {
         for (let i = 1; i <= 5; i++) {
             result[i] = ratingCounts[i];
         }
-        console.log("RATING CALC: ", result)
+        console.log("RATING CALC: ", result);
         return result;
     }
 }

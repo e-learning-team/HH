@@ -35,7 +35,7 @@ export const LectureSidebar = ({ handleHover }) => {
                     className={` absolute cursor-pointer text-white font-bold text-lg -right-5 top-[18px] p-3 w-3 h-3 bg-slate-500 border-dark-purple border-2 rounded-full duration-300 ${open && "rotate-180"}`}
                 />
 
-                <div className="flex px-5 gap-x-4 py-3 items-center hover:bg-[#3e4143]" onClick={() => navigate(`${Path.LECTURER_P}`)}>
+                <div className="flex px-5 gap-x-4 py-3 items-center hover:bg-[#3e4143]" onClick={() => navigate(`${Path.LECTURER_P}${Path.LECTURER_COURSE}`)}>
                     <img src={open ? fullLogoText : logoText} className={`cursor-pointer h-[55px]  ${!open && " "}`} />
                 </div>
                 <ul className="">
