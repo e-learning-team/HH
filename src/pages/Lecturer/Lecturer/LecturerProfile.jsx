@@ -167,6 +167,7 @@ const LecturerProfile = () => {
         }catch{
             toast.error("Đã xãy ra lỗi")
         }
+        setOnChangeCKEditor(false)
         setprofileLoading(false)
     }
     useEffect(() => {
