@@ -67,7 +67,7 @@ const Lecturer = () => {
         // if (isLoggedIn) {
         //     getUserDetail();
         // }
-        console.log('---lecturer change---')
+        // console.log('---lecturer change---')
     }, [userData]);
     return (
         <>
@@ -88,7 +88,7 @@ const Lecturer = () => {
                                 <ProfileMenu handleLogout={handleLogout} />
                             </div>
                         </div>
-                        <div className={`flex-1 min-h-[999px] mx-12 mt-3`}>
+                        <div className={`flex-1 min-h-[500px] mx-12 mt-3`}>
                             <div>
                                 <Outlet context={{ isLoggedIn, avatarURL, userData, token, isLoading, message }} />
                             </div>

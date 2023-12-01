@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Editor from 'ckeditor5-custom-build/build/ckeditor';
+// import Editor from 'ckeditor5-custom-build/build/ckeditor';
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-// import Editor from '@ckeditor/ckeditor5-build-classic/build/ckeditor'
+import Editor from '@ckeditor/ckeditor5-build-classic/build/ckeditor'
 // import Editor from './CustomCKEditor';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { useDispatch, useSelector } from 'react-redux';
