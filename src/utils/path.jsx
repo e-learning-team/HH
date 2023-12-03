@@ -26,5 +26,10 @@ const Path={
     LECTURER_HOME: "",
     LECTURER_COURSE: "course",
     LECTURER_SAVE_COURSE: "save/:courseId?",
+
+    //admin
+    ADMIN_P: "/admin/",
+    ADMIN_USER: "user",
+    ADMIN_COURSE: "course"
 }
 export default Path

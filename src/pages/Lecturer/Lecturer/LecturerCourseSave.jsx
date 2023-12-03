@@ -10,7 +10,7 @@ import { apiCategory } from '../../../apis/category';
 import { TreeSelect } from 'primereact/treeselect';
 import { data } from 'autoprefixer';
 import { MultiSelect } from 'primereact/multiselect';
-import './style.css';
+// import './style.css';
 // import {MyQuillEditor} from '../../../components/Editor/QuillEditor';
 const LecturerCourseSave = () => {
     const dispatch = useDispatch();

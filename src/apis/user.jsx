@@ -60,3 +60,26 @@ export const apiUserDetail = (userId) => axios({
     // data,
 })
 
+export const apiUserList = (params) => axios({
+    url: '/user/',
+    method: 'get',
+    params,
+})
+
+export const apiUpdateStatus = (userId, params) => axios({
+    url: `/user/lock/${userId}`,
+    method: 'post',
+    params,
+    headers: {
+        'Authorization': ``,
+    }
+})
+
+export const apiUpdateRoles = (userId, params) => axios( {
+    url: `/user/update-roles/${userId}`,
+    method: 'put',
+    params,
+    headers: {
+        'Authorization': ``,
+    }
+})

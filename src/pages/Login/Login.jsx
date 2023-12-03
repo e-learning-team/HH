@@ -28,7 +28,11 @@ const Login = () => {
     useEffect(() => {
         document.title = 'Đăng nhập';
         if (isLoggedIn) {
-            navigate(-1)
+            if(userData.roles.includes("ROLE_LECTURE")) {
+                navigate(`${Path.ADMIN_P}`)
+            } else{
+                navigate(-1)
+            }
         }
     }, [isLoggedIn]);
     const [invalidFields, setInvalidFields] = useState([]);
