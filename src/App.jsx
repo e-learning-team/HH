@@ -20,7 +20,8 @@ import LecturerProfile from './pages/Lecturer/Lecturer/LecturerProfile';
 import Lecturer from './pages/Lecturer/Lecturer';
 import LecturerCourseNew from './pages/Lecturer/Lecturer/LecturerCourseNew';
 import LecturerCourseSave from './pages/Lecturer/Lecturer/LecturerCourseSave';
-
+import Admin from './pages/Admin/Admin'
+import AdminUser from './pages/Admin/Admin/AdminUser';
 
 function App() {
   return (
@@ -48,7 +49,10 @@ function App() {
           <Route path={Path.LECTURER_P + Path.LECTURER_NEW_COURSE} element={<LecturerCourseNew/>}/>
           <Route path={Path.LECTURER_P + Path.LECTURER_SAVE_COURSE} element={<LecturerCourseSave/>}/>
         </Route>
-
+        <Route path={Path.ADMIN_P} element={<Admin/>}>
+          <Route path={Path.ADMIN_USER} element={<AdminUser/>}/>
+          <Route path={Path.ADMIN_COURSE}/>
+        </Route>
 
         <Route path={Path.COURSE_LEARN} element={<CourseLearn />} />
 
