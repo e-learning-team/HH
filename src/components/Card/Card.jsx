@@ -57,9 +57,9 @@ const Card = ({ content, isEnrolled, enrollmentContent }) => {
                                     </div>
 
                                     <div className="mx-1 mt-2 mb-1">
-                                        <div className="text-[13px] w-full flex justify-start items-center line-clamp-1" title={content.created_by}>
-                                            <Typography className='font-bold text-sm'>Tác giả </Typography>&nbsp;&nbsp;
-                                            <Typography className='text-sm'>
+                                        <div className="text-[13px] w-full flex justify-between items-center line-clamp-1" title={content.created_by}>
+                                            <Typography className='font-bold text-sm min-w-[46px]'>Tác giả </Typography>&nbsp;&nbsp;
+                                            <Typography className='min-w-[105px] flex justify-end text-sm line-clamp-1'>
                                                 {content.created_user_info[content.created_by]}
                                             </Typography>
                                         </div>
@@ -96,28 +96,28 @@ const Card = ({ content, isEnrolled, enrollmentContent }) => {
                                                 </div>
                                             </div>
                                             <div className="w-full">
-                                                <div className="mb-2 flex flex-col items-center justify-between ">
+                                                <div className="mb-2 flex flex-col items-center justify-between line-clamp-1">
                                                     <span className='w-full  flex justify-between items-center'>
-                                                        <>
-                                                            <Typography className='text-[13px] text-black font-bold' color="blue-gray">
+                                                        {/* <> */}
+                                                            <Typography className='text-[13px] min-w-[108px] text-black font-bold' color="blue-gray">
                                                                 Giá mua khóa học
                                                             </Typography>
-                                                            <Typography className='text-[13px] ' color="blue-gray">
+                                                            <Typography className='text-[13px] flex justify-end min-w-[70px]' color="blue-gray">
                                                                 {enrollmentContent.price_purchase ? `đ${enrollmentContent.price_purchase}` : "Miễn phí"}
                                                             </Typography>
-                                                        </>
+                                                        {/* </> */}
                                                     </span>
                                                 </div>
                                             </div>
                                             <div className="w-full">
                                                 <div className="flex flex-col items-center justify-between ">
                                                     <span className='w-full  flex justify-between items-start'>
-                                                        <Typography className='text-[13px] text-black font-bold' color="blue-gray">
+                                                        <Typography className='text-[13px] line-clamp-1 text-black font-bold' color="blue-gray">
                                                             Đánh giá khóa học
                                                         </Typography>
-                                                        <Tooltip title="Thay đổi đánh giá" placement="bottom" className='hover:border-b'>
+                                                        <Tooltip title="Thay đổi đánh giá" placement="bottom" className='min-w-[100px] hover:border-b'>
                                                             <Typography
-                                                                className='text-[13px] gap-1 flex flex-col items-end justify-start' color="blue-gray">
+                                                                className='text-[13px] gap-1 flex flex-col items-end justify-end' color="blue-gray">
                                                                 <Rating name="half-rating-read" readOnly className=" text-sm " value={myRate} precision={0.5} emptyIcon={<StarIcon className="" style={{ stroke: `#faaf00`, opacity: 0.55 }} fontSize="inherit" />} />
                                                                 <span
                                                                     onClick={(e) => {
@@ -126,7 +126,7 @@ const Card = ({ content, isEnrolled, enrollmentContent }) => {
                                                                         setOpenCourseRating(true);
                                                                     }}
                                                                     className='text-black font-medium'>
-                                                                    Thay đổi đánh giá
+                                                                    Thay đổi
                                                                 </span>
                                                             </Typography>
                                                         </Tooltip>

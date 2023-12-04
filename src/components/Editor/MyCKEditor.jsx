@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import './MyCKEditor.css';
 import { toast } from 'react-toastify';
 import { apiUploadFile } from '../../apis/fileRelationship';
-export const MyCKEditor = ({handleData, data}) => {
+export const MyCKEditor = ({handleData, data, parent_id, type, className}) => {
     const { isLoggedIn, avatarURL, userData, token, isLoading, message } = useSelector((state) => state.user);
     const uploadAdapter = (loader) => {
         return {
@@ -18,8 +18,8 @@ export const MyCKEditor = ({handleData, data}) => {
                     loader.file.then((file) => {
                         body.append("file", file);
                         const params = {
-                            parent_id: userData.id,
-                            parent_type: "USER_PROFILE_DESCRIPTION"
+                            parent_id: parent_id || userData.id,
+                            parent_type: type || "USER_PROFILE_DESCRIPTION"
                         };
                         apiUploadFile(body, params)
                             .then((res => res.data?.path_file))
@@ -40,7 +40,7 @@ export const MyCKEditor = ({handleData, data}) => {
         }
     }
     return (
-        <div className='ckeditor-wrapper min-w-[735px] max-w-[735px]'>
+        <div className={`ckeditor-wrapper min-w-[735px] max-w-[735px] ${className}`}>
             <CKEditor
                 editor={Editor}
                 config={{

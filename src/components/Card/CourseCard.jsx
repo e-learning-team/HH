@@ -5,6 +5,7 @@ import { RatingBar } from "../RatingBar/RatingBar";
 import noImg from '../../assets/no-image-icon.jpg';
 import { Rating, Typography } from "@mui/material";
 import { Chip } from "@material-tailwind/react";
+import Path from "../../utils/path";
 
 const CourseCard = ({ content }) => {
     const totalRatings = content?.course_ratings;
@@ -20,21 +21,25 @@ const CourseCard = ({ content }) => {
                 <div className="flex p-3  h-full min-w-[340px] max-w-[340px]  flex-col justify-between">
                     <div className="flex-1">
                         <Typography className="font-medium line-clamp-2">
+                            {content?.name}
+                            {/* Tên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa học
                             Tên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa học
-                            Tên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa học
-                            Tên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa học
+                            Tên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa học */}
                         </Typography>
                     </div>
                     <div className="flex gap-x-2 items-center">
                         <div className="flex gap-x-2">
-                            {content?.course_type == "DRAFT" && (
+                            {content?.courseType == "DRAFT" && (
                                 <Typography className={`font-medium bg-slate-600 text-sm text-white p-1 px-2 rounded-lg`}> Nháp </Typography>
                             )}
-                            {content?.course_type == "OFFICIAL" && (
+                            {content?.courseType == "OFFICIAL" && (
                                 <Typography className={`font-medium bg-[#3366cc] text-sm text-white p-1 px-2 rounded-lg`}> Live </Typography>
                             )}
-                            {content?.course_type == "WAITING" && (
+                            {content?.courseType == "WAITING" && (
                                 <Typography className={`font-medium bg-[#f97316] text-sm text-white p-1 px-2 rounded-lg`}> Chờ duyệt </Typography>
+                            )}
+                            {content?.courseType == "CHANGE_PRICE" && (
+                                <Typography className={`font-medium bg-[#f93016] text-sm text-white p-1 px-2 rounded-lg`}> Chờ duyệt giá tiền </Typography>
                             )}
                         </div>
                         <div className="flex gap-x-2">
@@ -43,7 +48,7 @@ const CourseCard = ({ content }) => {
                     </div>
                 </div>
 
-                {content?.course_type == "OFFICIAL" && (
+                {content?.courseType == "OFFICIAL" && (
                     <>
                         <div className="flex p-3 h-full min-w-[300px] max-w-[300px]  flex-wrap  flex-col justify-center">
                             <div className="flex  flex-col justify-center">
@@ -57,7 +62,7 @@ const CourseCard = ({ content }) => {
                             {/* )} */}
                         </div>
                         <div className="flex p-3 h-full min-w-[300px] max-w-[300px] border-r flex-wrap items-center flex-col justify-center">
-                            {/* {content?.course_type == "OFFICIAL" && ( */}
+                            {/* {content?.courseType == "OFFICIAL" && ( */}
                             <div className="flex gap-x-2 flex-col items-start justify-start">
                                 <div className="flex items-center gap-x-2">
                                     <Typography className='font-bold text-[#faaf00] '>{4.8}</Typography>
@@ -72,13 +77,13 @@ const CourseCard = ({ content }) => {
                     </>
                 )}
                 <div className="flex p-3 h-full w-full flex-col items-center  justify-center">
-                    <div className="flex flex-col items-start gap-y-2 justify-center">
+                    <div className="flex min-w-[145px] flex-col items-start gap-y-2 justify-center">
                         <Typography className='cursor-pointer hover:text-[#3366cc] font-medium text-[#373632] text-sm'>
                             Preview
                         </Typography>
-                        {(content?.course_type == "OFFICIAL" || content?.course_type == "DRAFT") && (
+                        {(content?.courseType == "OFFICIAL" || content?.courseType == "DRAFT") && (
                             <>
-                                {content?.course_type == "OFFICIAL" ? (
+                                {content?.courseType == "OFFICIAL" ? (
                                     <>
                                         <Typography className='cursor-pointer hover:text-[#3366cc] font-medium text-[#373632] text-sm'>
                                             <>Chi tiết đăng kí</>
@@ -88,16 +93,18 @@ const CourseCard = ({ content }) => {
                                         </Typography>
                                     </>
                                 ) : (
-                                    <Typography className='cursor-pointer hover:text-[#3366cc] font-medium text-[#373632] text-sm'>
-                                        Chỉnh sửa và xuất bản
-                                    </Typography>
+                                    <NavLink to={`${Path.LECTURER_P + Path.LECTURER_NEW_COURSE + content.id}`}>
+                                        <Typography className='cursor-pointer hover:text-[#3366cc] font-medium text-[#373632] text-sm'>
+                                            Chỉnh sửa và xuất bản
+                                        </Typography>
+                                    </NavLink>
                                 )}
                             </>
                         )}
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
         // </NavLink>
     );
 };

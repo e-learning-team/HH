@@ -18,6 +18,7 @@ import LecturerRegister from './pages/Lecturer/Lecturer/LecturerRegister';
 import LecturerCourse from './pages/Lecturer/Lecturer/LecturerCourse';
 import LecturerProfile from './pages/Lecturer/Lecturer/LecturerProfile';
 import Lecturer from './pages/Lecturer/Lecturer';
+import LecturerCourseNew from './pages/Lecturer/Lecturer/LecturerCourseNew';
 import LecturerCourseSave from './pages/Lecturer/Lecturer/LecturerCourseSave';
 
 
@@ -44,6 +45,7 @@ function App() {
         <Route path={Path.LECTURER_P} element={<Lecturer />}>
           <Route path={Path.LECTURER_P + Path.LECTURER_COURSE} element={<LecturerCourse />} />
           <Route path={Path.LECTURER_P + Path.LECTURER_PROFILE} element={<LecturerProfile />} />
+          <Route path={Path.LECTURER_P + Path.LECTURER_NEW_COURSE} element={<LecturerCourseNew/>}/>
           <Route path={Path.LECTURER_P + Path.LECTURER_SAVE_COURSE} element={<LecturerCourseSave/>}/>
         </Route>
 

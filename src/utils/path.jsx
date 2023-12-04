@@ -25,6 +25,7 @@ const Path={
     LECTURER_REGISTER:'register',
     LECTURER_HOME: "",
     LECTURER_COURSE: "course",
-    LECTURER_SAVE_COURSE: "save/:courseId?",
+    LECTURER_NEW_COURSE: "save/",
+    LECTURER_SAVE_COURSE: "save/:courseId",
 }
 export default Path

@@ -1,6 +1,6 @@
 .multiselect-container {
     width: 100%;
-    max-width: 735px;
+    /* max-width: 735px; */
 }
 .p-multiselect{
     background-color: #f5f8ff;

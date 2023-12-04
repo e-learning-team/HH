@@ -130,18 +130,6 @@ const LecturerProfile = () => {
             }
         }
     };
-    // const getUserDetail = async () => {
-    //     setprofileLoading(true);
-    //     const res = await apiUserDetail(userData?.id);
-    //     if (res?.data) {
-    //         setProfileData(res.data);
-    //         dispatch(updateUser({
-    //             userData: res.data
-    //         }));
-    //     }
-    //     // console.log(res?.data);
-    //     setprofileLoading(false);
-    // };
     const handleCKEditor = (bool) => {
         setOnChangeCKEditor(bool);
         if (!bool) {

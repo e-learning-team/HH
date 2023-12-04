@@ -1,6 +1,6 @@
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Typography } from '@material-tailwind/react';
+import { Spinner, Typography } from '@material-tailwind/react';
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import CourseCard from '../../../components/Card/CourseCard';
 import { NavLink, useNavigate, useOutletContext } from 'react-router-dom';
@@ -14,35 +14,38 @@ const LectureCourse = () => {
     const [myCourseList, setMyCourseList] = useState([]);
 
     const getMyCourse = async (pageIndex) => {
-        try {
-            // const paramsAPI = getParams(pageIndex);
-            const paramsAPI = {
-                created_by: userData?.id,
-                build_child: false
-            };
-            const response = await apiGetCourse(paramsAPI);
-            if (response?.data?.data?.length > 0) {
-                setCourseList(response.data);
-                console.log('---my course---', response.data);
-            }
-            else {
-                setMyCourseList([]);
-                console.log('---my course empty---');
+        if (!loading) {
+            setLoading(true);
+            try {
+                // const paramsAPI = getParams(pageIndex);
+                const paramsAPI = {
+                    created_by: userData?.id,
+                    build_child: false
+                };
+                const response = await apiGetCourse(paramsAPI);
+                if (response?.data?.data?.length > 0) {
+                    setMyCourseList(response.data);
+                    console.log('---my course---', response.data.data);
+                }
+                else {
+                    setMyCourseList([]);
+                    console.log('---my course empty---');
 
+                }
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching course data", error);
+                setMyCourseList([]);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
-        } catch (error) {
-            console.error("Error fetching course data", error);
-            setMyCourseList([]);
-        } finally {
-            setLoading(false);
         }
     };
     useEffect(() => {
         getMyCourse();
     }, []);
     return (
-        <div className='relative'>
+        <div className={`relative ${loading ? 'pointer-events-none' : ''}`}>
             <div className='mb-8'>
                 <Typography className='text-4xl font-serif font-medium text-black'>
                     Khóa học
@@ -83,22 +86,33 @@ const LectureCourse = () => {
             </div>
             {myCourseList.data?.length > 0 ? (
                 <>
-                    <CourseCard content={{ course_type: "OFFICIAL" }} />
-                    <CourseCard content={{ course_type: "DRAFT" }} />
-                    <CourseCard content={{ course_type: "WAITING" }} />
+                    {myCourseList?.data.map((content, index) => (
+                        <CourseCard key={index} content={content} />
+                    ))}
+                    {/* <CourseCard content={{ courseType: "DRAFT" }} />
+                    <CourseCard content={{ courseType: "WAITING" }} />
+                    <CourseCard content={{ courseType: "OFFICIAL" }} />
+                    <CourseCard content={{ courseType: "CHANGE_PRICE" }} /> */}
                 </>
             ) : (
                 <div className="border border-[#d1d7dc] mb-6 flex justify-center items-center h-[120px]">
                     <div className='flex flex-col items-center gap-y-2'>
                         <Typography>Chưa có khóa học</Typography>
-                        <div className='min-w-[8rem] h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
-                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                Tạo ngay
-                            </Typography>
-                        </div>
+                        <NavLink to={`${Path.LECTURER_P}save`}>
+                            <div className='min-w-[8rem] h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
+                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                    Tạo ngay
+                                </Typography>
+                            </div>
+                        </NavLink>
                     </div>
                 </div>
 
+            )}
+            {loading && (
+                <span className='bg-[#eaeef6] opacity-70 fixed z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
+                    <Spinner className='h-auto text-[#fff] w-20' color="cyan" />
+                </span>
             )}
         </div>
     );
