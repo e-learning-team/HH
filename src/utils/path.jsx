@@ -1,35 +1,36 @@
-const Path={
-    PUBLIC:'/',
-    HOME:'',
-    COURSES:'courses/search/:keyword?/:categoryId?',
-    COURSES_CATEGORY:'courses/search/',
+const Path = {
+    PUBLIC: '/',
+    HOME: '',
+    COURSES: 'courses/search/:keyword?/:categoryId?',
+    COURSES_CATEGORY: 'courses/search/',
     COURSES_DETAIL: `courses/:slug`,
     COURSE_LEARN: 'courses/learn/:slug',
-    LOGIN:'login',
-    REGISTER:'register',
-    FORGET_PASSWORD:'forget-password',
+    LOGIN: 'login',
+    REGISTER: 'register',
+    FORGET_PASSWORD: 'forget-password',
 
 
     //user
-    USER_P:"/user/",
-    USER_PROFILE:"profile",
-    USER_ENROLLMENT:"enrollment",
-    USER_BOOKMARK:"bookmark",
-    USER_HISTORY:"payment-history",
+    USER_P: "/user/",
+    USER_PROFILE: "profile",
+    USER_ENROLLMENT: "enrollment",
+    USER_BOOKMARK: "bookmark",
+    USER_HISTORY: "payment-history",
 
 
     //lecture
     LECTURER_P: "/lecturer/",
-    LECTURER_PROFILE:"profile",
+    LECTURER_PROFILE: "profile",
     // LECTURER_FIRST:'teach-header',
-    LECTURER_REGISTER:'register',
+    LECTURER_REGISTER: 'register',
     LECTURER_HOME: "",
     LECTURER_COURSE: "course",
-    LECTURER_SAVE_COURSE: "save/:courseId?",
+    LECTURER_NEW_COURSE: "save/",
+    LECTURER_SAVE_COURSE: "save/:courseId",
 
     //admin
     ADMIN_P: "/admin/",
     ADMIN_USER: "user",
     ADMIN_COURSE: "course"
-}
-export default Path
+};
+export default Path;
