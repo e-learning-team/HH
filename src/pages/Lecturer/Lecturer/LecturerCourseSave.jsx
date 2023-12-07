@@ -1,22 +1,15 @@
-import { Input, Spinner, Typography } from '@material-tailwind/react';
-import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { Editor } from "primereact/editor";
+import { Spinner, Typography } from '@material-tailwind/react';
+import React, { useEffect, useState } from 'react';
 import { MyCKEditor } from '../../../components/Editor/MyCKEditor';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import Path from '../../../utils/path';
 import { apiCategory } from '../../../apis/category';
-import { TreeSelect } from 'primereact/treeselect';
-import { data } from 'autoprefixer';
 import { MultiSelect } from 'primereact/multiselect';
-// import './style.css';
 import { apiGetCourse, apiSaveCourse } from '../../../apis/course';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare, faXmark } from '@fortawesome/free-solid-svg-icons';
-import Button from '../../../components/Button/Button';
+import { faFloppyDisk, faPen, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { apiDeleteFileByPathFile, apiUploadFile } from '../../../apis/fileRelationship';
-// import {MyQuillEditor} from '../../../components/Editor/QuillEditor';
 
 const IntroductionContent = ({ content, handleChange }) => {
     const [loading, setLoading] = useState(false);
@@ -210,10 +203,12 @@ const IntroductionContent = ({ content, handleChange }) => {
 const VideoContent = ({ content, handleChange }) => {
     const [fileInputRef, setFileInputRef] = useState(null);
     const [videoLoading, setVideoLoading] = useState(false);
+    const [loadingVideo, setLoadingVideo] = useState(true);
     const [video, setVideo] = useState(null);
     const [processing, setProcessing] = useState(false);
     const handleRemoveVideo = () => {
         setVideo(null);
+        setLoadingVideo(true);
         if (fileInputRef && fileInputRef.value) {
             fileInputRef.value = ''; // Reset the file input
         }
@@ -225,7 +220,6 @@ const VideoContent = ({ content, handleChange }) => {
         if (file) {
             if (file.type.includes("video")) {
                 setVideo(file);
-                // console.log(URL.createObjectURL(file));
             } else {
                 toast.error("Video không hợp lệ!", {
                     position: toast.POSITION.TOP_RIGHT,
@@ -283,9 +277,6 @@ const VideoContent = ({ content, handleChange }) => {
                 const videoUrl = await apiUploadFile(formData, params);
 
                 if (videoUrl && videoUrl.data?.path_file) {
-                    // dispatch(updateAvatarURL({
-                    //     avatarURL: newAvatarUrl.data?.path_file
-                    // }));
                     toast.success("Tải lên thành công!", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
@@ -304,7 +295,6 @@ const VideoContent = ({ content, handleChange }) => {
         setProcessing(false);
     };
     const handleUploadVideo = async () => {
-        // if (isLoggedIn && userData && userData.id) {
         if (video) {
             setVideoLoading(true);
             setProcessing(true);
@@ -319,7 +309,6 @@ const VideoContent = ({ content, handleChange }) => {
         } else {
             console.warn('No video selected for upload.');
         }
-        // }
     };
     useEffect(() => {
         console.log(content);
@@ -327,15 +316,15 @@ const VideoContent = ({ content, handleChange }) => {
     return (
         <>
             <div className='my-6 min-w-[300px] w-[600px]'>
-                <div className='w-full flex justify-between items-center mb-6 relative h-[40px] border rounded-sm border-[#003a47]'>
-                    <div className='mx-3 w-full h-full flex items-center '>
-                        <Typography className='cursor-default'>
-                            {video?.name || "Chưa có file được chọn"}
+                <div className='w-full flex justify-between items-center mb-6 relative h-[35px] border rounded-sm border-[#003a47]'>
+                    <div className='mx-3 w-full h-full flex items-center line-clamp-1  '>
+                        <Typography className='w-full !line-clamp-1 truncate cursor-default'>
+                            {`${(content?.video_path && !video) ? content?.video_path : (video ? video?.name : "Chưa có file được chọn")}`}
                         </Typography>
                         {video && (
-                            <span onClick={handleRemoveVideo} className='cursor-pointer h-full flex items-center justify-between px-3' title='Hủy' >
+                            <Typography onClick={handleRemoveVideo} className='cursor-pointer h-full flex items-center justify-between px-3' title='Hủy' >
                                 <FontAwesomeIcon className='' icon={faXmark} />
-                            </span>
+                            </Typography>
                         )}
                     </div>
                     <input
@@ -355,15 +344,18 @@ const VideoContent = ({ content, handleChange }) => {
                             <>
                                 {(content?.video_path && !video) ? (
                                     <>
+                                        {loadingVideo ? (
+                                            <div className='absolute flex justify-center items-center top-0 left-0 w-full h-full'>
+                                                <Spinner className='w-20 h-auto' color="teal" />
+                                            </div>
+                                        ) : <></>}
                                         <iframe
                                             className='w-full h-full'
                                             src={content?.video_path}
                                             allowFullScreen
-                                        // width="640"
-                                        // height="480"
-                                        // onLoad={handleLoadingVideo}
-                                        // allow="autoplay"
-                                        // autoPlay
+                                            onLoad={() => setLoadingVideo(false)}
+                                            allow="autoplay"
+                                            autoPlay
                                         >
                                             <p>Trình duyệt của bạn không có phép iframe.</p>
                                         </iframe>
@@ -374,7 +366,6 @@ const VideoContent = ({ content, handleChange }) => {
                                             <>
                                                 <video width="" className='w-full h-full' controls>
                                                     <source src={video ? URL.createObjectURL(video) : ''} type="video/mp4" />
-                                                    {/* <source src={video ? URL.createObjectURL(video) : ''} type="video/ogg" /> */}
                                                     Không hỗ trợ video.
                                                 </video>
                                             </>
@@ -410,10 +401,184 @@ const VideoContent = ({ content, handleChange }) => {
 };
 
 const CourseContent = ({ content }) => {
+    const [courses, setCourses] = useState([]);
+    
+    const handleInputChange = (event, index, level3Index = null) => {
+        const newCourses = [...courses];
+        if (level3Index !== null) {
+            newCourses[index].level3Courses[level3Index][event.target.name] = event.target.value;
+        } else {
+            newCourses[index][event.target.name] = event.target.value;
+        }
+        setCourses(newCourses);
+    };
+
+    const handleAddLevel3Course = (index) => {
+        const newCourses = [...courses];
+        newCourses[index].level3Courses.push({ contentType: '', title: '' });
+        setCourses(newCourses);
+    };
+
+    const handleDeleteLevel3Course = (index, level3Index) => {
+        const newCourses = [...courses];
+        newCourses[index].level3Courses.splice(level3Index, 1);
+        setCourses(newCourses);
+    };
+
+    const handleAddLevel2Course = () => {
+        setCourses([...courses, { title: '', level3Courses: [] }]);
+    };
+
+    const handleDeleteLevel2Course = (index) => {
+        const newCourses = [...courses];
+        newCourses.splice(index, 1);
+        setCourses(newCourses);
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        // Handle form submission here
+    };
+
+    const handleSaveCourse = (index) => {
+        const newCourses = [...courses];
+        newCourses[index].readOnly = true;
+        setCourses(newCourses);
+    };
+
+    const handleEditCourse = (index) => {
+        const newCourses = [...courses];
+        newCourses[index].readOnly = false;
+        setCourses(newCourses);
+    };
+
+    const handleSaveLevel3Course = (index, level3Index) => {
+        const newCourses = [...courses];
+        newCourses[index].level3Courses[level3Index].readOnly = true;
+        console.log(newCourses[index].level3Courses[level3Index].contentType)
+        setCourses(newCourses);
+        
+    };
+
+    const handleEditLevel3Course = (index, level3Index) => {
+        const newCourses = [...courses];
+        newCourses[index].level3Courses[level3Index].readOnly = false;
+        setCourses(newCourses);
+    };
+    useEffect(() => {
+        console.log(content)
+        setCourses(content?.children);
+    },[])
     return (
-        <div>
-            <p>This is the content for Nội dung khóa học with content: </p>
-        </div>
+        <form onSubmit={handleSubmit}>
+            {courses.map((course, index) => (
+                <div key={index} className={`p-3 bg-[#f7f9fa] shadow my-8 border border-black`}>
+                    <div className={`flex items-center gap-3 mb-3`}>
+                        <label className='flex gap-3 h-full  items-center'>
+                            <Typography className='font-bold min-w-[80px]'>Chương {index + 1}: </Typography>
+                            <div className='relative h-[40px] flex'>
+                                <input
+                                    type="text"
+                                    name="title"
+                                    value={course.title}
+                                    onChange={(event) => handleInputChange(event, index)}
+                                    placeholder='Tên chương'
+                                    className={` px-4 outline-none h-full  ${course.readOnly ? 'border-b border-[#003a47]' : 'border border-[#003a47]'}`}
+                                    readOnly={course.readOnly}
+                                />
+                            </div>
+                        </label>
+                        {course.readOnly ? (
+                            <div title='Thay đổi' onClick={() => handleEditCourse(index)} className='h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none border-[#003a47] flex justify-center items-center'>
+                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                    <FontAwesomeIcon icon={faPen} />
+                                </Typography>
+                            </div>
+                        ) : (
+                            <div title='Lưu' onClick={() => handleSaveCourse(index)} className='h-[40px] min-w-[40px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none border-[#003a47] flex justify-center items-center'>
+                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                    <FontAwesomeIcon icon={faFloppyDisk} />
+                                </Typography>
+                            </div>
+                        )}
+                        <div title='Xóa ' onClick={() => handleDeleteLevel2Course(index)} className=' h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
+                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                <FontAwesomeIcon icon={faTrash} />
+                            </Typography>
+                        </div>
+                    </div>
+                    {course.level3Courses.map((level3Course, level3Index) => (
+                        <div key={level3Index} className={`p-3 bg-white mb-2 border border-black`}>
+                            <div className='flex justify-between items-center gap-3'>
+                                <div>
+                                    <div className={`flex items-center gap-3 mb-3`}>
+                                        <label className='flex gap-3 h-full  items-center'>
+                                            <Typography className='font-bold '>Bài {(index + 1) + '.' + (level3Index + 1)}: </Typography>
+                                            <div className='relative h-[40px] flex'>
+                                                <input
+                                                    type="text"
+                                                    name="title"
+                                                    value={level3Course.title}
+                                                    onChange={(event) => handleInputChange(event, index, level3Index)}
+                                                    placeholder='Tiêu đề'
+                                                    className={` px-4 outline-none h-full  ${level3Course.readOnly ? 'border-b border-[#003a47]' : 'border border-[#003a47]'}`}
+                                                    readOnly={level3Course.readOnly}
+                                                />
+                                            </div>
+                                        </label>
+                                        {level3Course.readOnly ? (
+                                            <div onClick={() => handleEditLevel3Course(index, level3Index)} className='min-w-[40px] px-1 h-[40px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none border-[#003a47] flex justify-center items-center'>
+                                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                                    <FontAwesomeIcon icon={faPen} />
+                                                </Typography>
+                                            </div>
+                                        ) : (
+                                            <div onClick={() => handleSaveLevel3Course(index, level3Index)} className='min-w-[40px] h-[40px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none border-[#003a47] flex justify-center items-center'>
+                                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                                    <FontAwesomeIcon icon={faFloppyDisk} />
+                                                </Typography>
+                                            </div>
+                                        )}
+                                        <div onClick={() => handleDeleteLevel3Course(index, level3Index)} className='h-[40px] w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
+                                            <FontAwesomeIcon icon={faTrash} />
+                                        </div>
+                                    </div>
+                                    {(level3Course && level3Course.readOnly) && (
+                                        <>
+                                            <label>
+                                                <Typography className='font-bold'>Nội dung bài học</Typography>
+                                                <div className='flex items-center gap-3'>
+                                                    <Typography>Chọn loại nội dung:</Typography>
+                                                    <select disabled readOnly name="contentType" value={level3Course.contentType} onChange={(event) => handleInputChange(event, index, level3Index)}>
+                                                        {/* <option value="">Chọn loại nội dung</option> */}
+                                                        <option defaultValue={'VIDEO'} value="VIDEO">Video</option>
+                                                        {/* <option value="ARTICLE">Article</option> */}
+                                                        {/* <option value="QUIZ">Quiz</option> */}
+                                                    </select>
+                                                </div>
+                                            </label>
+                                            <VideoContent content={level3Course} />
+                                        </>
+                                    )}
+
+                                </div>
+
+                            </div>
+                        </div>
+                    ))}
+                    {(course && course.readOnly) && (
+                        <button type="button" onClick={() => handleAddLevel3Course(index)} className=' h-[40px] border group/sort duration-200  hover:bg-[#e5e6e9] px-1  cursor-pointer border-[#003a47] flex justify-center items-center'>
+                            Thêm mục trong chương
+                        </button>
+                    )}
+                </div>
+            ))}
+            <div onClick={handleAddLevel2Course} className=' h-[40px] border group/sort duration-200  hover:bg-[#2d2f31] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
+                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                    Thêm chương mới
+                </Typography>
+            </div>
+        </form>
     );
 };
 
@@ -430,7 +595,6 @@ const LecturerCourseSave = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { isLoggedIn, avatarURL, userData, token, isLoading, message } = useOutletContext();
-    // const [loading, setLoading] = useState(false);
     const [processing, setProcessing] = useState(true);
     const [change, setChange] = useState({});
     const [myCourse, setMyCourse] = useState({});
@@ -446,7 +610,6 @@ const LecturerCourseSave = () => {
             const response = await apiGetCourse(paramsAPI);
             if (response?.data?.data?.length > 0) {
                 setMyCourse(response.data?.data[0]);
-                // console.log('---my course---', response.data?.data[0]);
                 setCourseName(response.data?.data[0].name);
             }
             else {
@@ -465,7 +628,6 @@ const LecturerCourseSave = () => {
     const handleSaveCourse = async () => {
         setProcessing(true);
         const data = {
-            // ...myCourse,
             id: myCourse.id,
             name: courseName
         };
@@ -492,17 +654,12 @@ const LecturerCourseSave = () => {
     const handleChangeIntroductionContent = (data) => {
         setChange(data);
     };
-    // useEffect(() => {
-    //     getMyCourse();
-    //     setActiveTab('Thông tin giới thiệu');
-    // }, []);
     useEffect(() => {
         getMyCourse();
     }, [change]);
 
     return (
         <>
-            {/* {myCourse && ( */}
             <div className={`${processing ? 'pointer-events-none' : ''}`}>
                 <div className='flex justify-between items-center mb-4'>
                     <div className='flex items-end gap-x-2'>
@@ -512,7 +669,6 @@ const LecturerCourseSave = () => {
                                 <input onBlur={handleSaveCourse} value={courseName} type='text' onChange={(e) => setCourseName(e.target.value)} className='font-bold text-lg border-b-2 px-2 outline-none bg-[#f5f8ff]  focus:border-slate-500 rounded-sm' />
                                 <FontAwesomeIcon icon={faPenToSquare} />
                             </div>
-                            {/* <Typography className='font-bold text-lg'>{myCourse.name}</Typography> */}
                         </label>
                         <div className="flex h-full gap-x-2 items-end">
                             <div className="flex gap-x-2">
@@ -551,14 +707,13 @@ const LecturerCourseSave = () => {
                             </div>
                         ))}
                     </div>
-                    <div className='flex justify-end min-w-[165px]'>Lưu và xuất bản</div>
+                    <div className='flex justify-end min-w-[165px]'>Xuất bản</div>
                 </div>
                 <div className='p-3 shadow-md my-8 border  mb-4'>
                     <div className=''>
                         <div className='mb-4'>
                             <Typography className={`font-bold`}>{activeTab}</Typography>
                         </div>
-                        {/* Render content based on the active tab */}
                         {myCourse && (
                             <>
                                 {(activeTab === 'Thông tin giới thiệu') && (
@@ -582,8 +737,6 @@ const LecturerCourseSave = () => {
                 </div>
 
             </div>
-            {/* )} */}
-            {/* )} */}
             {processing && (
                 <span className='bg-[#eaeef6] opacity-70 fixed z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
                     <Spinner className='h-auto text-[#fff] w-20' color="cyan" />

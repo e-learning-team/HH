@@ -1,24 +1,16 @@
 import { Input, Spinner, Typography } from '@material-tailwind/react';
-import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { Editor } from "primereact/editor";
-import { MyCKEditor } from '../../../components/Editor/MyCKEditor';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Path from '../../../utils/path';
 import { apiCategory } from '../../../apis/category';
-import { TreeSelect } from 'primereact/treeselect';
-import { data } from 'autoprefixer';
 import { MultiSelect } from 'primereact/multiselect';
-// import './style.css';
-import { apiGetCourse, apiSaveCourse } from '../../../apis/course';
-// import {MyQuillEditor} from '../../../components/Editor/QuillEditor';
+import { apiSaveCourse } from '../../../apis/course';
 const LecturerCourseNew = () => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [processing, setProcessing] = useState(true);
-    const [categoryNodes, setCategoryNodes] = useState(null);
     const [categoryList, setCategoryList] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [payload, setPayload] = useState({
@@ -120,18 +112,6 @@ const LecturerCourseNew = () => {
             category_ids: ""
         }));
     };
-    const handleEditorDescription = (editorData) => {
-        setPayload((prevPayload) => ({
-            ...prevPayload,
-            description: editorData,
-        }));
-    };
-    const handleEditorRequireMent = (editorData) => {
-        setPayload((prevPayload) => ({
-            ...prevPayload,
-            requirement: editorData,
-        }));
-    };
     useEffect(() => {
         document.title = "Tạo khóa học";
     }, []);
@@ -213,7 +193,7 @@ const LecturerCourseNew = () => {
                 </div>
 
                 {processing && (
-                    <span className='bg-[#eaeef6] opacity-70 fixed z-10 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
+                    <span className='bg-[#eaeef6] opacity-70 fixed z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
                         <Spinner className='h-auto text-[#fff] w-20' color="cyan" />
                     </span>
                 )}
