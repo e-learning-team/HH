@@ -416,7 +416,7 @@ const CourseContent = ({ content }) => {
     const handleAddLevel3Course = (index) => {
         setLevel3Add(true);
         const newCourses = [...courses];
-        newCourses[index].children.push({ contentType: 'VIDEO', name: '' });
+        newCourses[index].children.push({ type: 'VIDEO', name: '' });
         setCourses(newCourses);
     };
 
@@ -452,11 +452,9 @@ const CourseContent = ({ content }) => {
         };
         console.log(data);
         const res = await apiSaveCourse(data);
-        console.log(res);
-        if (res?.data?.data) {
-            // console.log(res?.data?.data);
-            newCourses[index].id = res?.data?.data.id;
-            newCourses[index].name = res?.data?.data.name;
+        if (res?.data) {
+            newCourses[index].id = res?.data?.id;
+            newCourses[index].name = res?.data?.name;
         }
         newCourses[index].readOnly = true;
         setCourses(newCourses);
@@ -464,11 +462,16 @@ const CourseContent = ({ content }) => {
     };
 
     const handleEditCourse = (index, isReadOnly) => {
-        setLevel3Add(true);
+        // setLevel3Add(true);
         handleUnEditCourseAll();
         const newCourses = [...courses];
         newCourses[index].readOnly = isReadOnly;
+
         setCourses(newCourses);
+        if (!newCourses[index].id) {
+            console.log('---delete level 2 course---');
+            handleDeleteLevel2Course(index);
+        }
     };
 
     const handleSaveLevel3Course = async (index, level3Index) => {
@@ -481,18 +484,15 @@ const CourseContent = ({ content }) => {
             parent_id: newCourses[index].id,
             // level: 2
         };
-        console.log(data);
-        // const res = await apiSaveCourse(data);
-        // console.log(res);
-        // if (res?.data?.data) {
-        //     // console.log(res?.data?.data);
-        //     // newCourses[index].children[level3Index].id = res?.data?.data.id;
-        //     // newCourses[index].children[level3Index].name = res?.data?.data.name;
-        //     console.log('---save level 3 success---', res?.data?.data);
-        // }
-        // newCourses[index].children[level3Index].readOnly = true;
-        // newCourses[index].children[level3Index].showVideoContent = true;
-        // setCourses(newCourses);
+        const res = await apiSaveCourse(data);
+        console.log(res);
+        if (res?.data) {
+            newCourses[index].children[level3Index].id = res?.data?.id;
+            newCourses[index].children[level3Index].name = res?.data?.name;
+            newCourses[index].children[level3Index].readOnly = true;
+            newCourses[index].children[level3Index].showVideoContent = true;
+            setCourses(newCourses);
+        }
         setProcessing(false);
 
     };
@@ -503,6 +503,11 @@ const CourseContent = ({ content }) => {
         const newCourses = [...courses];
         newCourses[index].children[level3Index].readOnly = edit;
         setCourses(newCourses);
+
+        if (!newCourses[index].children[level3Index].id) {
+            console.log('---delete level 3 course---');
+            handleDeleteLevel3Course(index, level3Index);
+        }
     };
     const getCourseChild = async () => {
         setProcessing(true);
@@ -683,7 +688,7 @@ const CourseContent = ({ content }) => {
                                     </div>
                                 ) : (
                                     <>
-                                        <Typography className='font-medium'>Nội dung.......</Typography>
+                                        <Typography className='font-medium'>Nội dung {(index + 1) + '.' + (level3Index + 1)}.......</Typography>
                                     </>
                                 )}
                             </div>
