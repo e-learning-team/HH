@@ -8,7 +8,7 @@ import { apiCategory } from '../../../apis/category';
 import { MultiSelect } from 'primereact/multiselect';
 import { apiGetCourse, apiSaveCourse } from '../../../apis/course';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFloppyDisk, faPen, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faChevronUp, faFloppyDisk, faPen, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { apiDeleteFileByPathFile, apiUploadFile } from '../../../apis/fileRelationship';
 
 const IntroductionContent = ({ content, handleChange }) => {
@@ -233,7 +233,6 @@ const VideoContent = ({ content, handleChange }) => {
     const deleteVideo = async () => {
         const params = {
             path_file: content?.video_path,
-            // parent_type: "USER_AVATAR"
         };
         console.log('params----', content);
         if (video) {
@@ -246,19 +245,9 @@ const VideoContent = ({ content, handleChange }) => {
                         position: toast.POSITION.TOP_RIGHT,
                     });
                 }
-                // else {
-                //     toast.error(`Xóa video cũ không thành công thành công! ${res.message}`, {
-                //         position: toast.POSITION.TOP_RIGHT,
-                //     });
-                // }
                 setVideoLoading(false);
                 setProcessing(false);
             } catch (e) {
-                // console.error('Upload failed:', e);
-                // setVideoLoading(false);
-                // toast.error(`Xóa video cũ không thành công!`, {
-                //     position: toast.POSITION.TOP_RIGHT,
-                // });
             }
         }
     };
@@ -280,7 +269,7 @@ const VideoContent = ({ content, handleChange }) => {
                     toast.success("Tải lên thành công!", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
-                    handleRemoveVideo();
+                    // handleRemoveVideo();
                 }
 
             } catch (e) {
@@ -311,7 +300,7 @@ const VideoContent = ({ content, handleChange }) => {
         }
     };
     useEffect(() => {
-        console.log(content);
+        // console.log(content);
     }, []);
     return (
         <>
@@ -402,31 +391,43 @@ const VideoContent = ({ content, handleChange }) => {
 
 const CourseContent = ({ content }) => {
     const [courses, setCourses] = useState([]);
-    
+    const [processing, setProcessing] = useState(false);
+    const [level3Add, setLevel3Add] = useState(false);
+
     const handleInputChange = (event, index, level3Index = null) => {
         const newCourses = [...courses];
         if (level3Index !== null) {
-            newCourses[index].level3Courses[level3Index][event.target.name] = event.target.value;
+            newCourses[index].children[level3Index][event.target.name] = event.target.value;
         } else {
             newCourses[index][event.target.name] = event.target.value;
         }
         setCourses(newCourses);
     };
-
-    const handleAddLevel3Course = (index) => {
+    const handleUnEditCourseAll = () => {
         const newCourses = [...courses];
-        newCourses[index].level3Courses.push({ contentType: '', title: '' });
+        newCourses.forEach(course => {
+            course.readOnly = true;
+            course.children.forEach(child => {
+                child.readOnly = true;
+            });
+        });
+        setCourses(newCourses);
+    };
+    const handleAddLevel3Course = (index) => {
+        setLevel3Add(true);
+        const newCourses = [...courses];
+        newCourses[index].children.push({ contentType: 'VIDEO', name: '' });
         setCourses(newCourses);
     };
 
     const handleDeleteLevel3Course = (index, level3Index) => {
         const newCourses = [...courses];
-        newCourses[index].level3Courses.splice(level3Index, 1);
+        newCourses[index].children.splice(level3Index, 1);
         setCourses(newCourses);
     };
 
     const handleAddLevel2Course = () => {
-        setCourses([...courses, { title: '', level3Courses: [] }]);
+        setCourses([...courses, { name: '', children: [] }]);
     };
 
     const handleDeleteLevel2Course = (index) => {
@@ -440,145 +441,274 @@ const CourseContent = ({ content }) => {
         // Handle form submission here
     };
 
-    const handleSaveCourse = (index) => {
+    const handleSaveCourse = async (index) => {
+        setProcessing(true);
+        setLevel3Add(false);
         const newCourses = [...courses];
+        const data = {
+            id: courses[index].id || '',
+            name: courses[index].name,
+            parent_id: content?.id,
+        };
+        console.log(data);
+        const res = await apiSaveCourse(data);
+        console.log(res);
+        if (res?.data?.data) {
+            // console.log(res?.data?.data);
+            newCourses[index].id = res?.data?.data.id;
+            newCourses[index].name = res?.data?.data.name;
+        }
         newCourses[index].readOnly = true;
         setCourses(newCourses);
+        setProcessing(false);
     };
 
-    const handleEditCourse = (index) => {
+    const handleEditCourse = (index, edit) => {
+        setLevel3Add(true);
+        handleUnEditCourseAll();
+
         const newCourses = [...courses];
-        newCourses[index].readOnly = false;
+        newCourses[index].readOnly = edit;
         setCourses(newCourses);
     };
 
-    const handleSaveLevel3Course = (index, level3Index) => {
+    const handleSaveLevel3Course = async (index, level3Index) => {
+        setLevel3Add(false);
+        setProcessing(true);
         const newCourses = [...courses];
-        newCourses[index].level3Courses[level3Index].readOnly = true;
-        console.log(newCourses[index].level3Courses[level3Index].contentType)
-        setCourses(newCourses);
-        
+        const data = {
+            id: newCourses[index].children[level3Index].id || '',
+            name: newCourses[index].children[level3Index].name,
+            parent_id: newCourses[index].id,
+            // level: 2
+        };
+        console.log(data);
+        // const res = await apiSaveCourse(data);
+        // console.log(res);
+        // if (res?.data?.data) {
+        //     // console.log(res?.data?.data);
+        //     // newCourses[index].children[level3Index].id = res?.data?.data.id;
+        //     // newCourses[index].children[level3Index].name = res?.data?.data.name;
+        //     console.log('---save level 3 success---', res?.data?.data);
+        // }
+        // newCourses[index].children[level3Index].readOnly = true;
+        // newCourses[index].children[level3Index].showVideoContent = true;
+        // setCourses(newCourses);
+        setProcessing(false);
+
     };
 
-    const handleEditLevel3Course = (index, level3Index) => {
+    const handleEditLevel3Course = (index, level3Index, edit) => {
+        setLevel3Add(false);
+        handleUnEditCourseAll();
         const newCourses = [...courses];
-        newCourses[index].level3Courses[level3Index].readOnly = false;
+        newCourses[index].children[level3Index].readOnly = edit;
+        setCourses(newCourses);
+    };
+    const getCourseChild = async () => {
+        setProcessing(true);
+        try {
+            const paramsAPI = {
+                level: 2,
+                parent_ids: content?.id,
+                build_child: true,
+            };
+            const response = await apiGetCourse(paramsAPI);
+            if (response?.data?.data?.length > 0) {
+                const updatedCourses = response.data?.data.map(course => ({
+                    ...course,
+                    readOnly: true,
+                    children: course.children.map(child => ({
+                        ...child,
+                        readOnly: true
+                    }))
+                }));
+                console.log(updatedCourses);
+                setCourses(updatedCourses);
+            } else {
+                setCourses([]);
+            }
+        } catch (error) {
+            setCourses([]);
+        } finally {
+            setProcessing(false);
+        }
+    };
+    const handleShowContent = (index, level3Index) => {
+        const newCourses = [...courses];
+        newCourses[index].children[level3Index].showVideoContent = !newCourses[index].children[level3Index].showVideoContent;
         setCourses(newCourses);
     };
     useEffect(() => {
-        console.log(content)
-        setCourses(content?.children);
-    },[])
+        getCourseChild();
+
+        return () => {
+            setCourses([]);
+        };
+    }, []);
+
     return (
-        <form onSubmit={handleSubmit}>
-            {courses.map((course, index) => (
-                <div key={index} className={`p-3 bg-[#f7f9fa] shadow my-8 border border-black`}>
-                    <div className={`flex items-center gap-3 mb-3`}>
-                        <label className='flex gap-3 h-full  items-center'>
-                            <Typography className='font-bold min-w-[80px]'>Chương {index + 1}: </Typography>
-                            <div className='relative h-[40px] flex'>
-                                <input
-                                    type="text"
-                                    name="title"
-                                    value={course.title}
-                                    onChange={(event) => handleInputChange(event, index)}
-                                    placeholder='Tên chương'
-                                    className={` px-4 outline-none h-full  ${course.readOnly ? 'border-b border-[#003a47]' : 'border border-[#003a47]'}`}
-                                    readOnly={course.readOnly}
-                                />
-                            </div>
-                        </label>
-                        {course.readOnly ? (
-                            <div title='Thay đổi' onClick={() => handleEditCourse(index)} className='h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none border-[#003a47] flex justify-center items-center'>
-                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                    <FontAwesomeIcon icon={faPen} />
-                                </Typography>
-                            </div>
-                        ) : (
-                            <div title='Lưu' onClick={() => handleSaveCourse(index)} className='h-[40px] min-w-[40px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none border-[#003a47] flex justify-center items-center'>
-                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                    <FontAwesomeIcon icon={faFloppyDisk} />
-                                </Typography>
-                            </div>
-                        )}
-                        <div title='Xóa ' onClick={() => handleDeleteLevel2Course(index)} className=' h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
-                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                <FontAwesomeIcon icon={faTrash} />
-                            </Typography>
-                        </div>
-                    </div>
-                    {course.level3Courses.map((level3Course, level3Index) => (
-                        <div key={level3Index} className={`p-3 bg-white mb-2 border border-black`}>
-                            <div className='flex justify-between items-center gap-3'>
-                                <div>
-                                    <div className={`flex items-center gap-3 mb-3`}>
-                                        <label className='flex gap-3 h-full  items-center'>
-                                            <Typography className='font-bold '>Bài {(index + 1) + '.' + (level3Index + 1)}: </Typography>
-                                            <div className='relative h-[40px] flex'>
-                                                <input
-                                                    type="text"
-                                                    name="title"
-                                                    value={level3Course.title}
-                                                    onChange={(event) => handleInputChange(event, index, level3Index)}
-                                                    placeholder='Tiêu đề'
-                                                    className={` px-4 outline-none h-full  ${level3Course.readOnly ? 'border-b border-[#003a47]' : 'border border-[#003a47]'}`}
-                                                    readOnly={level3Course.readOnly}
-                                                />
-                                            </div>
-                                        </label>
-                                        {level3Course.readOnly ? (
-                                            <div onClick={() => handleEditLevel3Course(index, level3Index)} className='min-w-[40px] px-1 h-[40px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none border-[#003a47] flex justify-center items-center'>
-                                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                                    <FontAwesomeIcon icon={faPen} />
-                                                </Typography>
-                                            </div>
-                                        ) : (
-                                            <div onClick={() => handleSaveLevel3Course(index, level3Index)} className='min-w-[40px] h-[40px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none border-[#003a47] flex justify-center items-center'>
-                                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                                    <FontAwesomeIcon icon={faFloppyDisk} />
-                                                </Typography>
-                                            </div>
-                                        )}
-                                        <div onClick={() => handleDeleteLevel3Course(index, level3Index)} className='h-[40px] w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
-                                            <FontAwesomeIcon icon={faTrash} />
+        <div className='relative flex items-center min-h-[250px]'>
+            <form onSubmit={handleSubmit} className={`w-full ${processing ? 'pointer-events-none' : ''}`}>
+                {courses.map((course, index) => (
+                    <div key={index} className={`p-3 bg-slate-100 shadow mb-10 border border-black`}>
+                        <div className={`flex justify-between items-center gap-3 mb-3`}>
+                            <div className={`flex items-top gap-3`}>
+                                <label className='flex gap-3  mb-3 h-full items-center'>
+                                    <Typography className='font-bold min-w-[80px]'>Chương {index + 1}: </Typography>
+                                    <div className='relative h-[40px] flex'>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            value={course.name}
+                                            onChange={(event) => handleInputChange(event, index)}
+                                            placeholder='Tên chương'
+                                            className={` px-4 outline-none h-full border  ${course.readOnly ? 'border-b-[#003a47]' : 'border-[#003a47]'}`}
+                                            readOnly={course.readOnly}
+                                            autoFocus
+                                        />
+                                    </div>
+                                </label>
+                                {course.readOnly ? (
+                                    <div title='Thay đổi' onClick={() => handleEditCourse(index, false)} className='h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none  flex justify-center items-center'>
+                                        <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                            <FontAwesomeIcon className='text-xs' icon={faPen} />
+                                        </Typography>
+                                    </div>
+                                ) : (
+                                    <div className='flex gap-3'>
+                                        <div title='Lưu' onClick={() => handleSaveCourse(index)} className={`h-[40px] min-w-[40px] border group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:border-none  flex justify-center items-center`}>
+                                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
+                                                Lưu
+                                            </Typography>
+                                        </div>
+                                        <div title='Hủy' onClick={() => handleEditCourse(index, true)} className='h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer hover:border-none  flex justify-center items-center'>
+                                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                                Hủy
+                                            </Typography>
                                         </div>
                                     </div>
-                                    {(level3Course && level3Course.readOnly) && (
-                                        <>
-                                            <label>
-                                                <Typography className='font-bold'>Nội dung bài học</Typography>
-                                                <div className='flex items-center gap-3'>
-                                                    <Typography>Chọn loại nội dung:</Typography>
-                                                    <select disabled readOnly name="contentType" value={level3Course.contentType} onChange={(event) => handleInputChange(event, index, level3Index)}>
-                                                        {/* <option value="">Chọn loại nội dung</option> */}
-                                                        <option defaultValue={'VIDEO'} value="VIDEO">Video</option>
-                                                        {/* <option value="ARTICLE">Article</option> */}
-                                                        {/* <option value="QUIZ">Quiz</option> */}
-                                                    </select>
-                                                </div>
-                                            </label>
-                                            <VideoContent content={level3Course} />
-                                        </>
-                                    )}
-
-                                </div>
-
+                                )}
+                            </div>
+                            <div title='Xóa ' onClick={() => handleDeleteLevel2Course(index)} className=' h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
+                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                    <FontAwesomeIcon icon={faTrash} className='text-xs' />
+                                </Typography>
                             </div>
                         </div>
-                    ))}
-                    {(course && course.readOnly) && (
-                        <button type="button" onClick={() => handleAddLevel3Course(index)} className=' h-[40px] border group/sort duration-200  hover:bg-[#e5e6e9] px-1  cursor-pointer border-[#003a47] flex justify-center items-center'>
-                            Thêm mục trong chương
-                        </button>
-                    )}
+                        {course.children.map((level3Course, level3Index) => (
+                            <div key={level3Index} className={`p-3 ${(level3Index % 2 === 0) ? 'bg-[#fff]' : 'bg-[#fff]'} my-4 border hover:bg-[#defafc22] border-black`}>
+                                {course.readOnly ? (
+                                    <div className='flex justify-between items-center gap-3'>
+                                        <div className='w-full h-full'>
+                                            <div className={`flex justify-between w-full items-center gap-3`}>
+                                                <div className={`flex items-center gap-3`}>
+                                                    <label className='flex gap-3 h-full  items-center'>
+                                                        <Typography className='font-bold min-w-[60px]'>Bài giảng {(index + 1) + '.' + (level3Index + 1)}: </Typography>
+                                                        <div className='relative h-[40px] flex'>
+                                                            <input
+                                                                type="text"
+                                                                name="name"
+                                                                value={level3Course.name}
+                                                                onChange={(event) => handleInputChange(event, index, level3Index)}
+                                                                placeholder='Tiêu đề'
+                                                                className={` px-4 outline-none h-full  border  ${level3Course.readOnly ? 'border-b-[#003a47]' : 'border-[#003a47]'}`}
+                                                                readOnly={level3Course.readOnly}
+                                                                autoFocus={!level3Course.readOnly}
+                                                            />
+                                                        </div>
+                                                    </label>
+                                                    {level3Course.readOnly ? (
+                                                        <div onClick={() => handleEditLevel3Course(index, level3Index, false)} className='min-w-[40px] px-1 h-[40px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none flex justify-center items-center'>
+                                                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                                                <FontAwesomeIcon className='text-xs' icon={faPen} />
+                                                            </Typography>
+                                                        </div>
+                                                    ) : (
+                                                        <div className='flex gap-3'>
+                                                            <div title='Lưu' onClick={() => handleSaveLevel3Course(index, level3Index)} className='h-[40px] min-w-[40px] border group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:border-none flex justify-center items-center'>
+                                                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
+                                                                    Lưu
+                                                                </Typography>
+                                                            </div>
+                                                            <div title='Hủy' onClick={() => handleEditLevel3Course(index, level3Index, true)} className='h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer hover:border-none flex justify-center items-center'>
+                                                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                                                    Hủy
+                                                                </Typography>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    <div onClick={() => handleDeleteLevel3Course(index, level3Index)} className='h-[40px] w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
+                                                        <FontAwesomeIcon icon={faTrash} className='text-xs' />
+                                                    </div>
+                                                </div>
+                                                <div onClick={() => handleShowContent(index, level3Index)} className='h-[40px] hover:bg-slate-100 flex items-center justify-center cursor-pointer' title={`${level3Course.showVideoContent ? 'Xem nội dung' : 'Ẩn nội dung'}`}>
+                                                    {level3Course.showVideoContent ?
+                                                        (
+                                                            <Typography className='flex items-center gap-1 px-1 min-w-[110px]'>
+                                                                Ẩn nội dung
+                                                                <FontAwesomeIcon icon={faChevronUp} />
+                                                            </Typography>
+                                                        ) :
+                                                        (
+                                                            <Typography className='flex items-center gap-1 px-1 min-w-[110px]'>
+                                                                Hiện nội dung
+                                                                <FontAwesomeIcon icon={faChevronDown} />
+                                                            </Typography>
+                                                        )
+                                                    }
+                                                </div>
+                                            </div>
+                                            {(level3Course && level3Course.readOnly) && (
+                                                <>
+                                                    {level3Course.showVideoContent && (
+                                                        <div className='mt-3'>
+                                                            <label>
+                                                                <Typography className='font-bold'>Nội dung bài học</Typography>
+                                                                <div className='flex items-center gap-3'>
+                                                                    <Typography>Chọn loại nội dung:</Typography>
+                                                                    <select disabled readOnly name="contentType" value={level3Course.contentType} onChange={(event) => handleInputChange(event, index, level3Index)}>
+                                                                        {/* <option value="">Chọn loại nội dung</option> */}
+                                                                        <option defaultValue={'VIDEO'} value="VIDEO">Video</option>
+                                                                        {/* <option value="ARTICLE">Article</option> */}
+                                                                        {/* <option value="QUIZ">Quiz</option> */}
+                                                                    </select>
+                                                                </div>
+                                                            </label>
+                                                            <VideoContent content={level3Course} />
+                                                        </div>
+                                                    )}
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <Typography className='font-medium'>Nội dung.......</Typography>
+                                    </>
+                                )}
+                            </div>
+                        ))}
+                        {(course && course.readOnly && !level3Add) && (
+                            <button type="button" onClick={() => handleAddLevel3Course(index)} className=' h-[40px] border group/sort duration-200  hover:bg-[#e5e6e9] px-1  cursor-pointer border-[#003a47] flex justify-center items-center'>
+                                Thêm mục trong chương
+                            </button>
+                        )}
+                    </div>
+                ))}
+                <div onClick={handleAddLevel2Course} className='justify-self-center h-[40px] w-[200px] border group/sort duration-200  hover:bg-[#2d2f31] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
+                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                        Thêm chương mới
+                    </Typography>
                 </div>
-            ))}
-            <div onClick={handleAddLevel2Course} className=' h-[40px] border group/sort duration-200  hover:bg-[#2d2f31] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
-                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                    Thêm chương mới
-                </Typography>
-            </div>
-        </form>
+            </form>
+            {processing && (
+                <div className='absolute top-0 bottom-0 right-0 left-0 bg-slate-200 opacity-70 flex justify-center items-center'>
+                    <Spinner className='h-auto text-[#fff] w-20' color="cyan" />
+                </div>
+            )}
+        </div>
+
     );
 };
 
@@ -690,11 +820,11 @@ const LecturerCourseSave = () => {
                             </div>
                         </div>
                     </div>
-                    <div onClick={() => handleSaveCourse()} className='min-w-[3rem] h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none border-[#003a47] flex justify-center items-center'>
+                    {/* <div onClick={() => handleSaveCourse()} className='min-w-[3rem] h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none border-[#003a47] flex justify-center items-center'>
                         <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
                             Lưu
                         </Typography>
-                    </div>
+                    </div> */}
                 </div>
                 <div className='w-full flex justify-between items-center mb-4'>
                     <div className='flex items-center flex-wrap'>
@@ -707,7 +837,11 @@ const LecturerCourseSave = () => {
                             </div>
                         ))}
                     </div>
-                    <div className='flex justify-end min-w-[165px]'>Xuất bản</div>
+                    <div onClick={() => handleSaveCourse()} className='min-w-[12rem] px-2 h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-[#3366cc] border-[#003a47] flex justify-center items-center'>
+                        <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                            Xuất bản
+                        </Typography>
+                    </div>
                 </div>
                 <div className='p-3 shadow-md my-8 border  mb-4'>
                     <div className=''>
