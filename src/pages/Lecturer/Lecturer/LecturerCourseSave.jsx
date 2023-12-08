@@ -463,12 +463,11 @@ const CourseContent = ({ content }) => {
         setProcessing(false);
     };
 
-    const handleEditCourse = (index, edit) => {
+    const handleEditCourse = (index, isReadOnly) => {
         setLevel3Add(true);
         handleUnEditCourseAll();
-
         const newCourses = [...courses];
-        newCourses[index].readOnly = edit;
+        newCourses[index].readOnly = isReadOnly;
         setCourses(newCourses);
     };
 
@@ -689,7 +688,7 @@ const CourseContent = ({ content }) => {
                                 )}
                             </div>
                         ))}
-                        {(course && course.readOnly && !level3Add) && (
+                        {(course && course.readOnly) && (
                             <button type="button" onClick={() => handleAddLevel3Course(index)} className=' h-[40px] border group/sort duration-200  hover:bg-[#e5e6e9] px-1  cursor-pointer border-[#003a47] flex justify-center items-center'>
                                 Thêm mục trong chương
                             </button>
