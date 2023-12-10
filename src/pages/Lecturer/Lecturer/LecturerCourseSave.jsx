@@ -158,23 +158,25 @@ const IntroductionContent = ({ content, handleChange }) => {
                             <Typography className='text-red-500'>{errors.category_ids}</Typography>
                         </div>
                     </div>
-                    <div className='mb-5 w-full'>
-                        <Typography className='font-normal text-base mb-2'>Mô tả về khóa học</Typography>
-                        <MyCKEditor
-                            className={'min-w-full'}
-                            type={'COURSE_DESCRIPTION'}
-                            parent_id={content?.id}
-                            data={content?.description}
-                            handleData={handleEditorDescription}
-                        />
-                    </div>
-                    <div className='mb-5 w-full'>
-                        <Typography className='font-normal text-base mb-2'>Yêu cầu khóa học</Typography>
-                        <MyCKEditor
-                            className={'min-w-full'}
-                            data={content?.requirement}
-                            handleData={handleEditorRequireMent}
-                        />
+                    <div className='flex flex-wrap w-full justify-between items-center'>
+                        <div className='mb-5'>
+                            <Typography className='font-normal text-base mb-2'>Mô tả về khóa học</Typography>
+                            <MyCKEditor
+                                className={'min-w-full'}
+                                type={'COURSE_DESCRIPTION'}
+                                parent_id={content?.id}
+                                data={content?.description}
+                                handleData={handleEditorDescription}
+                            />
+                        </div>
+                        <div className='mb-5'>
+                            <Typography className='font-normal text-base mb-2'>Yêu cầu khóa học</Typography>
+                            <MyCKEditor
+                                className={'min-w-full'}
+                                data={content?.requirement}
+                                handleData={handleEditorRequireMent}
+                            />
+                        </div>
                     </div>
                     <span className='w-full bg-slate-300 h-[1px] my-4'></span>
                     <div
@@ -304,7 +306,7 @@ const VideoContent = ({ content, handleChange }) => {
     }, []);
     return (
         <>
-            <div className='my-6 min-w-[300px] w-[600px]'>
+            <div className='my-6 min-w-[300px] w-[715px]'>
                 <div className='w-full flex justify-between items-center mb-6 relative h-[35px] border rounded-sm border-[#003a47]'>
                     <div className='mx-3 w-full h-full flex items-center line-clamp-1  '>
                         <Typography className='w-full !line-clamp-1 truncate cursor-default'>
@@ -325,7 +327,7 @@ const VideoContent = ({ content, handleChange }) => {
                     />
                     <button onClick={() => fileInputRef && fileInputRef.click()} className="bg-[#3366cc] !rounded-none w-[100px] h-full ring-gray-300 hover:opacity-80 text-white" >Chọn</button>
                 </div>
-                <div className='w-full min-h-[230px] h-[300px] relative flex border rounded-sm border-[#003a47]'>
+                <div className='w-full min-h-[230px] h-[350px] relative flex border rounded-sm border-[#003a47]'>
                     <div className='relative h-full flex justify-center items-center  w-full bg-[#f0f2f4]'>
                         {videoLoading ? (
                             <Spinner className='w-[60px] object-cover object-center h-auto' color="teal" />
@@ -543,6 +545,29 @@ const CourseContent = ({ content }) => {
         newCourses[index].children[level3Index].showVideoContent = !newCourses[index].children[level3Index].showVideoContent;
         setCourses(newCourses);
     };
+    const handleChangeLevel3Description = (value, index, level3Index) => {
+        const newCourses = [...courses];
+        newCourses[index].children[level3Index].description = value;
+        setCourses(newCourses);
+    };
+    const handleSaveLevel3Description = async (index, level3Index) => {
+        const newCourses = [...courses];
+        // console.log('---save level 3 description---', newCourses[index].children[level3Index].description);
+        setProcessing(true);
+        const data = {
+            id: newCourses[index].children[level3Index].id || '',
+            parent_id: newCourses[index].id,
+            name: newCourses[index].children[level3Index].name,
+            description: newCourses[index].children[level3Index].description,
+        }
+        const res = await apiSaveCourse(data);
+        if (res?.data) {
+            // newCourses[index].children[level3Index].id = res?.data?.id;
+            newCourses[index].children[level3Index].description = res?.data?.description;
+            setCourses(newCourses);
+        }
+        setProcessing(false);
+    };
     useEffect(() => {
         getCourseChild();
 
@@ -556,7 +581,7 @@ const CourseContent = ({ content }) => {
             <form onSubmit={handleSubmit} className={`w-full ${processing ? 'pointer-events-none' : ''}`}>
                 {courses.map((course, index) => (
                     <div key={index} className={`p-3 bg-slate-100 shadow mb-10 border border-black`}>
-                        <div className={`flex justify-between items-center gap-3 mb-3`}>
+                        <div className={`flex justify-between items-center gap-3 mb-3 group/level2`}>
                             <div className={`flex items-top gap-3`}>
                                 <label className='flex gap-3  mb-3 h-full items-center'>
                                     <Typography className='font-bold min-w-[80px]'>Chương {index + 1}: </Typography>
@@ -574,7 +599,7 @@ const CourseContent = ({ content }) => {
                                     </div>
                                 </label>
                                 {course.readOnly ? (
-                                    <div title='Thay đổi' onClick={() => handleEditCourse(index, false)} className='h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none  flex justify-center items-center'>
+                                    <div title='Thay đổi' onClick={() => handleEditCourse(index, false)} className='hidden group-hover/level2:flex h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none  justify-center items-center'>
                                         <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
                                             <FontAwesomeIcon className='text-xs' icon={faPen} />
                                         </Typography>
@@ -594,7 +619,7 @@ const CourseContent = ({ content }) => {
                                     </div>
                                 )}
                             </div>
-                            <div title='Xóa ' onClick={() => handleDeleteLevel2Course(index)} className=' h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
+                            <div title='Xóa ' onClick={() => handleDeleteLevel2Course(index)} className='hidden group-hover/level2:flex h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] justify-center items-center'>
                                 <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
                                     <FontAwesomeIcon icon={faTrash} className='text-xs' />
                                 </Typography>
@@ -605,7 +630,7 @@ const CourseContent = ({ content }) => {
                                 {course.readOnly ? (
                                     <div className='flex justify-between items-center gap-3'>
                                         <div className='w-full h-full'>
-                                            <div className={`flex justify-between w-full items-center gap-3`}>
+                                            <div className={`group/level3 flex justify-between w-full items-center gap-3`}>
                                                 <div className={`flex items-center gap-3`}>
                                                     <label className='flex gap-3 h-full  items-center'>
                                                         <Typography className='font-bold min-w-[60px]'>Bài giảng {(index + 1) + '.' + (level3Index + 1)}: </Typography>
@@ -623,7 +648,7 @@ const CourseContent = ({ content }) => {
                                                         </div>
                                                     </label>
                                                     {level3Course.readOnly ? (
-                                                        <div onClick={() => handleEditLevel3Course(index, level3Index, false)} className='min-w-[40px] px-1 h-[40px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none flex justify-center items-center'>
+                                                        <div title='Thay đổi' onClick={() => handleEditLevel3Course(index, level3Index, false)} className='hidden group-hover/level3:flex min-w-[40px] px-1 h-[40px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none justify-center items-center'>
                                                             <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
                                                                 <FontAwesomeIcon className='text-xs' icon={faPen} />
                                                             </Typography>
@@ -642,7 +667,7 @@ const CourseContent = ({ content }) => {
                                                             </div>
                                                         </div>
                                                     )}
-                                                    <div onClick={() => handleDeleteLevel3Course(index, level3Index)} className='h-[40px] w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
+                                                    <div title='Xóa' onClick={() => handleDeleteLevel3Course(index, level3Index)} className='hidden group-hover/level3:flex h-[40px] w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] justify-center items-center'>
                                                         <FontAwesomeIcon icon={faTrash} className='text-xs' />
                                                     </div>
                                                 </div>
@@ -666,7 +691,7 @@ const CourseContent = ({ content }) => {
                                             {(level3Course && level3Course.readOnly) && (
                                                 <>
                                                     {level3Course.showVideoContent && (
-                                                        <div className='mt-3'>
+                                                        <div className='mt-6'>
                                                             <label>
                                                                 <Typography className='font-bold'>Nội dung bài học</Typography>
                                                                 <div className='flex items-center gap-3'>
@@ -679,7 +704,23 @@ const CourseContent = ({ content }) => {
                                                                     </select>
                                                                 </div>
                                                             </label>
-                                                            <VideoContent content={level3Course} />
+                                                            <div className='mt-3 flex flex-wrap justify-between'>
+                                                                <div className=''>
+                                                                    <Typography className='font-medium'>Video</Typography>
+                                                                    <VideoContent content={level3Course} />
+                                                                </div>
+                                                                <div className=''>
+                                                                    <Typography className='font-medium'>Mô tả</Typography>
+                                                                    <div className='my-6'>
+                                                                        <div title='Lưu' onClick={() => handleSaveLevel3Description(index, level3Index)} className='mb-6 h-[33px]  min-w-[40px] border border-[#003a47] group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:opacity-70 flex justify-center items-center'>
+                                                                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
+                                                                                Lưu
+                                                                            </Typography>
+                                                                        </div>
+                                                                        <MyCKEditor className={`max-w-[600px] max-h-[350px]`} data={level3Course.description} handleData={(value) => handleChangeLevel3Description(value, index, level3Index)} />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     )}
                                                 </>
@@ -743,13 +784,13 @@ const LecturerCourseSave = () => {
             };
             const response = await apiGetCourse(paramsAPI);
             if (response?.data?.data?.length > 0) {
+                document.title = response.data?.data[0].name;
                 setMyCourse(response.data?.data[0]);
                 setCourseName(response.data?.data[0].name);
             }
             else {
                 setMyCourse({});
                 console.log('---my course empty---');
-
             }
         } catch (error) {
             console.error("Error fetching course data", error);
@@ -789,12 +830,15 @@ const LecturerCourseSave = () => {
         setChange(data);
     };
     useEffect(() => {
+        document.title = 'Khóa học của tôi';
+    }, []);
+    useEffect(() => {
         getMyCourse();
     }, [change]);
 
     return (
         <>
-            <div className={`${processing ? 'pointer-events-none' : ''}`}>
+            <div className={`${processing ? 'pointer-events-none' : ''} mb-80`}>
                 <div className='flex justify-between items-center mb-4'>
                     <div className='flex items-end gap-x-2'>
                         <label className='flex flex-col justify-between items-start'>
@@ -841,7 +885,7 @@ const LecturerCourseSave = () => {
                             </div>
                         ))}
                     </div>
-                    <div onClick={() => handleSaveCourse()} className='min-w-[12rem] px-2 h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-[#3366cc] border-[#003a47] flex justify-center items-center'>
+                    <div onClick={() => { }} className='min-w-[12rem] px-2 h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-[#3366cc] border-[#003a47] flex justify-center items-center'>
                         <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
                             Xuất bản
                         </Typography>
