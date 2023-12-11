@@ -7,7 +7,8 @@ export const initialState = {
     avatarURL: defaultAvatar,
     roles: [],
     // isLoading: false,
-    message: ''
+    message: '',
+    course_payment: ''
 };
 export const userSlice = createSlice({
     name: 'user',
@@ -59,8 +60,14 @@ export const userSlice = createSlice({
             state.roles = [];
             state.message = '';
         },
+        coursePay : (state, action) => {
+            return {
+                ...state,
+                course_payment: action.payload.course_payment,
+            };
+        }
     }
 });
-export const { login, lectureRegister, updateUser, updateToken, updateAvatarURL, logout } = userSlice.actions;
+export const { login, lectureRegister, updateUser, updateToken, updateAvatarURL, logout, coursePay} = userSlice.actions;
 export default userSlice.reducer;
 export const selectUserToken = (state) => state.user.token;

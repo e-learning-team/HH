@@ -22,8 +22,10 @@ import { getVideoThumbnailGoogleGDriveUrl } from '../../utils/Constants';
 import { extractVideoGoogleGDriveUrlId, formatTimeStampTo_DDMMYYY, calcRating, extractIdSlug } from '../../utils/helper';
 import { apiGetCourse } from '../../apis/course';
 import { toast } from 'react-toastify';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { apiCheckEnrollment, apiSaveEnrollment } from '../../apis/enrollment';
+import { apiGetPaymentUrl } from '../../apis/invoice';
+import { coursePay } from '../../store/User/userSlice';
 
 const CourseDeTail = () => {
     const { isLoggedIn, userData, token, isLoading, message } = useSelector((state) => state.user);
@@ -34,7 +36,7 @@ const CourseDeTail = () => {
     const [isEnrolled, setIsEnrolled] = useState(false);
     const [totalRatings, setTotalRatings] = useState({});
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
     const getCurrentCourse = async () => {
         try {
             const response = await apiGetCourse({ slug: slug, build_child: true });
@@ -65,16 +67,31 @@ const CourseDeTail = () => {
     };
     const handleEnroll = async () => {
         console.log("CLICK enroll");
+        setLoading(true)
         if (!isLoggedIn || !userData) {
             toast.warning(`Vui lòng đăng nhập trước`, {
                 position: toast.POSITION.TOP_RIGHT,
             });
+            setLoading(false)
             return;
         }
         const data = {
             user_id: userData.id,
             course_id: extractIdSlug(slug),
         };
+        //Kiểm tra nếu có giá tiền thì thanh toán trc khi enroll
+        if (course.data[0]?.price_sell > 0) {
+            const response = await apiGetPaymentUrl(data.course_id, data.user_id);
+            if (response.status === 0) { 
+                toast.error(`${response.message}`, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            } else {
+                dispatch(coursePay({course_payment: slug}))
+                window.location.href = response;
+                return;
+            }
+        }
         const res = await apiSaveEnrollment(data);
         if (res.status == 1) {
             toast.success(`Đăng kí thành công\nChuyển hướng đến trang học`, {
@@ -87,6 +104,7 @@ const CourseDeTail = () => {
                 position: toast.POSITION.TOP_RIGHT,
             });
         }
+        setLoading(false)
     };
     const checkEnroll = async (course_id) => {
         const res = await apiCheckEnrollment(course_id);
