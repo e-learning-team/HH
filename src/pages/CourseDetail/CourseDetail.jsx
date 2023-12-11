@@ -67,10 +67,12 @@ const CourseDeTail = () => {
     };
     const handleEnroll = async () => {
         console.log("CLICK enroll");
+        setLoading(true)
         if (!isLoggedIn || !userData) {
             toast.warning(`Vui lòng đăng nhập trước`, {
                 position: toast.POSITION.TOP_RIGHT,
             });
+            setLoading(false)
             return;
         }
         const data = {
@@ -87,6 +89,7 @@ const CourseDeTail = () => {
             } else {
                 dispatch(coursePay({course_payment: slug}))
                 window.location.href = response;
+                return;
             }
         }
         const res = await apiSaveEnrollment(data);
@@ -101,6 +104,7 @@ const CourseDeTail = () => {
                 position: toast.POSITION.TOP_RIGHT,
             });
         }
+        setLoading(false)
     };
     const checkEnroll = async (course_id) => {
         const res = await apiCheckEnrollment(course_id);
