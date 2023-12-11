@@ -6,3 +6,30 @@ export const apiCategory=(params)=>axios({
     params,
     // withCredentials: true
 })
+
+export const apiCreateCategory=(data) =>axios({
+    url:'/category/create',
+    method:'post',
+    data,
+    headers: {
+        'Authorization': ``,
+    }
+})
+
+export const apiDeleteCategory=(id) => axios({
+    url:`/category/delete/${id}`,
+    method:'delete',
+    headers: {
+        'Authorization': ``,
+    }
+})
+
+//api update-name 
+export const apiUpdateCategoryName=(id,data) => axios({
+    url:`/category/update-name/${id}`,
+    method:'put',
+    data,
+    headers: {
+        'Authorization': ``,
+    }
+})

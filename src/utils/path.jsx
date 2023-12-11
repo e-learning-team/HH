@@ -8,6 +8,7 @@ const Path = {
     LOGIN: 'login',
     REGISTER: 'register',
     FORGET_PASSWORD: 'forget-password',
+    VNPAY_RETURN: 'vnpay-return',
 
 
     //user
@@ -31,6 +32,7 @@ const Path = {
     //admin
     ADMIN_P: "/admin/",
     ADMIN_USER: "user",
-    ADMIN_COURSE: "course"
-};
-export default Path;
+    ADMIN_COURSE: "course",
+    ADMIN_CATEGORY: "category"
+}
+export default Path

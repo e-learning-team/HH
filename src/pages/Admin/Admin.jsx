@@ -38,33 +38,27 @@ const Admin = () => {
                 userData: res.data
             }));
         }
-        // console.log(res?.data);
         setLoading(false);
     };
     useEffect(() => {
         if (isLoggedIn) {
             getUserDetail();
-            if (userData.roles.includes("ROLE_ADMIN")) {
+            if (userData.roles.includes("ROLE_ADMIN") || userData.roles.includes("ROLE_MANAGER")) {
                 const currentPath = window.location.pathname.normalize();
-                if (currentPath === `${Path.ADMIN_P.trim()}` || currentPath === `/admin`) {
+                if (currentPath === `${Path.ADMIN_P.trim()}` || currentPath === `/admin` || currentPath === `/admin/`) {
                     navigate(Path.ADMIN_P + Path.ADMIN_USER);
                 }
+            } else {
+                navigate(`/${Path.HOME}`);
             }
         } else {
             navigate(`/${Path.LOGIN}`);
             toast.warning("Hãy đăng nhập trước");
         }
-
     }, []);
-    useEffect(() => {
-        // if (isLoggedIn) {
-        //     getUserDetail();
-        // }
-        // console.log('---lecturer change---')
-    }, [userData]);
     return (
         <>
-            {isLoggedIn && userData.roles.includes("ROLE_LECTURE") && (
+            {isLoggedIn && (
                 <div className="flex  w-full">
                     <AdminSidebar className='' handleHover={handleHover} />
                     <div className={`w-full duration-500  ml-20 ${isHover && 'ml-[13rem]'}`}>
