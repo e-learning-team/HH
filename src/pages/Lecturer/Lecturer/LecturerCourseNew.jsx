@@ -158,24 +158,11 @@ const LecturerCourseNew = () => {
                                         options={categoryList} optionLabel="title"
                                         display="chip"
                                         placeholder="Chọn danh mục"
-                                        // maxSelectedLabels={3}
                                         className="w-full md:w-20rem" />
                                 </div>
                                 <Typography className='text-red-500'>{errors.category_ids}</Typography>
                             </div>
                         </div>
-                        {/* <div className='mb-5'>
-                            <Typography className='font-normal text-base mb-2'>Mô tả về khóa học</Typography>
-                            <MyCKEditor className={'max-w-[635px]'}
-                                handleData={handleEditorDescription}
-                            />
-                        </div>
-                        <div className='mb-5'>
-                            <Typography className='font-normal text-base mb-2'>Yêu cầu khóa học</Typography>
-                            <MyCKEditor className={'max-w-[635px]'}
-                                handleData={handleEditorRequireMent}
-                            />
-                        </div> */}
                         <span className='w-full bg-slate-300 h-[1px] my-4'></span>
                         <div
                             onClick={() => handleCreateCourse()}

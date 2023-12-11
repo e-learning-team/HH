@@ -27,6 +27,8 @@ const Path = {
     LECTURER_COURSE: "course",
     LECTURER_NEW_COURSE: "save/",
     LECTURER_SAVE_COURSE: "save/:courseId",
+    LECTURER_COURSE_PREVIEW_DETAIL: 'courses/:slug/preview',
+    LECTURER_COURSE_PREVIEW_LEARN: 'courses/learn/:slug/preview',
 
     //admin
     ADMIN_P: "/admin/",
