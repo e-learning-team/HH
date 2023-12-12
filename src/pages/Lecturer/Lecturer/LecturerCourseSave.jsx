@@ -6,11 +6,17 @@ import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { apiCategory } from '../../../apis/category';
 import { MultiSelect } from 'primereact/multiselect';
-import { apiGetCourse, apiSaveCourse } from '../../../apis/course';
+import { apiGetCourse, apiLecturePublishCourse, apiSaveCourse } from '../../../apis/course';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp, faFloppyDisk, faPen, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { apiDeleteFileByPathFile, apiUploadFile } from '../../../apis/fileRelationship';
-
+import { Tooltip } from '@mui/material';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 const IntroductionContent = ({ content, handleChange }) => {
     const [loading, setLoading] = useState(false);
     const [processing, setProcessing] = useState(true);
@@ -152,43 +158,59 @@ const IntroductionContent = ({ content, handleChange }) => {
                                     options={categoryList} optionLabel="title"
                                     display="chip"
                                     placeholder="Chọn danh mục"
+                                    disabled={content?.courseType !== "DRAFT"}
                                     // maxSelectedLabels={3}
                                     className="max-w-full min-w-full md:w-20rem" />
                             </div>
                             <Typography className='text-red-500'>{errors.category_ids}</Typography>
                         </div>
                     </div>
-                    <div className='mb-5 w-full'>
-                        <Typography className='font-normal text-base mb-2'>Mô tả về khóa học</Typography>
-                        <MyCKEditor
-                            className={'min-w-full'}
-                            type={'COURSE_DESCRIPTION'}
-                            parent_id={content?.id}
-                            data={content?.description}
-                            handleData={handleEditorDescription}
-                        />
-                    </div>
-                    <div className='mb-5 w-full'>
-                        <Typography className='font-normal text-base mb-2'>Yêu cầu khóa học</Typography>
-                        <MyCKEditor
-                            className={'min-w-full'}
-                            data={content?.requirement}
-                            handleData={handleEditorRequireMent}
-                        />
+                    <div className='flex flex-wrap w-full justify-between items-center'>
+                        <div className='mb-5'>
+                            <Typography className='font-normal text-base mb-2'>Mô tả về khóa học</Typography>
+                            {content?.courseType === "DRAFT" ? (
+                                <MyCKEditor
+                                    className={'min-w-full'}
+                                    type={'COURSE_DESCRIPTION'}
+                                    parent_id={content?.id}
+                                    data={content?.description}
+                                    handleData={handleEditorDescription}
+                                />
+                            ) : (
+                                <div className='min-h-[350px] max-h-[350px] min-w-[650px] max-w-[650px] overflow-y-auto p-4 bg-white shadow-md' dangerouslySetInnerHTML={{
+                                    __html: `${content.description || `Không có mô tả`}`
+                                }} />
+                            )}
+                        </div>
+                        <div className='mb-5'>
+                            <Typography className='font-normal text-base mb-2'>Yêu cầu khóa học</Typography>
+                            {content?.courseType === "DRAFT" ? (
+                                <MyCKEditor
+                                    className={'min-w-full'}
+                                    data={content?.requirement}
+                                    handleData={handleEditorRequireMent} />
+                            ) : (
+                                <div className='min-h-[350px] max-h-[350px] min-w-[650px] max-w-[650px] overflow-y-auto p-4 bg-white shadow-md' dangerouslySetInnerHTML={{
+                                    __html: `${content.requirement || `Không có yêu cầu`}`
+                                }} />
+                            )}
+                        </div>
                     </div>
                     <span className='w-full bg-slate-300 h-[1px] my-4'></span>
-                    <div
-                        onClick={() => handleSaveCourse()}
-                        className='h-[50px] relative border group/sort duration-200 hover:opacity-75 bg-[#3366cc] text-white cursor-pointer border-[#829093] flex justify-center items-center'>
-                        <Typography className='font-semibold text-base text-white duration-200 '>
-                            Lưu
-                        </Typography>
-                        {processing && (
-                            <span className='bg-slate-400 absolute z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
-                                <Spinner className='h-auto text-[#fff]' color="cyan" />
-                            </span>
-                        )}
-                    </div>
+                    {(content?.courseType === "DRAFT" || content?.contentType === "OFFICIAL") && (
+                        <div
+                            onClick={() => handleSaveCourse()}
+                            className='h-[50px] relative border group/sort duration-200 hover:opacity-75 bg-[#3366cc] text-white cursor-pointer border-[#829093] flex justify-center items-center'>
+                            <Typography className='font-semibold text-base text-white duration-200 '>
+                                Lưu
+                            </Typography>
+                            {processing && (
+                                <span className='bg-slate-400 absolute z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
+                                    <Spinner className='h-auto text-[#fff]' color="cyan" />
+                                </span>
+                            )}
+                        </div>
+                    )}
                     {processing && (
                         <span className='bg-[#eaeef6] opacity-70 absolute z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
                             {/* <Spinner className='h-auto text-[#fff] w-20' color="cyan" /> */}
@@ -304,7 +326,7 @@ const VideoContent = ({ content, handleChange }) => {
     }, []);
     return (
         <>
-            <div className='my-6 min-w-[300px] w-[600px]'>
+            <div className='my-6 min-w-[300px] w-[715px]'>
                 <div className='w-full flex justify-between items-center mb-6 relative h-[35px] border rounded-sm border-[#003a47]'>
                     <div className='mx-3 w-full h-full flex items-center line-clamp-1  '>
                         <Typography className='w-full !line-clamp-1 truncate cursor-default'>
@@ -316,16 +338,20 @@ const VideoContent = ({ content, handleChange }) => {
                             </Typography>
                         )}
                     </div>
-                    <input
-                        type="file"
-                        accept="video/*"
-                        style={{ display: 'none' }}
-                        onChange={handleVideoChange}
-                        ref={(fileInput) => (setFileInputRef(fileInput))}
-                    />
-                    <button onClick={() => fileInputRef && fileInputRef.click()} className="bg-[#3366cc] !rounded-none w-[100px] h-full ring-gray-300 hover:opacity-80 text-white" >Chọn</button>
+                    {content?.courseType === "DRAFT" && (
+                        <>
+                            <input
+                                type="file"
+                                accept="video/*"
+                                style={{ display: 'none' }}
+                                onChange={handleVideoChange}
+                                ref={(fileInput) => (setFileInputRef(fileInput))}
+                            />
+                            <button onClick={() => fileInputRef && fileInputRef.click()} className="bg-[#3366cc] !rounded-none w-[100px] h-full ring-gray-300 hover:opacity-80 text-white" >Chọn</button>
+                        </>
+                    )}
                 </div>
-                <div className='w-full min-h-[230px] h-[300px] relative flex border rounded-sm border-[#003a47]'>
+                <div className='w-full min-h-[230px] h-[350px] relative flex border rounded-sm border-[#003a47]'>
                     <div className='relative h-full flex justify-center items-center  w-full bg-[#f0f2f4]'>
                         {videoLoading ? (
                             <Spinner className='w-[60px] object-cover object-center h-auto' color="teal" />
@@ -543,6 +569,29 @@ const CourseContent = ({ content }) => {
         newCourses[index].children[level3Index].showVideoContent = !newCourses[index].children[level3Index].showVideoContent;
         setCourses(newCourses);
     };
+    const handleChangeLevel3Description = (value, index, level3Index) => {
+        const newCourses = [...courses];
+        newCourses[index].children[level3Index].description = value;
+        setCourses(newCourses);
+    };
+    const handleSaveLevel3Description = async (index, level3Index) => {
+        const newCourses = [...courses];
+        // console.log('---save level 3 description---', newCourses[index].children[level3Index].description);
+        setProcessing(true);
+        const data = {
+            id: newCourses[index].children[level3Index].id || '',
+            parent_id: newCourses[index].id,
+            name: newCourses[index].children[level3Index].name,
+            description: newCourses[index].children[level3Index].description,
+        };
+        const res = await apiSaveCourse(data);
+        if (res?.data) {
+            // newCourses[index].children[level3Index].id = res?.data?.id;
+            newCourses[index].children[level3Index].description = res?.data?.description;
+            setCourses(newCourses);
+        }
+        setProcessing(false);
+    };
     useEffect(() => {
         getCourseChild();
 
@@ -556,7 +605,7 @@ const CourseContent = ({ content }) => {
             <form onSubmit={handleSubmit} className={`w-full ${processing ? 'pointer-events-none' : ''}`}>
                 {courses.map((course, index) => (
                     <div key={index} className={`p-3 bg-slate-100 shadow mb-10 border border-black`}>
-                        <div className={`flex justify-between items-center gap-3 mb-3`}>
+                        <div className={`flex justify-between items-center gap-3 mb-3 group/level2`}>
                             <div className={`flex items-top gap-3`}>
                                 <label className='flex gap-3  mb-3 h-full items-center'>
                                     <Typography className='font-bold min-w-[80px]'>Chương {index + 1}: </Typography>
@@ -573,39 +622,45 @@ const CourseContent = ({ content }) => {
                                         />
                                     </div>
                                 </label>
-                                {course.readOnly ? (
-                                    <div title='Thay đổi' onClick={() => handleEditCourse(index, false)} className='h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none  flex justify-center items-center'>
-                                        <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                            <FontAwesomeIcon className='text-xs' icon={faPen} />
-                                        </Typography>
-                                    </div>
-                                ) : (
-                                    <div className='flex gap-3'>
-                                        <div title='Lưu' onClick={() => handleSaveCourse(index)} className={`h-[40px] min-w-[40px] border group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:border-none  flex justify-center items-center`}>
-                                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
-                                                Lưu
-                                            </Typography>
-                                        </div>
-                                        <div title='Hủy' onClick={() => handleEditCourse(index, true)} className='h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer hover:border-none  flex justify-center items-center'>
-                                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                                Hủy
-                                            </Typography>
-                                        </div>
-                                    </div>
+                                {course?.courseType === "DRAFT" && (
+                                    <>
+                                        {course.readOnly ? (
+                                            <div title='Thay đổi' onClick={() => handleEditCourse(index, false)} className='hidden group-hover/level2:flex h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none  justify-center items-center'>
+                                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                                    <FontAwesomeIcon className='text-xs' icon={faPen} />
+                                                </Typography>
+                                            </div>
+                                        ) : (
+                                            <div className='flex gap-3'>
+                                                <div title='Lưu' onClick={() => handleSaveCourse(index)} className={`h-[40px] min-w-[40px] border group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:border-none  flex justify-center items-center`}>
+                                                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
+                                                        Lưu
+                                                    </Typography>
+                                                </div>
+                                                <div title='Hủy' onClick={() => handleEditCourse(index, true)} className='h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer hover:border-none  flex justify-center items-center'>
+                                                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                                        Hủy
+                                                    </Typography>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </>
                                 )}
                             </div>
-                            <div title='Xóa ' onClick={() => handleDeleteLevel2Course(index)} className=' h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
-                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                    <FontAwesomeIcon icon={faTrash} className='text-xs' />
-                                </Typography>
-                            </div>
+                            {course?.courseType === "DRAFT" && (
+                                <div title='Xóa ' onClick={() => handleDeleteLevel2Course(index)} className='hidden group-hover/level2:flex h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] justify-center items-center'>
+                                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                        <FontAwesomeIcon icon={faTrash} className='text-xs' />
+                                    </Typography>
+                                </div>
+                            )}
                         </div>
                         {course.children.map((level3Course, level3Index) => (
                             <div key={level3Index} className={`p-3 ${(level3Index % 2 === 0) ? 'bg-[#fff]' : 'bg-[#fff]'} my-4 border hover:bg-[#defafc22] border-black`}>
                                 {course.readOnly ? (
                                     <div className='flex justify-between items-center gap-3'>
                                         <div className='w-full h-full'>
-                                            <div className={`flex justify-between w-full items-center gap-3`}>
+                                            <div className={`group/level3 flex justify-between w-full items-center gap-3`}>
                                                 <div className={`flex items-center gap-3`}>
                                                     <label className='flex gap-3 h-full  items-center'>
                                                         <Typography className='font-bold min-w-[60px]'>Bài giảng {(index + 1) + '.' + (level3Index + 1)}: </Typography>
@@ -622,29 +677,33 @@ const CourseContent = ({ content }) => {
                                                             />
                                                         </div>
                                                     </label>
-                                                    {level3Course.readOnly ? (
-                                                        <div onClick={() => handleEditLevel3Course(index, level3Index, false)} className='min-w-[40px] px-1 h-[40px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none flex justify-center items-center'>
-                                                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                                                <FontAwesomeIcon className='text-xs' icon={faPen} />
-                                                            </Typography>
-                                                        </div>
-                                                    ) : (
-                                                        <div className='flex gap-3'>
-                                                            <div title='Lưu' onClick={() => handleSaveLevel3Course(index, level3Index)} className='h-[40px] min-w-[40px] border group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:border-none flex justify-center items-center'>
-                                                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
-                                                                    Lưu
-                                                                </Typography>
+                                                    {course?.courseType === "DRAFT" && (
+                                                        <>
+                                                            {level3Course.readOnly ? (
+                                                                <div title='Thay đổi' onClick={() => handleEditLevel3Course(index, level3Index, false)} className='hidden group-hover/level3:flex min-w-[40px] px-1 h-[40px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none justify-center items-center'>
+                                                                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                                                        <FontAwesomeIcon className='text-xs' icon={faPen} />
+                                                                    </Typography>
+                                                                </div>
+                                                            ) : (
+                                                                <div className='flex gap-3'>
+                                                                    <div title='Lưu' onClick={() => handleSaveLevel3Course(index, level3Index)} className='h-[40px] min-w-[40px] border group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:border-none flex justify-center items-center'>
+                                                                        <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
+                                                                            Lưu
+                                                                        </Typography>
+                                                                    </div>
+                                                                    <div title='Hủy' onClick={() => handleEditLevel3Course(index, level3Index, true)} className='h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer hover:border-none flex justify-center items-center'>
+                                                                        <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                                                            Hủy
+                                                                        </Typography>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                            <div title='Xóa' onClick={() => handleDeleteLevel3Course(index, level3Index)} className='hidden group-hover/level3:flex h-[40px] w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] justify-center items-center'>
+                                                                <FontAwesomeIcon icon={faTrash} className='text-xs' />
                                                             </div>
-                                                            <div title='Hủy' onClick={() => handleEditLevel3Course(index, level3Index, true)} className='h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer hover:border-none flex justify-center items-center'>
-                                                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                                                    Hủy
-                                                                </Typography>
-                                                            </div>
-                                                        </div>
+                                                        </>
                                                     )}
-                                                    <div onClick={() => handleDeleteLevel3Course(index, level3Index)} className='h-[40px] w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
-                                                        <FontAwesomeIcon icon={faTrash} className='text-xs' />
-                                                    </div>
                                                 </div>
                                                 <div onClick={() => handleShowContent(index, level3Index)} className='h-[40px] hover:bg-slate-100 flex items-center justify-center cursor-pointer' title={`${level3Course.showVideoContent ? 'Xem nội dung' : 'Ẩn nội dung'}`}>
                                                     {level3Course.showVideoContent ?
@@ -666,7 +725,7 @@ const CourseContent = ({ content }) => {
                                             {(level3Course && level3Course.readOnly) && (
                                                 <>
                                                     {level3Course.showVideoContent && (
-                                                        <div className='mt-3'>
+                                                        <div className='mt-6'>
                                                             <label>
                                                                 <Typography className='font-bold'>Nội dung bài học</Typography>
                                                                 <div className='flex items-center gap-3'>
@@ -679,7 +738,31 @@ const CourseContent = ({ content }) => {
                                                                     </select>
                                                                 </div>
                                                             </label>
-                                                            <VideoContent content={level3Course} />
+                                                            <div className='mt-3 flex flex-wrap justify-between'>
+                                                                <div className=''>
+                                                                    <Typography className='font-medium'>Video</Typography>
+                                                                    <VideoContent content={level3Course} />
+                                                                </div>
+                                                                <div className=''>
+                                                                    <Typography className='font-medium'>Mô tả</Typography>
+                                                                    <div className='my-6'>
+                                                                        {course?.courseType === "DRAFT" ? (
+                                                                            <>
+                                                                                <div title='Lưu' disabled={course?.courseType !== 'DRAFT'} onClick={() => handleSaveLevel3Description(index, level3Index)} className='mb-6 h-[33px]  min-w-[40px] border border-[#003a47] group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:opacity-70 flex justify-center items-center'>
+                                                                                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
+                                                                                        Lưu
+                                                                                    </Typography>
+                                                                                </div>
+                                                                                <MyCKEditor className={`max-w-[600px] max-h-[350px]`} data={level3Course.description} handleData={(value) => handleChangeLevel3Description(value, index, level3Index)} />
+                                                                            </>
+                                                                        ) : (
+                                                                            <div className='min-h-[407px] max-h-[407px] min-w-[650px] max-w-[650px] overflow-y-auto p-4 bg-white shadow-md' dangerouslySetInnerHTML={{
+                                                                                __html: `${level3Course.description || `Không có mô tả`}`
+                                                                            }} />
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     )}
                                                 </>
@@ -693,18 +776,24 @@ const CourseContent = ({ content }) => {
                                 )}
                             </div>
                         ))}
-                        {(course && course.readOnly) && (
-                            <button type="button" onClick={() => handleAddLevel3Course(index)} className=' h-[40px] border group/sort duration-200  hover:bg-[#e5e6e9] px-1  cursor-pointer border-[#003a47] flex justify-center items-center'>
-                                Thêm mục trong chương
-                            </button>
+                        {content?.courseType === "DRAFT" && (
+                            <>
+                                {(course && course.readOnly) && (
+                                    <button type="button" onClick={() => handleAddLevel3Course(index)} className=' h-[40px] border group/sort duration-200  hover:bg-[#e5e6e9] px-1  cursor-pointer border-[#003a47] flex justify-center items-center'>
+                                        Thêm mục trong chương
+                                    </button>
+                                )}
+                            </>
                         )}
                     </div>
                 ))}
-                <div onClick={handleAddLevel2Course} className='justify-self-center h-[40px] w-[200px] border group/sort duration-200  hover:bg-[#2d2f31] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
-                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                        Thêm chương mới
-                    </Typography>
-                </div>
+                {content?.courseType === "DRAFT" && (
+                    <div onClick={handleAddLevel2Course} className='justify-self-center h-[40px] w-[200px] border group/sort duration-200  hover:bg-[#2d2f31] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
+                        <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                            Thêm chương mới
+                        </Typography>
+                    </div>
+                )}
             </form>
             {processing && (
                 <div className='absolute top-0 bottom-0 right-0 left-0 bg-slate-200 opacity-70 flex justify-center items-center'>
@@ -716,10 +805,135 @@ const CourseContent = ({ content }) => {
     );
 };
 
-const PriceContent = ({ content }) => {
+const PriceContent = ({ content, handleChange }) => {
+    const [processing, setProcessing] = useState(false);
+    const [priceType, setPriceType] = useState('FREE');
+    const [priceValue, setPriceValue] = useState(0);
+    const [errors, setErrors] = useState({
+        price: "",
+    });
+    const handlePriceTypeChange = (event) => {
+        if (event.target.value === 'FREE') {
+            setPriceType('FREE');
+            setPriceValue(0);
+            setErrors((errors) => ({
+                ...errors,
+                price: "",
+            }));
+        } else {
+            setPriceType('PAID');
+            setPriceValue(10000);
+        }
+
+    };
+    const validateForm = () => {
+        let valid = true;
+        if (priceType === 'PAID' && priceValue < 10000) {
+            valid = false;
+            setErrors((errors) => ({
+                ...errors,
+                price: "Giá bán không bé hơn 10.000 Vnđ",
+            }));
+        }
+        return valid;
+    };
+
+    const handlePriceValueChange = (event) => {
+        // console.log(event.target.value);
+        setPriceValue(event.target.value);
+        setErrors((errors) => ({
+            ...errors,
+            price: "",
+        }));
+    };
+    const handlePriceSave = async () => {
+        setProcessing(true);
+        if (validateForm()) {
+            const data = {
+                id: content?.id,
+                name: content?.name,
+                price_sell: priceValue,
+            };
+            console.log(data);
+            const res = await apiSaveCourse(data);
+            if (res?.data) {
+                handleChange && handleChange(res?.data);
+            }
+        } else {
+        }
+        setProcessing(false);
+    };
+    useEffect(() => {
+        if (content?.price_sell > 0) {
+            setPriceType('PAID');
+            setPriceValue(content?.price_sell);
+        }
+    }, []);
+
     return (
         <div>
-            <p>This is the content for Giá tiền with content: </p>
+            <div className='flex justify-between items-center mb-4'>
+                <div className=''>
+                    <label className='flex mb-4 gap-2 items-center'>
+                        <input
+                            type="radio"
+                            name="price"
+                            value="FREE"
+                            checked={priceType === 'FREE'}
+                            disabled={content?.courseType !== 'DRAFT' && content?.courseType != 'OFFICIAL'}
+                            onChange={handlePriceTypeChange}
+                        />
+                        <Typography className='font-bold'>Miễn phí</Typography>
+                    </label>
+                    <label className='flex mb-4 gap-2 items-center'>
+                        <input
+                            type="radio"
+                            name="price"
+                            value="PAID"
+                            checked={priceType === 'PAID'}
+                            disabled={content?.courseType !== 'DRAFT' && content?.courseType != 'OFFICIAL'}
+                            onChange={handlePriceTypeChange}
+                        />
+                        <Typography className='font-bold'>Có phí</Typography>
+                    </label>
+                    {priceType === 'PAID' && (
+                        <div className='flex items-center h-[40px] gap-3'>
+                            <Tooltip title='Giá bán không bé hơn 10.000 Vnđ' placement='right'>
+                                <label className='flex gap-3  h-full items-center'>
+                                    <Typography className='font-bold min-w-[50px]'>Giá:<span className='text-red-500'>*</span> </Typography>
+                                    <div className='relative h-[40px] flex'>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            value={priceValue}
+                                            onChange={(event) => handlePriceValueChange(event)}
+                                            placeholder='Tên chương'
+                                            className={` px-4 outline-none h-full border  border-b-[#003a47] `}
+                                            disabled={content?.courseType !== 'DRAFT' && content?.courseType != 'OFFICIAL'}
+                                            autoFocus
+                                        />
+                                    </div>
+                                    <div className='flex items-center h-[40px] gap-3 border border-[#003a47] px-2 '>
+                                        <Typography className='font-bold'>Vnđ</Typography>
+                                    </div>
+                                </label>
+                            </Tooltip>
+                        </div>
+                    )}
+                    {errors.price && (
+                        <div>
+                            <Typography className='text-red-500'>{errors.price}</Typography>
+                        </div>
+                    )}
+                    {(content?.courseType === "DRAFT" || content?.contentType === "OFFICIAL") && (
+                        <div title='Lưu' onClick={handlePriceSave} className='h-[50px] mt-4 min-w-[40px] max-w-[278px] border border-[#003a47] group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:opacity-70 flex justify-center items-center'>
+                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
+                                Lưu
+                            </Typography>
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 };
@@ -733,6 +947,7 @@ const LecturerCourseSave = () => {
     const [change, setChange] = useState({});
     const [myCourse, setMyCourse] = useState({});
     const [courseName, setCourseName] = useState('');
+    const [openPublishDialog, setOpenPublishDialog] = useState(false);
     const getMyCourse = async () => {
         setProcessing(true);
         try {
@@ -743,13 +958,13 @@ const LecturerCourseSave = () => {
             };
             const response = await apiGetCourse(paramsAPI);
             if (response?.data?.data?.length > 0) {
+                document.title = response.data?.data[0].name;
                 setMyCourse(response.data?.data[0]);
                 setCourseName(response.data?.data[0].name);
             }
             else {
                 setMyCourse({});
                 console.log('---my course empty---');
-
             }
         } catch (error) {
             console.error("Error fetching course data", error);
@@ -770,6 +985,7 @@ const LecturerCourseSave = () => {
         if (res?.data) {
             getMyCourse();
         }
+        setProcessing(false);
     };
     const [activeTab, setActiveTab] = useState('Thông tin giới thiệu');
 
@@ -778,7 +994,7 @@ const LecturerCourseSave = () => {
         'Video giới thiệu',
         'Nội dung khóa học',
         'Giá tiền',
-        'Cài đặt',
+        // 'Cài đặt',
     ];
 
     const handleTabClick = (tabName) => {
@@ -788,19 +1004,44 @@ const LecturerCourseSave = () => {
     const handleChangeIntroductionContent = (data) => {
         setChange(data);
     };
+    const handlePublishCourse = async () => {
+        setProcessing(true);
+        const params = {
+            course_id: myCourse.id,
+        };
+        const res = await apiLecturePublishCourse(params);
+        if (res?.status === 1) {
+            setChange(true);
+        } else {
+            toast.error(`Xuất bản không thành công!`, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
+        setOpenPublishDialog(false);
+        setProcessing(false);
+    };
+    useEffect(() => {
+        document.title = 'Khóa học của tôi';
+    }, []);
     useEffect(() => {
         getMyCourse();
     }, [change]);
 
     return (
         <>
-            <div className={`${processing ? 'pointer-events-none' : ''}`}>
+            <div className={`${processing ? 'pointer-events-none' : ''} mb-80`}>
                 <div className='flex justify-between items-center mb-4'>
                     <div className='flex items-end gap-x-2'>
                         <label className='flex flex-col justify-between items-start'>
                             <Typography className='px-2 text-lg'>Tên khóa học</Typography>
                             <div className='flex items-center gap-2'>
-                                <input onBlur={handleSaveCourse} value={courseName} type='text' onChange={(e) => setCourseName(e.target.value)} className='font-bold text-lg border-b-2 px-2 outline-none bg-[#f5f8ff]  focus:border-slate-500 rounded-sm' />
+                                <input
+                                    onBlur={handleSaveCourse}
+                                    value={courseName} type='text'
+                                    onChange={(e) => setCourseName(e.target.value)}
+                                    className='font-bold text-lg border-b-2 px-2 outline-none bg-[#f5f8ff]  focus:border-slate-500 rounded-sm'
+                                    disabled={myCourse?.courseType !== 'DRAFT'}
+                                />
                                 <FontAwesomeIcon icon={faPenToSquare} />
                             </div>
                         </label>
@@ -841,11 +1082,13 @@ const LecturerCourseSave = () => {
                             </div>
                         ))}
                     </div>
-                    <div onClick={() => handleSaveCourse()} className='min-w-[12rem] px-2 h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-[#3366cc] border-[#003a47] flex justify-center items-center'>
-                        <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                            Xuất bản
-                        </Typography>
-                    </div>
+                    {myCourse?.courseType === 'DRAFT' && (
+                        <div onClick={() => setOpenPublishDialog(true)} className='min-w-[12rem] px-2 h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-[#3366cc] border-[#003a47] flex justify-center items-center'>
+                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                Xuất bản
+                            </Typography>
+                        </div>
+                    )}
                 </div>
                 <div className='p-3 shadow-md my-8 border  mb-4'>
                     <div className=''>
@@ -864,7 +1107,7 @@ const LecturerCourseSave = () => {
                                     <CourseContent content={myCourse} />
                                 )}
                                 {activeTab === 'Giá tiền' && (
-                                    <PriceContent content={myCourse} />
+                                    <PriceContent content={myCourse} handleChange={handleChangeIntroductionContent} />
                                 )}
                                 {activeTab === 'Cài đặt' && (
                                     <></>
@@ -873,8 +1116,44 @@ const LecturerCourseSave = () => {
                         )}
                     </div>
                 </div>
-
             </div>
+            <Dialog
+                open={openPublishDialog}
+                onClose={() => setOpenPublishDialog(false)}
+                aria-labelledby="alert-dialog-title"
+                width='lg'
+                aria-describedby="alert-dialog-description" >
+                <DialogTitle id="alert-dialog-title">
+                    {
+                        <>
+                            <Typography className='font-bold text-lg text-[#9b9b9b]'>Xuất bản khóa học: <span className='underline text-black'>{myCourse?.name}</span></Typography>
+                        </>
+                    }
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        <Typography className='font-semibold text-lg'>
+                            Với giá:
+                            {myCourse?.price_sell > 0 ? (
+                                <>
+                                    &nbsp;<span className='font-bold text-lg text-black underline mx-1'>{myCourse?.price_sell.toLocaleString()}</span>&nbsp;Vnđ
+                                </>
+                            ) : (
+                                <span className='font-bold text-lg text-black'> Miễn phí</span>
+                            )}
+                        </Typography>
+                        <Typography className='font-normal text-lg mt-4'>
+                            Xuất bản khóa học sẽ không thể chỉnh sửa lại được.
+                            <br />
+                            Bạn có chắc chắn muốn xuất bản khóa học này?
+                        </Typography>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenPublishDialog(false)} className='hover:opacity-70 text-white bg-red-500 mr-4 pt-2'>Hủy</Button>
+                    <Button onClick={() => handlePublishCourse()} className='hover:opacity-70 text-white bg-[#3366cc] pt-2'>Xác nhận</Button>
+                </DialogActions>
+            </Dialog>
             {processing && (
                 <span className='bg-[#eaeef6] opacity-70 fixed z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
                     <Spinner className='h-auto text-[#fff] w-20' color="cyan" />

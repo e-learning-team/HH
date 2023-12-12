@@ -15,7 +15,7 @@ const CourseCard = ({ content }) => {
             <div className="h-full max-w-[120px] ">
                 <img
                     src={content?.video_path ? getVideoThumbnailGoogleGDriveUrl(extractVideoGoogleGDriveUrlId(content?.video_path)) : noImg}
-                    className="transition w-full h-full border-none outline-none  object-cover" />
+                    className="transition w-full h-full max-w-[120px] max-h-[120px] min-w-[120px] min-h-[120px] border-none outline-none  object-cover" />
             </div>
             <div className="flex w-full ">
                 <div className="flex p-3  h-full min-w-[340px] max-w-[340px]  flex-col justify-between">
@@ -78,29 +78,46 @@ const CourseCard = ({ content }) => {
                 )}
                 <div className="flex p-3 h-full w-full flex-col items-center  justify-center">
                     <div className="flex min-w-[145px] flex-col items-start gap-y-2 justify-center">
-                        <Typography className='cursor-pointer hover:text-[#3366cc] font-medium text-[#373632] text-sm'>
-                            Preview
-                        </Typography>
-                        {(content?.courseType == "OFFICIAL" || content?.courseType == "DRAFT") && (
-                            <>
-                                {content?.courseType == "OFFICIAL" ? (
-                                    <>
-                                        <Typography className='cursor-pointer hover:text-[#3366cc] font-medium text-[#373632] text-sm'>
-                                            <>Chi tiết đăng kí</>
-                                        </Typography>
-                                        <Typography className='cursor-pointer hover:text-[#3366cc] font-medium text-[#373632] text-sm'>
-                                            <>Thu hồi và chỉnh sửa</>
-                                        </Typography>
-                                    </>
-                                ) : (
+                        <NavLink to={`/lecturer/courses/${content?.slug}/preview`}>
+                            <Typography className='cursor-pointer hover:text-[#3366cc] font-medium text-[#373632] text-sm'>
+                                Preview
+                            </Typography>
+                        </NavLink>
+                        {/* {(content?.courseType) && ( */}
+                        <>
+                            {content?.courseType == "OFFICIAL" ? (
+                                <>
+                                    <Typography className='cursor-pointer hover:text-[#3366cc] font-medium text-[#373632] text-sm'>
+                                        <>Chi tiết đăng kí</>
+                                    </Typography>
                                     <NavLink to={`${Path.LECTURER_P + Path.LECTURER_NEW_COURSE + content.id}`}>
                                         <Typography className='cursor-pointer hover:text-[#3366cc] font-medium text-[#373632] text-sm'>
-                                            Chỉnh sửa và xuất bản
+                                            Xem chi tiết
                                         </Typography>
                                     </NavLink>
-                                )}
-                            </>
-                        )}
+                                </>
+                            ) : (
+                                <>
+                                    {content?.courseType == "DRAFT" ? (
+                                        <NavLink to={`${Path.LECTURER_P + Path.LECTURER_NEW_COURSE + content.id}`}>
+                                            <Typography className='cursor-pointer hover:text-[#3366cc] font-medium text-[#373632] text-sm'>
+                                                Chỉnh sửa và xuất bản
+                                            </Typography>
+                                        </NavLink>
+                                    ) : (
+                                        <>
+                                            <NavLink to={`${Path.LECTURER_P + Path.LECTURER_NEW_COURSE + content.id}`}>
+                                                <Typography className='cursor-pointer hover:text-[#3366cc] font-medium text-[#373632] text-sm'>
+                                                    Xem chi tiết
+                                                </Typography>
+                                            </NavLink>
+                                        </>
+                                    )}
+                                </>
+                            )}
+
+                        </>
+                        {/* )} */}
                     </div>
                 </div>
             </div>

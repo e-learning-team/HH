@@ -40,7 +40,7 @@ export const MyCKEditor = ({handleData, data, parent_id, type, className}) => {
         }
     }
     return (
-        <div className={`ckeditor-wrapper min-w-[735px] max-w-[735px] ${className}`}>
+        <div className={`ckeditor-wrapper min-w-[715px] max-w-[715px] ${className}`}>
             <CKEditor
                 editor={Editor}
                 config={{

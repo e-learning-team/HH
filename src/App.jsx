@@ -50,6 +50,9 @@ function App() {
           <Route path={Path.LECTURER_P + Path.LECTURER_PROFILE} element={<LecturerProfile />} />
           <Route path={Path.LECTURER_P + Path.LECTURER_NEW_COURSE} element={<LecturerCourseNew/>}/>
           <Route path={Path.LECTURER_P + Path.LECTURER_SAVE_COURSE} element={<LecturerCourseSave/>}/>
+
+          <Route path={Path.LECTURER_P + Path.LECTURER_COURSE_PREVIEW_DETAIL} element={<CourseDeTail />} />
+          <Route path={Path.LECTURER_P + Path.LECTURER_COURSE_PREVIEW_LEARN} element={<CourseLearn />} />
         </Route>
         <Route path={Path.ADMIN_P} element={<Admin/>}>
           <Route path={Path.ADMIN_USER} element={<AdminUser/>}/>

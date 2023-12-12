@@ -19,6 +19,7 @@ import { apiCheckEnrollment, apiMyEnrollment, apiSaveEnrollment } from '../../ap
 import { Rating } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import { CourseRatingDialog } from '../../components/Dialog/CourseRatingDialog';
+import { apiGetCourse } from '../../apis/course';
 
 const CourseLearn = () => {
     const { isLoggedIn, userData, token, isLoading, message } = useSelector((state) => state.user);
@@ -42,11 +43,26 @@ const CourseLearn = () => {
     const navigate = useNavigate();
     const contentRefs = useRef(null);
     const checkEnroll = async (course_id) => {
+
         const res = await apiCheckEnrollment(course_id);
-        if (res && res.data) {
+        console.log(res?.data === true);
+        if (res?.data === true) {
             setIsEnrolled(res.data);
+            getMyEnrollment();
             return true;
         } else {
+            setLoading(true);
+            const res_lecture = await apiGetCourse({ slug: slug, build_child: true });
+            if (res_lecture?.data?.data?.length > 0 && userData?.id == res_lecture.data.data[0].created_by) {
+                setCourse(res_lecture.data.data[0]);
+
+                setRate(res_lecture.data.data[0].course_ratings);
+
+                setCourseName(res_lecture.data.data[0].name);
+
+                setLoading(false);
+                return false;
+            }
             setIsEnrolled(res.data);
             toast.error(`Cần phải đăng kí để bắt đầu học`, {
                 position: toast.POSITION.TOP_RIGHT,
@@ -153,9 +169,7 @@ const CourseLearn = () => {
             navigate(`/${Path.HOME}`);
             return;
         }
-        if (checkEnroll(extractIdSlug(slug))) {
-            getMyEnrollment();
-        }
+        checkEnroll(extractIdSlug(slug));
     }, [isLoggedIn]);
     return (
         <>
@@ -177,29 +191,37 @@ const CourseLearn = () => {
             ) : (!error && (
                 <>
                     <div className=' flex relative '>
-                        <div className='w-full h-16 px-8 py-2  text-white fixed bg-[#003a47] z-10'>
+                        <div className={`w-full h-16 px-8 py-2  text-white ${(!(userData?.id == course.created_by)) ? 'fixed' : 'absolute'} bg-[#003a47] z-10`}>
                             <div className='h-full flex justify-between'>
                                 <div className='h-full  flex justify-center items-center'>
-                                    <NavLink to={`/`} className='h-full'>
+                                    <NavLink to={`${(userData?.id == course.created_by) ? '/lecturer/course' : '/'}`} className='h-full'>
                                         <img src={logo} className='h-full ' alt="" />
                                     </NavLink>
                                     <div className=' border mx-6 py-3 border-gray-300'></div>
-                                    <Typography className='font-normal'>
-                                        <NavLink to={`/courses/${slug}`} className='hover:opacity-80 hover:underline'>{courseName}</NavLink>
-                                    </Typography>
-                                </div>
-                                <div className='h-full gap-2 flex  justify-center items-center'>
-                                    {/* <CircularProgressBar progress={enrollmentData.percent_complete} /> */}
-                                    <CircularProgressBar progress={Math.floor((completedCourse.length / enrollmentData.course?.total_lesson) * 100)} />
-                                    <div className='h-full  font-normal flex flex-col justify-center items-center'>
-                                        <Typography className='text-[14px] flex-1 line-clamp-1'>Tiến độ hoàn thành</Typography>
-                                        <Typography className='text-[14px] flex-1 line-clamp-1 font-bold'>
-                                            <span className='underline'>
-                                                {completedCourse?.length}/{enrollmentData.course?.total_lesson}
-                                            </span> đã học
+                                    {!(userData?.id == course.created_by) ? (
+                                        <Typography className='font-normal'>
+                                            <NavLink to={`/courses/${slug}`} className='hover:opacity-80 hover:underline'>{courseName}</NavLink>
                                         </Typography>
-                                    </div>
+                                    ) : (
+                                        <Typography className='font-normal'>
+                                            <NavLink to={`/lecturer/courses/${slug}/preview`} className='hover:opacity-80 hover:underline'>{courseName}</NavLink>
+                                        </Typography>
+                                    )}
                                 </div>
+                                {!(userData?.id == course.created_by) && (
+                                    <div className='h-full gap-2 flex  justify-center items-center'>
+                                        {/* <CircularProgressBar progress={enrollmentData.percent_complete} /> */}
+                                        <CircularProgressBar progress={Math.floor((completedCourse.length / enrollmentData.course?.total_lesson) * 100)} />
+                                        <div className='h-full  font-normal flex flex-col justify-center items-center'>
+                                            <Typography className='text-[14px] flex-1 line-clamp-1'>Tiến độ hoàn thành</Typography>
+                                            <Typography className='text-[14px] flex-1 line-clamp-1 font-bold'>
+                                                <span className='underline'>
+                                                    {completedCourse?.length}/{enrollmentData.course?.total_lesson}
+                                                </span> đã học
+                                            </Typography>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className='h-full w-full flex pt-16 '>
@@ -262,20 +284,24 @@ const CourseLearn = () => {
                                             </TabPanel>
                                             <TabPanel header="Đánh giá">
                                                 <span className="m-0">
-                                                    <Typography className='font-bold text-base uppercase mb-4'>
-                                                        <span>Đánh giá của bạn</span>
-                                                    </Typography>
-                                                    <div className='mb-4'>
-                                                        <div className='flex items-center gap-2'>
-                                                            <Typography className='text-2xl font-bold text-[#faaf00]'>{myRate.toFixed(1)}</Typography>
-                                                            <Rating name="size-large" size='large' readOnly value={myRate} precision={1} />
+                                                    {!(userData?.id == course.created_by) && (
+                                                        <>
+                                                            <Typography className='font-bold text-base uppercase mb-4'>
+                                                                <span>Đánh giá của bạn</span>
+                                                            </Typography>
+                                                            <div className='mb-4'>
+                                                                <div className='flex items-center gap-2'>
+                                                                    <Typography className='text-2xl font-bold text-[#faaf00]'>{myRate.toFixed(1)}</Typography>
+                                                                    <Rating name="size-large" size='large' readOnly value={myRate} precision={1} />
 
-                                                            <span onClick={handleOpenCourseRating} className='p-2 hover:bg-[#e2e8f0] cursor-pointer rounded'>Thay đổi đánh giá</span>
-                                                            {openCourseRating && (
-                                                                <CourseRatingDialog open={openCourseRating} setOpen={handleOpenCourseRating} course={{ id: course.id, name: course.name }} changeRate={handleChangeRate} />
-                                                            )}
-                                                        </div>
-                                                    </div>
+                                                                    <span onClick={handleOpenCourseRating} className='p-2 hover:bg-[#e2e8f0] cursor-pointer rounded'>Thay đổi đánh giá</span>
+                                                                    {openCourseRating && (
+                                                                        <CourseRatingDialog open={openCourseRating} setOpen={handleOpenCourseRating} course={{ id: course.id, name: course.name }} changeRate={handleChangeRate} />
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    )}
                                                     <Typography className='font-bold text-base uppercase mb-4'>
                                                         <span>Đánh giá của học viên</span>
                                                     </Typography>
@@ -321,7 +347,7 @@ const CourseLearn = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className={`' fixed right-0 h-full w-[24rem] z-10 bg-gray-50 flex flex-col border-gray-400' ${openSideBar ? '' : 'hidden'}`}>
+                            <div className={`${(userData?.id == course.created_by) ? 'absolute' : 'fixed'}  right-0 h-full w-[24rem] z-10 bg-gray-50 flex flex-col border-gray-400' ${openSideBar ? '' : 'hidden'}`}>
                                 <div className='p-4 flex justify-between items-center border-b border-gray-400'>
                                     <Typography className='font-bold'>Nội dung khóa học</Typography>
                                     <FontAwesomeIcon className='p-2 cursor-pointer rounded-lg w-[18px] h-[18px] hover:bg-gray-200' title='Ẩn thanh bên' icon={faXmark} onClick={handleSideBar} />

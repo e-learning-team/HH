@@ -14,3 +14,12 @@ export const apiSaveCourse = (data) => axios({
         'Authorization': ``,
     }
 });
+
+export const apiLecturePublishCourse = (params) => axios({
+    url: `/course/lecturer/change-course-type`,
+    method: 'put',
+    params,
+    headers: {
+        'Authorization': ``,
+    }
+});

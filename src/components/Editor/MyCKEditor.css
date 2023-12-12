@@ -1,9 +1,13 @@
 .ckeditor-wrapper {
-    height: 370px;
+    height: 350px;
     margin-bottom: 40px;
 }
+.ck-editor{
+    height: 350px !important;
+
+}
 .ck-editor__editable_inline:not(.ck-comment__input *) {
-    height: 350px;
+    height: 311px;
     background-color: #f5f8ff;
     /* overflow-y: auto; */
 }
