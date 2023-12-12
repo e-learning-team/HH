@@ -8,33 +8,45 @@ import axios from 'axios';
 import Card from '../components/Card/Card';
 import Footer from '../components/Footer/Footer';
 const Home = () => {
-  const [loading, setLoading] = useState(true);
-  const [courseList, setCourseList] = useState([]);
+  const [loadingRating, setLoadingRating] = useState(true);
+  const [loadingSub, setLoadingSub] = useState(true);
+  const [highestRatingCourses, setHighestRatingCourses] = useState([]);
+  const [highestSubCourses, setHighestSubCourses] = useState([]);
 
-
-  const searchCourse = async () => {
+  const buildCouses = async () => {
     try {
       const params = {
-        search_type: "OFFICIAL"
+        search_type: "OFFICIAL",
+        sort_by: "HIGHEST_RATING",
+        max_result: "5"
       };
       const response = await apiGetCourse(params);
       if (response.data && response.data.data && response.data.data?.length > 0) {
-        setCourseList(response.data);
-        console.log(response.data);
-        setLoading(false);
-      }
-      else {
-        // console.log("empty");
+        setHighestRatingCourses(response.data);
+        setLoadingRating(false);
       }
     } catch (error) {
-      console.error("Error fetching course data", error);
-      setLoading(true);
-    } finally {
+      setLoadingRating(true);
+    }
+
+    try {
+      const params = {
+        search_type: "OFFICIAL",
+        sort_by: "HIGHEST_SUB",
+        max_result: "5"
+      };
+      const response = await apiGetCourse(params);
+      if (response.data && response.data.data && response.data.data?.length > 0) {
+        setHighestSubCourses(response.data);
+        setLoadingSub(false);
+      }
+    } catch (error) {
+      setLoadingSub(true);
     }
   };
   useEffect(() => {
     document.title = "Trang chủ";
-    searchCourse();
+    buildCouses();
   }, []);
 
 
@@ -82,15 +94,15 @@ const Home = () => {
               Khoá học đăng ký nhiều nhất
             </label>
             <div className=" grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mx-4">
-              {loading ? (
+              {loadingSub ? (
                 <>
                   {Array.from({ length: 5 }).map(
                     (_, index) => <Card key={index} />
                   )}
                 </>
-              ) : (courseList.data?.length > 0 ?
+              ) : (highestSubCourses.data?.length > 0 ?
                 <>
-                  {courseList.data.map((course, index) => (
+                  {highestSubCourses.data.map((course, index) => (
                     <Card key={index} content={course} />
                   ))}
                 </>
@@ -109,15 +121,15 @@ const Home = () => {
               Khoá học đánh giá cao nhất
             </label>
             <div className=" grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mx-4">
-              {loading ? (
+              {loadingRating ? (
                 <>
                   {Array.from({ length: 5 }).map(
                     (_, index) => <Card key={index} />
                   )}
                 </>
-              ) : (courseList.data?.length > 0 ?
+              ) : (highestRatingCourses.data?.length > 0 ?
                 <>
-                  {courseList.data.map((course, index) => (
+                  {highestRatingCourses.data.map((course, index) => (
                     <Card key={index} content={course} />
                   ))}
                 </>
