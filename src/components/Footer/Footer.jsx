@@ -1,4 +1,3 @@
-import { useState } from "react";
 import logo from '../../assets/logo-side.svg';
 const Footer = () => {
     return(
