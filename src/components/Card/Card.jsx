@@ -57,8 +57,8 @@ const Card = ({ content, isEnrolled, enrollmentContent }) => {
                                     </div>
 
                                     <div className="mx-1 mt-2 mb-1">
-                                        <div className="text-[13px] w-full flex justify-between items-center line-clamp-1" title={content.created_by}>
-                                            <Typography className='font-bold text-sm min-w-[46px]'>Tác giả </Typography>&nbsp;&nbsp;
+                                        <div className="text-[13px] w-full flex items-center line-clamp-1" title={content.created_by}>
+                                            <Typography className='font-bold text-sm min-w-[46px]'>Tác giả: </Typography>&nbsp;&nbsp;
                                             <Typography className='min-w-[105px] flex justify-end text-sm line-clamp-1'>
                                                 {content.created_user_info[content.created_by]}
                                             </Typography>
