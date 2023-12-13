@@ -24,6 +24,7 @@ import Admin from './pages/Admin/Admin'
 import AdminUser from './pages/Admin/Admin/AdminUser';
 import AdminCategory from './pages/Admin/Admin/AdminCategory';
 import VnPayReturn from './pages/Invoice/VnPayReturn';
+import LecturerCourseEnroll from './pages/Lecturer/Lecturer/LecturerCourseEnroll';
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
         <Route path={Path.LECTURER_P} element={<Lecturer />}>
           <Route path={Path.LECTURER_P + Path.LECTURER_COURSE} element={<LecturerCourse />} />
           <Route path={Path.LECTURER_P + Path.LECTURER_PROFILE} element={<LecturerProfile />} />
+          <Route path={Path.LECTURER_P + Path.LECTURER_SALE} element={<LecturerCourseEnroll />} />
           <Route path={Path.LECTURER_P + Path.LECTURER_NEW_COURSE} element={<LecturerCourseNew/>}/>
           <Route path={Path.LECTURER_P + Path.LECTURER_SAVE_COURSE} element={<LecturerCourseSave/>}/>
 
