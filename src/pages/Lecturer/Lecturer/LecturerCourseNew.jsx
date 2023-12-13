@@ -71,7 +71,7 @@ const LecturerCourseNew = () => {
             return {
                 id,
                 title: modifiedTitle,
-                children: children && children.length > 0 ? addDashesToTitles(children, level + 1) : [],
+                // children: children && children.length > 0 ? addDashesToTitles(children, level + 1) : [],
             };
         });
     };

@@ -6,7 +6,7 @@ import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { apiCategory } from '../../../apis/category';
 import { MultiSelect } from 'primereact/multiselect';
-import { apiGetCourse, apiLecturePublishCourse, apiSaveCourse } from '../../../apis/course';
+import { apiDeleteCourse, apiGetCourse, apiLecturePublishCourse, apiSaveCourse } from '../../../apis/course';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp, faFloppyDisk, faPen, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { apiDeleteFileByPathFile, apiUploadFile } from '../../../apis/fileRelationship';
@@ -58,7 +58,7 @@ const IntroductionContent = ({ content, handleChange }) => {
             return {
                 id,
                 title: modifiedTitle,
-                children: children && children.length > 0 ? addDashesToTitles(children, level + 1) : [],
+                // children: children && children.length > 0 ? addDashesToTitles(children, level + 1) : [],
             };
         });
     };
@@ -440,26 +440,55 @@ const CourseContent = ({ content }) => {
         setCourses(newCourses);
     };
     const handleAddLevel3Course = (index) => {
-        setLevel3Add(true);
+        handleUnEditCourseAll();
         const newCourses = [...courses];
         newCourses[index].children.push({ type: 'VIDEO', name: '' });
         setCourses(newCourses);
     };
 
-    const handleDeleteLevel3Course = (index, level3Index) => {
+    const handleDeleteLevel3Course = async (index, level3Index) => {
         const newCourses = [...courses];
-        newCourses[index].children.splice(level3Index, 1);
-        setCourses(newCourses);
+        setProcessing(true);
+        try {
+            const params = {
+                is_deleted: true,
+            };
+            await apiDeleteCourse(newCourses[index].children[level3Index].id, params);
+            newCourses[index].children.splice(level3Index, 1);
+            setCourses(newCourses);
+            toast.success(`Xóa thành công!`);
+        } catch (e) {
+            toast.error(`Xóa không thành công!`);
+        }
+        setProcessing(false);
     };
 
     const handleAddLevel2Course = () => {
-        setCourses([...courses, { name: '', children: [] }]);
+        handleUnEditCourseAll();
+        setCourses([...courses, { name: '', children: [], readOnly: false }]);
     };
 
-    const handleDeleteLevel2Course = (index) => {
+    const handleDeleteLevel2Course = async (index) => {
         const newCourses = [...courses];
-        newCourses.splice(index, 1);
-        setCourses(newCourses);
+        setProcessing(true);
+        console.log(!newCourses[index].id);
+        if (newCourses[index].id) {
+            try {
+                const params = {
+                    is_deleted: true,
+                };
+                await apiDeleteCourse(newCourses[index].id, params);
+                toast.success(`Xóa thành công!`);
+                newCourses.splice(index, 1);
+                setCourses(newCourses);
+
+            } catch (e) {
+                toast.error(`Xóa không thành công!`);
+            }
+        } else {
+            setCourses(newCourses);
+        }
+        setProcessing(false);
     };
 
     const handleSubmit = (event) => {
@@ -493,11 +522,11 @@ const CourseContent = ({ content }) => {
         const newCourses = [...courses];
         newCourses[index].readOnly = isReadOnly;
 
-        setCourses(newCourses);
         if (!newCourses[index].id) {
-            console.log('---delete level 2 course---');
-            handleDeleteLevel2Course(index);
+            // const newCourses = [...courses];
+            newCourses.splice(index, 1);
         }
+        setCourses(newCourses);
     };
 
     const handleSaveLevel3Course = async (index, level3Index) => {
@@ -528,12 +557,12 @@ const CourseContent = ({ content }) => {
         handleUnEditCourseAll();
         const newCourses = [...courses];
         newCourses[index].children[level3Index].readOnly = edit;
-        setCourses(newCourses);
 
         if (!newCourses[index].children[level3Index].id) {
             console.log('---delete level 3 course---');
-            handleDeleteLevel3Course(index, level3Index);
+            newCourses[index].children.splice(level3Index, 1);
         }
+        setCourses(newCourses);
     };
     const getCourseChild = async () => {
         setProcessing(true);
@@ -542,10 +571,12 @@ const CourseContent = ({ content }) => {
                 level: 2,
                 parent_ids: content?.id,
                 build_child: true,
+                is_deleted: false,
             };
-            const response = await apiGetCourse(paramsAPI);
-            if (response?.data?.data?.length > 0) {
-                const updatedCourses = response.data?.data.map(course => ({
+            // const response = await apiGetCourse(paramsAPI);
+            // if (response?.data?.data?.length > 0) {
+            if (content?.children?.length > 0) {
+                const updatedCourses = content?.children?.map(course => ({
                     ...course,
                     readOnly: true,
                     children: course.children.map(child => ({
@@ -576,7 +607,6 @@ const CourseContent = ({ content }) => {
     };
     const handleSaveLevel3Description = async (index, level3Index) => {
         const newCourses = [...courses];
-        // console.log('---save level 3 description---', newCourses[index].children[level3Index].description);
         setProcessing(true);
         const data = {
             id: newCourses[index].children[level3Index].id || '',
@@ -622,7 +652,7 @@ const CourseContent = ({ content }) => {
                                         />
                                     </div>
                                 </label>
-                                {course?.courseType === "DRAFT" && (
+                                {content?.courseType === "DRAFT" && (
                                     <>
                                         {course.readOnly ? (
                                             <div title='Thay đổi' onClick={() => handleEditCourse(index, false)} className='hidden group-hover/level2:flex h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none  justify-center items-center'>
@@ -647,7 +677,7 @@ const CourseContent = ({ content }) => {
                                     </>
                                 )}
                             </div>
-                            {course?.courseType === "DRAFT" && (
+                            {content?.courseType === "DRAFT" && (
                                 <div title='Xóa ' onClick={() => handleDeleteLevel2Course(index)} className='hidden group-hover/level2:flex h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] justify-center items-center'>
                                     <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
                                         <FontAwesomeIcon icon={faTrash} className='text-xs' />
@@ -677,7 +707,7 @@ const CourseContent = ({ content }) => {
                                                             />
                                                         </div>
                                                     </label>
-                                                    {course?.courseType === "DRAFT" && (
+                                                    {content?.courseType === "DRAFT" && (
                                                         <>
                                                             {level3Course.readOnly ? (
                                                                 <div title='Thay đổi' onClick={() => handleEditLevel3Course(index, level3Index, false)} className='hidden group-hover/level3:flex min-w-[40px] px-1 h-[40px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none justify-center items-center'>
@@ -746,7 +776,7 @@ const CourseContent = ({ content }) => {
                                                                 <div className=''>
                                                                     <Typography className='font-medium'>Mô tả</Typography>
                                                                     <div className='my-6'>
-                                                                        {course?.courseType === "DRAFT" ? (
+                                                                        {content?.courseType === "DRAFT" ? (
                                                                             <>
                                                                                 <div title='Lưu' disabled={course?.courseType !== 'DRAFT'} onClick={() => handleSaveLevel3Description(index, level3Index)} className='mb-6 h-[33px]  min-w-[40px] border border-[#003a47] group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:opacity-70 flex justify-center items-center'>
                                                                                     <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
@@ -953,7 +983,7 @@ const LecturerCourseSave = () => {
         try {
             const paramsAPI = {
                 created_by: userData?.id,
-                build_child: false,
+                build_child: true,
                 ids: courseId
             };
             const response = await apiGetCourse(paramsAPI);

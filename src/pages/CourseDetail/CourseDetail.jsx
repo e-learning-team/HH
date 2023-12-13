@@ -193,7 +193,7 @@ const CourseDeTail = () => {
                                                 <NavLink to={`/courses/learn/${slug}`} className="flex-1 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm ring-1 ring-inset bg-[#29abe2] shadow-lg w-full h-[60px] hover:bg-[#088ab7] font-bold text-white">Học ngay</NavLink>
                                             ) : (
                                                 <>
-                                                    {course.data[0].created_by == userData.id ? (
+                                                    {course.data[0].created_by == userData?.id ? (
                                                         <>
                                                             <NavLink to={`/lecturer/courses/learn/${slug}/preview`} className="flex-1 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm ring-1 ring-inset bg-[#29abe2] shadow-lg w-full h-[60px] hover:bg-[#088ab7] font-bold text-white">Xem ngay</NavLink>
                                                         </>
