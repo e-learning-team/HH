@@ -52,7 +52,7 @@ const Home = () => {
 
   return (
     <div>
-      <div className="pt-[40px] mb-[80px] grid justify-center gap-6">
+      <div className="pt-[40px] mb-[80px] lg:mx-32 px-4 grid justify-center gap-6">
         <div className="flex justify-center">
           <Carousel
             className="container w-full"

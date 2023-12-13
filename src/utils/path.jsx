@@ -26,6 +26,7 @@ const Path = {
     LECTURER_REGISTER: 'register',
     LECTURER_HOME: "",
     LECTURER_COURSE: "course",
+    LECTURER_SALE: "sale",
     LECTURER_NEW_COURSE: "save/",
     LECTURER_SAVE_COURSE: "save/:courseId",
     LECTURER_COURSE_PREVIEW_DETAIL: 'courses/:slug/preview',
