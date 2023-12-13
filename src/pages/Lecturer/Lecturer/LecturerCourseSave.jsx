@@ -637,21 +637,23 @@ const CourseContent = ({ content }) => {
                     <div key={index} className={`p-3 bg-slate-100 shadow mb-10 border border-black`}>
                         <div className={`flex justify-between items-center gap-3 mb-3 group/level2`}>
                             <div className={`flex items-top gap-3`}>
-                                <label className='flex gap-3  mb-3 h-full items-center'>
-                                    <Typography className='font-bold min-w-[80px]'>Chương {index + 1}: </Typography>
-                                    <div className='relative h-[40px] flex'>
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            value={course.name}
-                                            onChange={(event) => handleInputChange(event, index)}
-                                            placeholder='Tên chương'
-                                            className={` px-4 outline-none h-full border  ${course.readOnly ? 'border-b-[#003a47]' : 'border-[#003a47]'}`}
-                                            readOnly={course.readOnly}
-                                            autoFocus
-                                        />
-                                    </div>
-                                </label>
+                                <Tooltip placement='top' title={`${course?.name}`}>
+                                    <label className='flex gap-3  mb-3 h-full items-center'>
+                                        <Typography className='font-bold min-w-[80px]'>Chương {index + 1}: </Typography>
+                                        <div className='relative h-[40px] flex'>
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                value={course.name}
+                                                onChange={(event) => handleInputChange(event, index)}
+                                                placeholder='Tên chương'
+                                                className={`max-w-[450px] min-w-[250px] px-4 outline-none h-full border  ${course.readOnly ? 'border-b-[#003a47]' : 'border-[#003a47]'}`}
+                                                readOnly={course.readOnly}
+                                                autoFocus
+                                            />
+                                        </div>
+                                    </label>
+                                </Tooltip>
                                 {content?.courseType === "DRAFT" && (
                                     <>
                                         {course.readOnly ? (
@@ -692,21 +694,23 @@ const CourseContent = ({ content }) => {
                                         <div className='w-full h-full'>
                                             <div className={`group/level3 flex justify-between w-full items-center gap-3`}>
                                                 <div className={`flex items-center gap-3`}>
-                                                    <label className='flex gap-3 h-full  items-center'>
-                                                        <Typography className='font-bold min-w-[60px]'>Bài giảng {(index + 1) + '.' + (level3Index + 1)}: </Typography>
-                                                        <div className='relative h-[40px] flex'>
-                                                            <input
-                                                                type="text"
-                                                                name="name"
-                                                                value={level3Course.name}
-                                                                onChange={(event) => handleInputChange(event, index, level3Index)}
-                                                                placeholder='Tiêu đề'
-                                                                className={` px-4 outline-none h-full  border  ${level3Course.readOnly ? 'border-b-[#003a47]' : 'border-[#003a47]'}`}
-                                                                readOnly={level3Course.readOnly}
-                                                                autoFocus={!level3Course.readOnly}
-                                                            />
-                                                        </div>
-                                                    </label>
+                                                    <Tooltip placement='top' title={`${level3Course?.name}`}>
+                                                        <label className='flex gap-3 h-full  items-center'>
+                                                            <Typography className='font-bold min-w-[60px]'>Bài giảng {(index + 1) + '.' + (level3Index + 1)}: </Typography>
+                                                            <div className='relative h-[40px] flex'>
+                                                                <input
+                                                                    type="text"
+                                                                    name="name"
+                                                                    value={level3Course.name}
+                                                                    onChange={(event) => handleInputChange(event, index, level3Index)}
+                                                                    placeholder='Tiêu đề'
+                                                                    className={`max-w-[450px] min-w-[250px] px-4 outline-none h-full  border  ${level3Course.readOnly ? 'border-b-[#003a47]' : 'border-[#003a47]'}`}
+                                                                    readOnly={level3Course.readOnly}
+                                                                    autoFocus={!level3Course.readOnly}
+                                                                />
+                                                            </div>
+                                                        </label>
+                                                    </Tooltip>
                                                     {content?.courseType === "DRAFT" && (
                                                         <>
                                                             {level3Course.readOnly ? (
