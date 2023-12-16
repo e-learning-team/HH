@@ -36,6 +36,7 @@ const Path = {
     ADMIN_P: "/admin/",
     ADMIN_USER: "user",
     ADMIN_COURSE: "course",
-    ADMIN_CATEGORY: "category"
+    ADMIN_CATEGORY: "category",
+    ADMIN_SALE: "sale"
 }
 export default Path

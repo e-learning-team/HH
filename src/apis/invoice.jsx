@@ -12,3 +12,12 @@ export const apiCreatePayment = (data) => axios({
         'Authorization': ``,
     }
 });
+
+export const apiGetInvoice = (params) => axios({
+    url: '/invoice/',
+    method: 'get',
+    params,
+    headers: {
+        'Authorization': ``,
+    }
+});

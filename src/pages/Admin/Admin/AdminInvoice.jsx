@@ -19,7 +19,7 @@ import { formatTimeStampTo_DDMMYYY } from '../../../utils/helper';
 import { ColumnGroup } from 'primereact/columngroup';
 import { Row } from 'primereact/row';
 import { Calendar } from 'primereact/calendar';
-const LecturerCourseEnroll = () => {
+const AdminInvoice = () => {
     const { isLoggedIn, avatarURL, userData, token, isLoading, message } = useOutletContext();
     const navigate = useNavigate();
     const [invoiceList, setInvoiceList] = useState([]);
@@ -43,7 +43,7 @@ const LecturerCourseEnroll = () => {
             const paramsAPI = new URLSearchParams();
             paramsAPI.set('max_result', params.rows != null ? params.rows : '10');
             paramsAPI.set('current_page', params.page != null ? params.page + 1 : '1');
-            paramsAPI.set('is_current_user', true);
+            paramsAPI.set('is_current_user', false);
             if (fromDate != null && fromDate > 0) {
                 paramsAPI.set('from_date', fromDate.getTime());
             }
@@ -85,7 +85,6 @@ const LecturerCourseEnroll = () => {
             getUsers(lazyParams);
             setLoading(false);
         }, Math.random() * 1000 + 250);
-
     }
 
     const onPage = (event) => {
@@ -122,6 +121,14 @@ const LecturerCourseEnroll = () => {
             <React.Fragment>
                 <span className="image-text font-medium">{rowData.customerName}</span> <br />
                 <span className="image-text">Email: {rowData.customerEmail}</span>
+            </React.Fragment>
+        );
+    }
+    const lectureBody = (rowData) => {
+        return (
+            <React.Fragment>
+                <span className="image-text font-medium">{rowData.sellerName}</span> <br />
+                <span className="image-text">Email: {rowData.sellerEmail}</span>
             </React.Fragment>
         );
     }
@@ -199,11 +206,11 @@ const LecturerCourseEnroll = () => {
                     <label htmlFor="from" className="font-bold">
                         Lọc từ ngày: &nbsp;
                     </label>
-                    <Calendar id="from" value={fromDate} onChange={(e) => { setFromDate(e.value);}} showTime dateFormat="dd/mm/yy" hourFormat="24"/>
+                    <Calendar id="from" value={fromDate} onChange={(e) => {setFromDate(e.value); }} showTime dateFormat="dd/mm/yy" hourFormat="24"/>
                     <label htmlFor="from" className="font-bold">
                         &nbsp; đến ngày: &nbsp;
                     </label>
-                    <Calendar id="from" value={toDate} onChange={(e) => { setToDate(e.value);}} showTime dateFormat="dd/mm/yy" hourFormat="24"/>
+                    <Calendar id="from" value={toDate} onChange={(e) => { setToDate(e.value);  }} showTime dateFormat="dd/mm/yy" hourFormat="24"/>
                 </div>
             </div>
         </div>
@@ -277,7 +284,7 @@ const LecturerCourseEnroll = () => {
     const footerGroup = (
         <ColumnGroup>
             <Row>
-                <Column footer="Tổng cộng:" colSpan={5} footerStyle={{ textAlign: 'right' }} />
+                <Column footer="Tổng cộng:" colSpan={6} footerStyle={{ textAlign: 'right' }} />
                 <Column footer={totalPrice?.toLocaleString() + " ₫"} />
             </Row>
         </ColumnGroup>
@@ -316,6 +323,7 @@ const LecturerCourseEnroll = () => {
                     <Column field="#" header="Thời gian" body={loading ? <Skeleton /> : (data, options) => formatTimeStampTo_DDMMYYY(data.createdAt, true)} headerStyle={{ width: '10%' }} ></Column>
                     <Column field="courseName" header="Khoá học" body={loading ? <Skeleton /> : null} headerStyle={{ width: '15%' }} ></Column>
                     <Column field="#" header="Người đăng ký" body={loading ? <Skeleton /> : registerBody} headerStyle={{ width: '10%' }} ></Column>
+                    <Column field="#" header="Giảng viên" body={loading ? <Skeleton /> : lectureBody} headerStyle={{ width: '10%' }} ></Column>
                     <Column field="#" header="Phí đăng ký" className="font-bold" body={loading ? <Skeleton /> : (data, options) => data.pricePurchase.toLocaleString() + " ₫"} headerStyle={{ width: '10%' }} ></Column>
                 </DataTable>
             </div>
@@ -325,4 +333,4 @@ const LecturerCourseEnroll = () => {
 }
 
 
-export default LecturerCourseEnroll
+export default AdminInvoice
