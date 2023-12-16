@@ -23,7 +23,7 @@ const LectureCourse = () => {
             try {
                 // const paramsAPI = getParams(pageIndex);
                 const paramsAPI = {
-                    created_by: userData?.id,
+                    created_by: window.location.pathname.normalize().includes('admin') ? '' : userData?.id,
                     build_child: false,
                     max_result: 20,
                     current_page: pageIndex || 1,
@@ -56,10 +56,13 @@ const LectureCourse = () => {
             // }
         }
     };
+    const handleChanged = () => {
+        getMyCourse(currentPage);
+    };
     const refresh = () => {
         setKeyword('');
         getMyCourse(1, true);
-    }
+    };
     const handleChangePage = (event, value) => {
         setCurrentPage(value);
         getMyCourse(value);
@@ -105,19 +108,21 @@ const LectureCourse = () => {
                     </div>
                 </div>
                 <div>
-                    <NavLink to={`${Path.LECTURER_P}save`}>
-                        <div className='min-w-[8rem] h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
-                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                Khóa học mới
-                            </Typography>
-                        </div>
-                    </NavLink>
+                    {!window.location.pathname.normalize().includes('admin') && (
+                        <NavLink to={`${Path.LECTURER_P}save`}>
+                            <div className='min-w-[8rem] h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
+                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                    Khóa học mới
+                                </Typography>
+                            </div>
+                        </NavLink>
+                    )}
                 </div>
             </div>
             {myCourseList.data?.length > 0 ? (
                 <>
                     {myCourseList?.data.map((content, index) => (
-                        <CourseCard key={index} content={content} />
+                        <CourseCard key={index} content={content} changed={handleChanged} />
                     ))}
                     {/* <CourseCard content={{ courseType: "DRAFT" }} />
                     <CourseCard content={{ courseType: "WAITING" }} />

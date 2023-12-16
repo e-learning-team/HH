@@ -36,6 +36,9 @@ const Path = {
     ADMIN_P: "/admin/",
     ADMIN_USER: "user",
     ADMIN_COURSE: "course",
-    ADMIN_CATEGORY: "category"
+    ADMIN_CATEGORY: "category",
+    ADMIN_SAVE_COURSE: "save/:courseId",
+    ADMIN_COURSE_PREVIEW_DETAIL: 'courses/:slug/preview',
+    ADMIN_COURSE_PREVIEW_LEARN: 'courses/learn/:slug/preview',
 }
 export default Path

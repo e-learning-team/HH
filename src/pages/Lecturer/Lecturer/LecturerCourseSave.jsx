@@ -959,7 +959,7 @@ const PriceContent = ({ content, handleChange }) => {
                             <Typography className='text-red-500'>{errors.price}</Typography>
                         </div>
                     )}
-                    {(content?.courseType === "DRAFT" || content?.contentType === "OFFICIAL") && (
+                    {(content?.courseType === "DRAFT" || content?.courseType === "OFFICIAL") && (
                         <div title='Lưu' onClick={handlePriceSave} className='h-[50px] mt-4 min-w-[40px] max-w-[278px] border border-[#003a47] group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:opacity-70 flex justify-center items-center'>
                             <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
                                 Lưu
@@ -986,7 +986,7 @@ const LecturerCourseSave = () => {
         setProcessing(true);
         try {
             const paramsAPI = {
-                created_by: userData?.id,
+                created_by: window.location.pathname.normalize().includes('admin') ? "" : userData?.id,
                 build_child: true,
                 ids: courseId
             };

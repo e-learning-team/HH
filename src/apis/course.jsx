@@ -31,3 +31,12 @@ export const apiLecturePublishCourse = (params) => axios({
     }
 });
 
+export const apiChangeCourseType = (params) => axios({
+    url: `/course/change-course-type`,
+    method: 'put',
+    params,
+    headers: {
+        'Authorization': ``,
+    }
+});
+

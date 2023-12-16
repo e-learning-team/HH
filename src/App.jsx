@@ -58,7 +58,10 @@ function App() {
         </Route>
         <Route path={Path.ADMIN_P} element={<Admin/>}>
           <Route path={Path.ADMIN_USER} element={<AdminUser/>}/>
-          <Route path={Path.ADMIN_COURSE}/>
+          <Route path={Path.ADMIN_COURSE} element={<LecturerCourse />} />
+          <Route path={Path.ADMIN_SAVE_COURSE} element={<LecturerCourseSave/>}/>
+          <Route path={Path.ADMIN_COURSE_PREVIEW_DETAIL} element={<CourseDeTail />} />
+          <Route path={Path.ADMIN_COURSE_PREVIEW_LEARN} element={<CourseLearn />} />
           <Route path={Path.ADMIN_CATEGORY} element={<AdminCategory/>}/>
         </Route>
 

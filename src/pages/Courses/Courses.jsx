@@ -42,6 +42,7 @@ const Courses = () => {
         paramsAPI.set('search_type', 'OFFICIAL');
         // paramsAPI.set('current_page', searchParams.get('page') || 1)
         paramsAPI.set('max_result', 3);
+        paramsAPI.set('is_deleted', 'false');
         paramsAPI.set('current_page', pageIndex || 1);
         if (categoryIds.length > 0) {
             categoryIds.forEach(categoryId => {
