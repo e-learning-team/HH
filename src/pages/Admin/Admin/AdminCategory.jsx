@@ -181,16 +181,18 @@ const AdminCategory = () => {
 
     const saveCategory = () => {
         setSubmitted(true);
-        const cate = {
-            title: category.title,
-            parent_id: category.parent?.id
+        if (category.title.trim()) {
+            const cate = {
+                title: category.title,
+                parent_id: category.parent?.id
+            }
+            createCategory(cate);
+            hideDialog();
         }
-        createCategory(cate);
-        hideDialog();
     }
 
     const actionBody = (rowData) => {
-        return (<Button icon="pi pi-trash" className="h-12 w-12" rounded outlined severity="danger" onClick={() => deleteCategory(rowData.data.id)}/>);
+        return (<Button icon="pi pi-trash" className="h-12 w-12" rounded outlined severity="danger" onClick={() => deleteCategory(rowData.data.id)} />);
     }
 
     const header = (
@@ -227,7 +229,7 @@ const AdminCategory = () => {
     );
 
     const textEditor = (options) => {
-        return <InputText type="text" className="w-full" value={options.rowData[options.field]} onChange={(e) => onEditorValueChange(options, e.target.value)} onBlur={(e) => onEditorUpdate(options, e.target.value)}/>;
+        return <InputText type="text" className="w-full" value={options.rowData[options.field]} onChange={(e) => onEditorValueChange(options, e.target.value)} onBlur={(e) => onEditorUpdate(options, e.target.value)} />;
     };
 
     const onEditorValueChange = (options, value) => {
@@ -237,7 +239,7 @@ const AdminCategory = () => {
         setNodes(newNodes);
     };
 
-    const onEditorUpdate = async(options, value) => {
+    const onEditorUpdate = async (options, value) => {
         console.log(options, "---", value)
         //call api apiUpdateCategoryName
         const respone = await apiUpdateCategoryName(options.node.key, value);
@@ -277,7 +279,7 @@ const AdminCategory = () => {
             <TreeTable value={nodes}
                 emptyMessage="Danh sách danh mục rỗng"
                 className="mt-4"
-                paginator rows={10} rowsPerPageOptions={[10, 20, 60]} 
+                paginator rows={10} rowsPerPageOptions={[10, 20, 60]}
                 tableStyle={{ minWidth: '50rem' }}
                 globalFilter={keyWord}
                 editMode="cell"
@@ -311,6 +313,7 @@ const AdminCategory = () => {
                         Tên:
                     </label>
                     <InputText id="name" value={category?.title} onChange={(e) => setCategory((category) => ({ ...category, title: e.target.value, }))} required autoFocus className={classNames({ 'p-invalid': submitted && !category?.title })} />
+                    {submitted && !category?.title && <small className="p-error">Không được bỏ trống tên danh mục.</small>}
                 </div>
                 <div className="field">
                     <label htmlFor="parent" className="font-bold">
@@ -318,7 +321,6 @@ const AdminCategory = () => {
                     </label>
                     <Dropdown id="parent" className="w-full" value={category?.parent} options={categories} onChange={(e) => setCategory((category) => ({ ...category, parent: e.value, }))} optionLabel="title" placeholder="Danh mục cha" />
                 </div>
-                {submitted && !category?.title && <small className="p-error">Không được bỏ trống tên danh mục.</small>}
             </Dialog>
         </div>
 

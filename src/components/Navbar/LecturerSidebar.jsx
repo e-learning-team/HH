@@ -1,7 +1,7 @@
 import { useState } from "react";
 import logoText from "../../assets/text_w_white_trans_bg.svg";
 import fullLogoText from "../../assets/text_w_full_white_trans_bg.svg";
-import { faArrowTrendUp, faTv, faBars, faAngleRight, faUsers, faIdBadge } from "@fortawesome/free-solid-svg-icons";
+import { faArrowTrendUp, faTv, faBars, faAngleRight, faUsers, faIdBadge ,faDollarSign} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tooltip, Typography } from "@material-tailwind/react";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ export const LectureSidebar = ({ handleHover }) => {
     const Menus = [
         { title: "Khóa học", src: faTv, path: Path.LECTURER_P + Path.LECTURER_COURSE },
         { title: "Số liệu", src: faArrowTrendUp, path: Path.LECTURER_P + "1" },
-        { title: "Doanh thu", src: faUsers, path: Path.LECTURER_P + Path.LECTURER_SALE },
+        { title: "Doanh thu", src: faDollarSign, path: Path.LECTURER_P + Path.LECTURER_SALE },
         { title: "Cá nhân", src: faIdBadge, path: Path.LECTURER_P + Path.LECTURER_PROFILE  },
         // { title: "Schedule ", src: "Calendar" },
         // { title: "Search", src: "Search" },

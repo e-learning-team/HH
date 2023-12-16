@@ -60,7 +60,7 @@ export function extractVideoGoogleGDriveUrlId(videoUrl) {
     const match = videoUrl.match(/\/file\/d\/(.+?)\//);
     return match ? match[1] : null;
 }
-export function formatTimeStampTo_DDMMYYY(timeStamp) {
+export function formatTimeStampTo_DDMMYYY(timeStamp, buildTime) {
     // Create a new Date object using the timestamp
     var date = new Date(timeStamp);
 
@@ -68,13 +68,19 @@ export function formatTimeStampTo_DDMMYYY(timeStamp) {
     var day = date.getDate();
     var month = date.getMonth() + 1; // Months are zero-based
     var year = date.getFullYear();
+    var hours = '';
+    var minutes = '';
+    if (buildTime) {
+        hours = date.getHours();
+        minutes = date.getMinutes();
+    }
 
     // Pad single-digit day and month with leading zeros
     var formattedDay = (day < 10) ? '0' + day : day;
     var formattedMonth = (month < 10) ? '0' + month : month;
 
-    // Format the date as 'DD/MM/YYYY'
-    var formattedDate = formattedDay + '/' + formattedMonth + '/' + year;
+    // Format the date as 'DD/MM/YYYY HH:mm'
+    var formattedDate = formattedDay + '/' + formattedMonth + '/' + year + (buildTime ? (" " + hours + ":" + minutes) : '');
 
     // Return the formatted date
     return formattedDate;
