@@ -7,6 +7,8 @@ import { Carousel } from "@material-tailwind/react";
 import axios from 'axios';
 import Card from '../components/Card/Card';
 import Footer from '../components/Footer/Footer';
+import { Helmet } from 'react-helmet-async';
+import logo from '../assets/logo-side.svg';
 const Home = () => {
   const [loadingRating, setLoadingRating] = useState(true);
   const [loadingSub, setLoadingSub] = useState(true);
@@ -52,7 +54,19 @@ const Home = () => {
 
   return (
     <div>
-      <div className="pt-[40px] mb-[80px] grid justify-center gap-6">
+      <Helmet>
+        { /* Standard metadata tags */}
+        <title>Wisdom E Learning</title>
+        <meta name='description' content="Wisdom chia sẻ kiến thức, kết nối đam mê - E Learning Team" />
+        { /* End standard metadata tags */}
+        { /* Facebook tags */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="Wisdom E Learning" />
+        <meta property="og:description" content="Wisdom chia sẻ kiến thức, kết nối đam mê - E Learning Team" />
+        <meta property="og:image" content={logo} />
+        { /* End Facebook tags */}
+      </Helmet>
+      <div className="pt-[40px] mb-[80px] lg:mx-32 px-4 grid justify-center gap-6">
         <div className="flex justify-center">
           <Carousel
             className="container w-full"
