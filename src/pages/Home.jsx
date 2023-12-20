@@ -20,7 +20,8 @@ const Home = () => {
       const params = {
         search_type: "OFFICIAL",
         sort_by: "HIGHEST_RATING",
-        max_result: "5"
+        max_result: "5",
+        is_deleted: false
       };
       const response = await apiGetCourse(params);
       if (response.data && response.data.data && response.data.data?.length > 0) {
@@ -35,7 +36,8 @@ const Home = () => {
       const params = {
         search_type: "OFFICIAL",
         sort_by: "HIGHEST_SUB",
-        max_result: "5"
+        max_result: "5",
+        is_deleted: false
       };
       const response = await apiGetCourse(params);
       if (response.data && response.data.data && response.data.data?.length > 0) {

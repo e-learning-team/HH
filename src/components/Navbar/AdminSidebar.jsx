@@ -1,7 +1,7 @@
 import { useState } from "react";
 import logoText from "../../assets/text_w_white_trans_bg.svg";
 import fullLogoText from "../../assets/text_w_full_white_trans_bg.svg";
-import { faArrowTrendUp, faTv, faBars, faAngleRight, faUsers, faBook, faList } from "@fortawesome/free-solid-svg-icons";
+import { faArrowTrendUp, faTv, faBars, faAngleRight, faUsers, faBook, faList, faHandHoldingDollar} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tooltip, Typography } from "@material-tailwind/react";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -13,6 +13,8 @@ export const AdminSidebar = ({ handleHover }) => {
         { title: "Người dùng", src: faUsers, path: Path.ADMIN_P + Path.ADMIN_USER},
         { title: "Khoá học", src: faBook, path: Path.ADMIN_P + Path.ADMIN_COURSE},
         { title: "Danh mục", src: faList, path: Path.ADMIN_P + Path.ADMIN_CATEGORY},
+        { title: "Doanh thu", src: faHandHoldingDollar, path: Path.ADMIN_P + Path.ADMIN_SALE},
+
     ];
     const [active, setActive] = useState(false);
     const handleActiveLink = (active) => {

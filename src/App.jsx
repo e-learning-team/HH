@@ -24,6 +24,8 @@ import Admin from './pages/Admin/Admin'
 import AdminUser from './pages/Admin/Admin/AdminUser';
 import AdminCategory from './pages/Admin/Admin/AdminCategory';
 import VnPayReturn from './pages/Invoice/VnPayReturn';
+import LecturerCourseEnroll from './pages/Lecturer/Lecturer/LecturerCourseEnroll';
+import AdminInvoice from './pages/Admin/Admin/AdminInvoice';
 
 function App() {
   return (
@@ -48,6 +50,7 @@ function App() {
         <Route path={Path.LECTURER_P} element={<Lecturer />}>
           <Route path={Path.LECTURER_P + Path.LECTURER_COURSE} element={<LecturerCourse />} />
           <Route path={Path.LECTURER_P + Path.LECTURER_PROFILE} element={<LecturerProfile />} />
+          <Route path={Path.LECTURER_P + Path.LECTURER_SALE} element={<LecturerCourseEnroll />} />
           <Route path={Path.LECTURER_P + Path.LECTURER_NEW_COURSE} element={<LecturerCourseNew/>}/>
           <Route path={Path.LECTURER_P + Path.LECTURER_SAVE_COURSE} element={<LecturerCourseSave/>}/>
 
@@ -56,8 +59,12 @@ function App() {
         </Route>
         <Route path={Path.ADMIN_P} element={<Admin/>}>
           <Route path={Path.ADMIN_USER} element={<AdminUser/>}/>
-          <Route path={Path.ADMIN_COURSE}/>
+          <Route path={Path.ADMIN_COURSE} element={<LecturerCourse />} />
+          <Route path={Path.ADMIN_SAVE_COURSE} element={<LecturerCourseSave/>}/>
+          <Route path={Path.ADMIN_COURSE_PREVIEW_DETAIL} element={<CourseDeTail />} />
+          <Route path={Path.ADMIN_COURSE_PREVIEW_LEARN} element={<CourseLearn />} />
           <Route path={Path.ADMIN_CATEGORY} element={<AdminCategory/>}/>
+          <Route path={Path.ADMIN_SALE} element={<AdminInvoice/>}/>
         </Route>
 
         <Route path={Path.COURSE_LEARN} element={<CourseLearn />} />

@@ -67,12 +67,12 @@ const CourseDeTail = () => {
     };
     const handleEnroll = async () => {
         console.log("CLICK enroll");
-        setLoading(true)
+        setLoading(true);
         if (!isLoggedIn || !userData) {
             toast.warning(`Vui lòng đăng nhập trước`, {
                 position: toast.POSITION.TOP_RIGHT,
             });
-            setLoading(false)
+            setLoading(false);
             return;
         }
         const data = {
@@ -82,12 +82,12 @@ const CourseDeTail = () => {
         //Kiểm tra nếu có giá tiền thì thanh toán trc khi enroll
         if (course.data[0]?.price_sell > 0) {
             const response = await apiGetPaymentUrl(data.course_id, data.user_id);
-            if (response.status === 0) { 
+            if (response.status === 0) {
                 toast.error(`${response.message}`, {
                     position: toast.POSITION.TOP_RIGHT,
                 });
             } else {
-                dispatch(coursePay({course_payment: slug}))
+                dispatch(coursePay({ course_payment: slug }));
                 window.location.href = response;
                 return;
             }
@@ -104,7 +104,7 @@ const CourseDeTail = () => {
                 position: toast.POSITION.TOP_RIGHT,
             });
         }
-        setLoading(false)
+        setLoading(false);
     };
     const checkEnroll = async (course_id) => {
         const res = await apiCheckEnrollment(course_id);
@@ -193,7 +193,7 @@ const CourseDeTail = () => {
                                                 <NavLink to={`/courses/learn/${slug}`} className="flex-1 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm ring-1 ring-inset bg-[#29abe2] shadow-lg w-full h-[60px] hover:bg-[#088ab7] font-bold text-white">Học ngay</NavLink>
                                             ) : (
                                                 <>
-                                                    {course.data[0].created_by == userData.id ? (
+                                                    {course.data[0].created_by == userData?.id ? (
                                                         <>
                                                             <NavLink to={`/lecturer/courses/learn/${slug}/preview`} className="flex-1 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm ring-1 ring-inset bg-[#29abe2] shadow-lg w-full h-[60px] hover:bg-[#088ab7] font-bold text-white">Xem ngay</NavLink>
                                                         </>
@@ -239,9 +239,12 @@ const CourseDeTail = () => {
                             </div>
                             <div className='mt-4 max-w-[46rem]'>
                                 <div>
-                                    <span>
+                                    <div className='' dangerouslySetInnerHTML={{
+                                        __html: `${course.data[0].description || `Không có mô tả`}`
+                                    }} />
+                                    {/* <span>
                                         {course.description}
-                                    </span>
+                                    </span> */}
                                 </div>
                             </div>
                         </div>
@@ -269,8 +272,9 @@ const CourseDeTail = () => {
                                 </h1>
                             </div>
                             <div className='mt-4 max-w-[46rem]'>
-                                <ul className='list-disc list-inside'>
-                                </ul>
+                                <div className='' dangerouslySetInnerHTML={{
+                                    __html: `${course.data[0].requirement || `Không có yêu cầu`}`
+                                }} />
                             </div>
                         </div>
                     </div>

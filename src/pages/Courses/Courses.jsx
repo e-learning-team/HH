@@ -42,6 +42,7 @@ const Courses = () => {
         paramsAPI.set('search_type', 'OFFICIAL');
         // paramsAPI.set('current_page', searchParams.get('page') || 1)
         paramsAPI.set('max_result', 3);
+        paramsAPI.set('is_deleted', 'false');
         paramsAPI.set('current_page', pageIndex || 1);
         if (categoryIds.length > 0) {
             categoryIds.forEach(categoryId => {
@@ -53,8 +54,8 @@ const Courses = () => {
                 paramsAPI.append('categories_ids', categoryId);
             });
             categoryIds.forEach(categoryId => {
-                paramsAPI.delete('categories_ids', categoryId)
-            })
+                paramsAPI.delete('categories_ids', categoryId);
+            });
         }
         // setLoading(false)
         return paramsAPI;
@@ -78,13 +79,13 @@ const Courses = () => {
         }
     };
     const handleChangePage = (event, value) => {
-        setCurrentPage(value)
+        setCurrentPage(value);
         searchCourse(value);
     };
     const handleDeleteFilters = () => {
         console.log("Delete Filters");
         setLoading(true);
-        setCurrentPage(1)
+        setCurrentPage(1);
         setSearchParams((currentSearchParams) => {
             const newSearchParams = new URLSearchParams(currentSearchParams.toString());
             const keywordValue = newSearchParams.get('keyword');
@@ -106,8 +107,8 @@ const Courses = () => {
     };
     useEffect(() => {
         setLoading(true);
-        setCurrentPage(1)
-        
+        setCurrentPage(1);
+
         if (searchParams.get('category')) {
             setParentCategory(searchParams.get('category'));
         }
@@ -154,7 +155,7 @@ const Courses = () => {
                                         <>
                                             {`${(courseList?.data?.length)?.toLocaleString()} trên ${(courseList?.total)?.toLocaleString()}`}
                                         </>
-                                    ): ('Không có')}
+                                    ) : ('Không có')}
                                 </Typography>
                                 <Typography className='font-bold text-base text-[#8c9196]'>
                                     {` Kết quả`}
@@ -198,8 +199,6 @@ const Courses = () => {
                     <div className='flex justify-center mb-[40px] pb-[40px]'>
                         <Pagination size='large' className='text-xl' page={currentPage} onChange={handleChangePage} count={courseList?.total_page} showFirstButton showLastButton />
                     </div>
-
-                    // <Pagination total_pages={courseList?.totalPage} />
                 )}
             </div>
             {loading && (

@@ -14,7 +14,14 @@ export const apiSaveCourse = (data) => axios({
         'Authorization': ``,
     }
 });
-
+export const apiDeleteCourse = (id, params) => axios({
+    url: `/course/delete/${id}`,
+    method: 'delete',
+    params,
+    headers: {
+        'Authorization': ``,
+    }
+});
 export const apiLecturePublishCourse = (params) => axios({
     url: `/course/lecturer/change-course-type`,
     method: 'put',
@@ -23,3 +30,13 @@ export const apiLecturePublishCourse = (params) => axios({
         'Authorization': ``,
     }
 });
+
+export const apiChangeCourseType = (params) => axios({
+    url: `/course/change-course-type`,
+    method: 'put',
+    params,
+    headers: {
+        'Authorization': ``,
+    }
+});
+
