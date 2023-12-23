@@ -205,16 +205,24 @@ const CourseCard = ({ content, changed }) => {
                                     </DialogTitle>
                                     <DialogContent>
                                         <DialogContentText id="alert-dialog-description">
-                                            {/* <span className='block font-semibold text-lg'>
+                                            <span className='block font-semibold text-lg'>
                                                 Với giá:
-                                                {(content?.price_sell > 0 || content?.attributes?.length > 0) ? (
+                                                {(content?.price_sell > 0) ? (
                                                     <>
-                                                        &nbsp;<span className='font-bold text-lg text-black underline mx-1'>{content?.attributes[0]?.attributeValue ? (parseInt(content?.attributes[0]?.attributeValue).toLocaleString()) : (content?.price_sell.toLocaleString())}</span>&nbsp;Vnđ
+                                                        &nbsp;<span className='font-bold text-lg text-black underline mx-1'>{(content?.price_sell.toLocaleString())}</span>&nbsp;Vnđ
                                                     </>
                                                 ) : (
                                                     <span className='font-bold text-lg text-black'> Miễn phí</span>
                                                 )}
-                                            </span> */}
+                                                {(content?.attributes?.length > 0 && content?.attributes[0]?.attributeValue) ? (
+                                                    <div>
+                                                    Với giá bán mới:
+                                                        &nbsp;<span className='font-bold text-lg text-black underline mx-1'>{content?.attributes[0]?.attributeValue ? (parseInt(content?.attributes[0]?.attributeValue).toLocaleString()) : (content?.price_sell.toLocaleString())}</span>&nbsp;Vnđ
+                                                    </div>
+                                                ) : (
+                                                    <></>
+                                                )}
+                                            </span>
                                             {/* <span className='block font-normal text-lg mt-4'>
                                             Xuất bản khóa học sẽ không thể chỉnh sửa lại được.
                                             <br />

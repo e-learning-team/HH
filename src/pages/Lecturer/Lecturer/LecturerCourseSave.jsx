@@ -338,7 +338,7 @@ const VideoContent = ({ content, handleChange }) => {
                             </Typography>
                         )}
                     </div>
-                    {content?.courseType === "DRAFT" && (
+                    {content?.courseType === "DRAFT"  && (
                         <>
                             <input
                                 type="file"
@@ -442,7 +442,7 @@ const CourseContent = ({ content }) => {
     const handleAddLevel3Course = (index) => {
         handleUnEditCourseAll();
         const newCourses = [...courses];
-        newCourses[index].children.push({ type: 'VIDEO', name: '' });
+        newCourses[index].children.push({ type: 'VIDEO', name: '', courseType: 'DRAFT' });
         setCourses(newCourses);
     };
 
