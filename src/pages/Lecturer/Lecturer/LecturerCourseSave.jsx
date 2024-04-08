@@ -6,7 +6,7 @@ import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { apiCategory } from '../../../apis/category';
 import { MultiSelect } from 'primereact/multiselect';
-import { apiDeleteCourse, apiGetCourse, apiLecturePublishCourse, apiSaveCourse } from '../../../apis/course';
+import { apiDeleteCourse, apiGetCourse, apiLecturePublishCourse, apiSaveCourse, apiUpdateIsPreview } from '../../../apis/course';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp, faFloppyDisk, faPen, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { apiDeleteFileByPathFile, apiUploadFile } from '../../../apis/fileRelationship';
@@ -17,6 +17,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { Checkbox } from "primereact/checkbox";
 const IntroductionContent = ({ content, handleChange }) => {
     const [loading, setLoading] = useState(false);
     const [processing, setProcessing] = useState(true);
@@ -326,7 +327,7 @@ const VideoContent = ({ content, handleChange }) => {
     }, []);
     return (
         <>
-            <div className='my-6 min-w-[300px] w-[715px]'>
+            <div className='min-w-[300px] w-[715px]'>
                 <div className='w-full flex justify-between items-center mb-6 relative h-[35px] border rounded-sm border-[#003a47]'>
                     <div className='mx-3 w-full h-full flex items-center line-clamp-1  '>
                         <Typography className='w-full !line-clamp-1 truncate cursor-default'>
@@ -338,7 +339,7 @@ const VideoContent = ({ content, handleChange }) => {
                             </Typography>
                         )}
                     </div>
-                    {content?.courseType === "DRAFT"  && (
+                    {content?.courseType === "DRAFT" && (
                         <>
                             <input
                                 type="file"
@@ -415,11 +416,218 @@ const VideoContent = ({ content, handleChange }) => {
     );
 };
 
+const ImageContent = ({ content, handleChange }) => {
+    const [fileInputRef, setFileInputRef] = useState(null);
+    const [imageLoading, setImageLoading] = useState(false);
+    const [loadingImage, setLoadingImage] = useState(true);
+    const [image, setImage] = useState(null);
+    const [processing, setProcessing] = useState(false);
+    const handleRemoveImage = () => {
+        setImage(null);
+        setLoadingImage(true);
+        if (fileInputRef && fileInputRef.value) {
+            fileInputRef.value = ''; // Reset the file input
+        }
+    };
+    const handleImageChange = (e) => {
+        setImageLoading(true);
+        setProcessing(true);
+        const file = e.target.files[0];
+        if (file) {
+            if (file.type.includes("image")) {
+                setImage(file);
+            } else {
+                toast.error("Hình ảnh không hợp lệ!", {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+                handleRemoveImage();
+            }
+        }
+        setImageLoading(false);
+        setProcessing(false);
+    };
+    const deleteImage = async () => {
+        const params = {
+            path_file: content?.image_path,
+        };
+        console.log('params----', content);
+        if (image) {
+            try {
+                setImageLoading(true);
+                setProcessing(true);
+                const res = await apiDeleteFileByPathFile(params);
+                if (res.status == 1) {
+                    toast.success(`Xóa ảnh cũ thành công!`, {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                }
+                setImageLoading(false);
+                setProcessing(false);
+            } catch (e) {
+            }
+        }
+    };
+    const uploadImage = async () => {
+        const params = {
+            parent_id: content?.id,
+            parent_type: "COURSE_IMAGE"
+        };
+        if (image) {
+            try {
+                setImageLoading(true);
+                setProcessing(true);
+                const formData = new FormData();
+                formData.append('file', image);
+                console.log(formData);
+                const imageUrl = await apiUploadFile(formData, params);
+
+                if (imageUrl && imageUrl.data?.path_file) {
+                    toast.success("Tải ảnh lên thành công!", {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                    // handleRemoveVideo();
+                }
+
+            } catch (e) {
+                console.error('Upload failed:', e);
+
+                toast.error(`Tải ảnh lên không thành công!`, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+        }
+        setImageLoading(false);
+        setProcessing(false);
+    };
+    const handleUploadImage = async () => {
+        if (image) {
+            setImageLoading(true);
+            setProcessing(true);
+
+            await deleteImage();
+            await uploadImage();
+            handleChange && handleChange(true);
+
+            setImageLoading(false);
+            setProcessing(false);
+
+        } else {
+            console.warn('No image selected for upload.');
+        }
+    };
+    useEffect(() => {
+        // console.log(content);
+    }, []);
+    return (
+        <>
+            <div className='min-w-[300px] w-[715px]'>
+                <div className='w-full flex justify-between items-center mb-6 relative h-[35px] border rounded-sm border-[#003a47]'>
+                    <div className='mx-3 w-full h-full flex items-center line-clamp-1  '>
+                        <Typography className='w-full !line-clamp-1 truncate cursor-default'>
+                            {`${(content?.image_path && !image) ? content?.image_path : (image ? image?.name : "Chưa có file được chọn")}`}
+                        </Typography>
+                        {image && (
+                            <Typography onClick={handleRemoveImage} className='cursor-pointer h-full flex items-center justify-between px-3' title='Hủy' >
+                                <FontAwesomeIcon className='' icon={faXmark} />
+                            </Typography>
+                        )}
+                    </div>
+                    {/* {content?.courseType === "DRAFT" && ( */}
+                        <>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                onChange={handleImageChange}
+                                ref={(fileInput) => (setFileInputRef(fileInput))}
+                            />
+                            <button onClick={() => fileInputRef && fileInputRef.click()} className="bg-[#3366cc] !rounded-none w-[100px] h-full ring-gray-300 hover:opacity-80 text-white" >Chọn</button>
+                        </>
+                    {/* )} */}
+                </div>
+                <div className='w-full min-h-[230px] h-[350px] relative flex border rounded-sm border-[#003a47]'>
+                    <div className='relative h-full flex justify-center items-center  w-full bg-[#f0f2f4]'>
+                        {imageLoading ? (
+                            <Spinner className='w-[60px] object-cover object-center h-auto' color="teal" />
+                        ) : (
+                            <>
+                                {(content?.image_path && !image) ? (
+                                    <>
+                                        {loadingImage ? (
+                                            <div className='absolute flex justify-center items-center top-0 left-0 w-full h-full'>
+                                                <Spinner className='w-20 h-auto' color="teal" />
+                                            </div>
+                                        ) : <></>}
+                                        {/* <iframe
+                                            className='w-full h-full'
+                                            src={content?.video_path}
+                                            allowFullScreen
+                                            onLoad={() => setLoadingImage(false)}
+                                            allow="autoplay"
+                                            autoPlay>
+                                            <p>Trình duyệt của bạn không có phép iframe.</p>
+                                        </iframe> */}
+                                        <img
+                                            src={content?.image_path}
+                                            alt={content?.name}
+                                            onLoad={() => setLoadingImage(false)}
+                                            className="h-full w-full object-cover"
+                                        />
+
+                                    </>
+                                ) : (
+                                    <>
+                                        {image ? (
+                                            <>
+                                                {/* <video width="" className='w-full h-full' controls>
+                                                    <source src={image ? URL.createObjectURL(image) : ''} type="video/mp4" />
+                                                    Không hỗ trợ video.
+                                                </video> */}
+                                                <img
+                                                    src={image ? URL.createObjectURL(image) : ''}
+                                                    type="image/*"
+                                                    alt={content?.name}
+                                                    controls
+                                                    className="h-full w-full object-cover"
+                                                />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Typography>Chưa có hình ảnh được chọn</Typography>
+                                            </>
+                                        )}
+                                    </>
+                                )}
+                            </>
+                        )}
+                    </div>
+                </div>
+                {image && (
+                    <div
+                        onClick={() => handleUploadImage()}
+                        className={`${processing ? 'pointer-events-none' : ''} h-[50px] mt-2 relative border group/sort duration-200 hover:opacity-75 bg-[#3366cc] text-white cursor-pointer border-[#829093] flex justify-center items-center`}>
+                        <Typography className='font-semibold text-base text-white duration-200 '>
+                            Lưu
+                        </Typography>
+                        {processing && (
+                            <span className='bg-slate-400 absolute z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
+                                <Spinner className='h-auto text-[#fff]' color="cyan" />
+                            </span>
+                        )}
+                    </div>
+                )}
+            </div>
+
+        </>
+    );
+};
+
+
 const CourseContent = ({ content }) => {
     const [courses, setCourses] = useState([]);
     const [processing, setProcessing] = useState(false);
     const [level3Add, setLevel3Add] = useState(false);
-
+    const [checked, setChecked] = useState(false);
     const handleInputChange = (event, index, level3Index = null) => {
         const newCourses = [...courses];
         if (level3Index !== null) {
@@ -622,6 +830,23 @@ const CourseContent = ({ content }) => {
         }
         setProcessing(false);
     };
+    const handleChangePreview = async (index, level3Index) => {
+        const newCourses = [...courses];
+        setProcessing(true);
+        let is_preview = false
+        if (newCourses[index].children[level3Index].is_preview === null || newCourses[index].children[level3Index].is_preview === false) {
+            is_preview = true;
+        }
+        const params = {
+            course_id: newCourses[index].children[level3Index].id,
+            is_preview: is_preview,
+        };
+        console.log(params);
+        const res = await apiUpdateIsPreview(params);
+        newCourses[index].children[level3Index].is_preview = is_preview;
+        setCourses(newCourses);
+        setProcessing(false);
+    };
     useEffect(() => {
         getCourseChild();
 
@@ -739,21 +964,31 @@ const CourseContent = ({ content }) => {
                                                         </>
                                                     )}
                                                 </div>
-                                                <div onClick={() => handleShowContent(index, level3Index)} className='h-[40px] hover:bg-slate-100 flex items-center justify-center cursor-pointer' title={`${level3Course.showVideoContent ? 'Xem nội dung' : 'Ẩn nội dung'}`}>
-                                                    {level3Course.showVideoContent ?
-                                                        (
-                                                            <Typography className='flex items-center gap-1 px-1 min-w-[110px]'>
-                                                                Ẩn nội dung
-                                                                <FontAwesomeIcon icon={faChevronUp} />
+                                                <div className="flex">
+                                                    {level3Course?.id !== undefined && content.price_sell !== undefined && content.price_sell > 0 && (
+                                                        <div className="flex align-items-center mr-4">
+                                                            <Checkbox inputId="ingredient1" onChange={e => handleChangePreview(index, level3Index)} checked={level3Course?.is_preview}></Checkbox>
+                                                            <Typography className='flex items-center gap-1 px-1'>
+                                                                Xem trước
                                                             </Typography>
-                                                        ) :
-                                                        (
-                                                            <Typography className='flex items-center gap-1 px-1 min-w-[110px]'>
-                                                                Hiện nội dung
-                                                                <FontAwesomeIcon icon={faChevronDown} />
-                                                            </Typography>
-                                                        )
-                                                    }
+                                                        </div>
+                                                    )}
+                                                    <div onClick={() => handleShowContent(index, level3Index)} className='h-[40px] hover:bg-slate-100 flex items-center justify-center cursor-pointer' title={`${level3Course.showVideoContent ? 'Xem nội dung' : 'Ẩn nội dung'}`}>
+                                                        {level3Course.showVideoContent ?
+                                                            (
+                                                                <Typography className='flex items-center gap-1 px-1 min-w-[110px]'>
+                                                                    Ẩn nội dung
+                                                                    <FontAwesomeIcon icon={faChevronUp} />
+                                                                </Typography>
+                                                            ) :
+                                                            (
+                                                                <Typography className='flex items-center gap-1 px-1 min-w-[110px]'>
+                                                                    Hiện nội dung
+                                                                    <FontAwesomeIcon icon={faChevronDown} />
+                                                                </Typography>
+                                                            )
+                                                        }
+                                                    </div>
                                                 </div>
                                             </div>
                                             {(level3Course && level3Course.readOnly) && (
@@ -779,7 +1014,7 @@ const CourseContent = ({ content }) => {
                                                                 </div>
                                                                 <div className=''>
                                                                     <Typography className='font-medium'>Mô tả</Typography>
-                                                                    <div className='my-6'>
+                                                                    <div className=''>
                                                                         {content?.courseType === "DRAFT" ? (
                                                                             <>
                                                                                 <div title='Lưu' disabled={course?.courseType !== 'DRAFT'} onClick={() => handleSaveLevel3Description(index, level3Index)} className='mb-6 h-[33px]  min-w-[40px] border border-[#003a47] group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:opacity-70 flex justify-center items-center'>
@@ -858,7 +1093,6 @@ const PriceContent = ({ content, handleChange }) => {
             setPriceType('PAID');
             setPriceValue(10000);
         }
-
     };
     const validateForm = () => {
         let valid = true;
@@ -1025,7 +1259,7 @@ const LecturerCourseSave = () => {
 
     const tabContentMap = [
         'Thông tin giới thiệu',
-        'Video giới thiệu',
+        'Hình ảnh & Video giới thiệu',
         'Nội dung khóa học',
         'Giá tiền',
         // 'Cài đặt',
@@ -1134,8 +1368,18 @@ const LecturerCourseSave = () => {
                                 {(activeTab === 'Thông tin giới thiệu') && (
                                     <IntroductionContent content={myCourse} handleChange={handleChangeIntroductionContent} />
                                 )}
-                                {activeTab === 'Video giới thiệu' && (
-                                    <VideoContent content={myCourse} handleChange={handleChangeIntroductionContent} />
+                                {activeTab === 'Hình ảnh & Video giới thiệu' && (
+                                    <div className="flex justify-between">
+                                        <div>
+                                        <label htmlFor="imageContent" className="font-bold block mb-2">Hình ảnh:</label>
+                                            <ImageContent id="imageContent" content={myCourse} handleChange={handleChangeIntroductionContent} />
+                                        </div>
+                                        <div>
+                                        <label htmlFor="imageContent" className="font-bold block mb-2">Video:</label>
+                                            <VideoContent content={myCourse} handleChange={handleChangeIntroductionContent} />
+                                        </div>
+
+                                    </div>
                                 )}
                                 {activeTab === 'Nội dung khóa học' && (
                                     <CourseContent content={myCourse} />

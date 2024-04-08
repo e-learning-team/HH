@@ -71,7 +71,7 @@ const CourseCard = ({ content, changed }) => {
         <div className="border border-[#d1d7dc] mb-6 flex h-[120px]">
             <div className="h-full max-w-[120px] ">
                 <img
-                    src={content?.video_path ? getVideoThumbnailGoogleGDriveUrl(extractVideoGoogleGDriveUrlId(content?.video_path)) : noImg}
+                    src={content.image_path ? content.image_path : noImg}
                     className="transition w-full h-full max-w-[120px] max-h-[120px] min-w-[120px] min-h-full border-none outline-none  object-cover" />
             </div>
             <div className="flex w-full h-full">

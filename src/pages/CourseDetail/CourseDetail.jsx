@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { apiCheckEnrollment, apiSaveEnrollment } from '../../apis/enrollment';
 import { apiGetPaymentUrl } from '../../apis/invoice';
 import { coursePay } from '../../store/User/userSlice';
+import noImg from '../../assets/no-image-icon.jpg';
 
 const CourseDeTail = () => {
     const { isLoggedIn, userData, token, isLoading, message } = useSelector((state) => state.user);
@@ -179,9 +180,9 @@ const CourseDeTail = () => {
                                             <span className='absolute h-full w-full bg-gradient-to-b from-transparent to-black  '>
                                             </span>
 
-                                            <img className='h-full w-full bg-cover object-contain' src={course.data[0].video_path
-                                                ? getVideoThumbnailGoogleGDriveUrl(extractVideoGoogleGDriveUrlId(course.data[0].video_path))
-                                                : "https://img-c.udemycdn.com/course/240x135/5246952_37c4.jpg"} />
+                                            <img className='h-full w-full bg-cover object-contain' src={course.data[0].image_path
+                                                ? course.data[0].image_path
+                                                : noImg}/>
                                         </div>
                                     </div>
                                     <div className='p-6  bg-white rounded-b-lg'>

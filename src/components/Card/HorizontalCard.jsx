@@ -17,7 +17,7 @@ const HorizontalCard = ({ className, content }) => {
                         {/* <img className='h-full w-full bg-cover' src={getVideoThumbnailGoogleGDriveUrl(extractVideoGoogleGDriveUrlId(content.video_path))} /> */}
                         <img
                             alt={content.name}
-                            src={content.video_path ? getVideoThumbnailGoogleGDriveUrl(extractVideoGoogleGDriveUrlId(content.video_path)) : noImg}
+                            src={content.image_path ? content.image_path : noImg}
                             className="transition w-full h-full group-hover/item:opacity-90 object-cover" />
                     </div>
                     <div className="lg:col-span-3 md:col-span-3 sm:col-span-3">

@@ -14,6 +14,15 @@ export const apiSaveCourse = (data) => axios({
         'Authorization': ``,
     }
 });
+export const apiUpdateIsPreview = (params) => axios({
+    url: '/course/update-is-preview',
+    method: 'put',
+    params,
+    headers: {
+        'Authorization': ``,
+    }
+})
+
 export const apiDeleteCourse = (id, params) => axios({
     url: `/course/delete/${id}`,
     method: 'delete',

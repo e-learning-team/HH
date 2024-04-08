@@ -1,0 +1,23 @@
+.swiper {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide {
+    display: flex;
+}
+
+.swiper-slide {
+    width: 60%;
+}
+
+.home-banner {
+    background-image: url(https://hoctapgiare.top/uploads/system/home-banner.jpg);
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: 50%;
+    padding: 120px 0px;
+    display: block;
+    unicode-bidi: isolate;
+    font-weight: 400;
+}

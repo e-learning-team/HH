@@ -46,7 +46,7 @@ const Card = ({ content, isEnrolled, enrollmentContent }) => {
                                 <div id="image" className='bg-[#f3f3f3]'>
                                     <img
                                         alt={content.name}
-                                        src={content.video_path ? getVideoThumbnailGoogleGDriveUrl(extractVideoGoogleGDriveUrlId(content.video_path)) : noImg}
+                                        src={content.image_path ? content.image_path : noImg}
                                         className="aspect-video rounded-t transition group-hover/item:opacity-90 w-full object-cover p-2" />
                                 </div>
                                 <div id="card-content" className='h-auto pb-1'>
@@ -70,7 +70,6 @@ const Card = ({ content, isEnrolled, enrollmentContent }) => {
                                             <Rating readOnly value={totalRatings.averageRate} precision={0.5} size='small'></Rating>
                                             <Typography className='font-light text-sm underline text-gray-500'>({totalRatings?.totalRatings})</Typography>
                                         </div>
-
                                     )}
                                     {/* <RatingBar className="w-full line-clamp-1" value={4.2} totalReview={245} /> */}
 
