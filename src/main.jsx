@@ -11,6 +11,8 @@ import "react-toastify/dist/ReactToastify.css";
 import "primeflex/primeflex.css";
 import "primeicons/primeicons.css";
 import { PrimeReactProvider } from 'primereact/api';
+import 'flowbite';
+import 'flowbite-react'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <PrimeReactProvider>
     <Provider store={store}>

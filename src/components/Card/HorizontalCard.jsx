@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { getVideoThumbnailGoogleGDriveUrl } from "../../utils/Constants";
 import { calcRating, extractVideoGoogleGDriveUrlId } from "../../utils/helper";
 import { RatingBar } from "../RatingBar/RatingBar";
-import noImg from '../../assets/no-image-icon.jpg';
+import noImg from "../../assets/no-image-icon.jpg";
 import { Typography } from "@mui/material";
 
 const HorizontalCard = ({ className, content }) => {
@@ -18,42 +18,47 @@ const HorizontalCard = ({ className, content }) => {
                         <img
                             alt={content.name}
                             src={content.image_path ? content.image_path : noImg}
-                            className="transition w-full h-full group-hover/item:opacity-90 object-cover" />
+                            className="transition w-full h-full group-hover/item:opacity-90 object-cover"
+                        />
                     </div>
                     <div className="lg:col-span-3 md:col-span-3 sm:col-span-3">
                         <div className="flex h-full">
                             <div className="w-full h-full">
                                 <div className="mx-1 flex flex-col justify-between h-full">
                                     <h3 className="font-bold line-clamp-1 group-hover/item:underline">
-                                        {content.name ? content.name : (
-                                            <>
-                                                Javascript cho người mới bắt đầu Javascript cho người mới bắt đầu Javascript cho người mới bắt đầu
-                                            </>
-                                        )}
+                                        {content.name && content.name}
                                     </h3>
-                                    <p className="text-sm line-clamp-2">
-                                        {content.description ? content.description : (
-                                            <>
-                                                Javascript cho người mới bắt đầu Javascript cho người mới bắt đầu
-                                                Javascript cho người mới bắt đầu Javascript cho người mới bắt đầu
-                                                Javascript cho người mới bắt đầu Javascript cho người mới bắt đầu
-                                            </>
-                                        )}
-
-                                    </p>
+                                    {content.description && (
+                                        <div className="text-sm line-clamp-2">
+                                            <div
+                                                className=""
+                                                dangerouslySetInnerHTML={{
+                                                    __html: `${content.description || ""}`,
+                                                }}
+                                            />
+                                        </div>
+                                    )}
                                     <div className="mt-2 mb-1">
                                         <div className="text-sm flex justify-start items-center line-clamp-1">
-                                            <Typography className='font-bold text-sm'>Tác giả </Typography>&nbsp;&nbsp;
-                                            <Typography className='text-sm'>
+                                            <Typography className="font-bold text-sm">
+                                                Tác giả{" "}
+                                            </Typography>
+                                            &nbsp;&nbsp;
+                                            <Typography className="text-sm">
                                                 {content.created_user_info[content.created_by]}
                                             </Typography>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3 mx-1">
-                                        <RatingBar value={totalRatings.averageRate.toFixed(1)} totalReview={totalRatings.totalRatings} />
+                                        <RatingBar
+                                            value={totalRatings.averageRate.toFixed(1)}
+                                            totalReview={totalRatings.totalRatings}
+                                        />
                                         {/* <span className="w-1 h-1 mx-1.5 bg-gray-500 rounded-full dark:bg-gray-400"></span> */}
                                         <span>•</span>
-                                        <span className="text-sm">{content.subscriptions || 0} đã đăng kí.</span>
+                                        <span className="text-sm">
+                                            {content.subscriptions || 0} đã đăng kí.
+                                        </span>
                                         {/* <svg className="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
                                         <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
                                     </svg>
@@ -65,7 +70,11 @@ const HorizontalCard = ({ className, content }) => {
                             </div>
                             <div className="mx-1 mt-1.5">
                                 <h3 className="font-bold line-clamp-1 w-max">
-                                    {content.price_sell ? content.price_sell.toLocaleString() + "₫" : (<>Miễn phí</>)}
+                                    {content.price_sell ? (
+                                        content.price_sell.toLocaleString() + "₫"
+                                    ) : (
+                                        <>Miễn phí</>
+                                    )}
                                 </h3>
                             </div>
                         </div>

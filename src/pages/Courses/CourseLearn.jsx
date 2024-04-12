@@ -6,6 +6,7 @@ import { Typography } from "@material-tailwind/react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Spinner } from "@material-tailwind/react";
 import {
+    faSync,
     faXmark
 } from '@fortawesome/free-solid-svg-icons';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -20,6 +21,9 @@ import { Rating } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import { CourseRatingDialog } from '../../components/Dialog/CourseRatingDialog';
 import { apiGetCourse } from '../../apis/course';
+import { apiGetComment } from '../../apis/comment';
+import { Comments } from '../../components/Comments/Comments';
+import Button from '../../components/Button/Button';
 
 const CourseLearn = () => {
     const { isLoggedIn, userData, token, isLoading, message } = useSelector((state) => state.user);
@@ -39,6 +43,12 @@ const CourseLearn = () => {
     const [myRate, setMyRate] = useState(0);
     const [myDeafaultRate, setMyDeafaultRate] = useState(0);
     const [openCourseRating, setOpenCourseRating] = useState(false);
+
+    const [comment, setComment] = useState([]); // [{}]
+    const [commentPage, setCommentPage] = useState(1); // [{}]
+    const [commentLoading, setCommentLoading] = useState(false); // [{}]
+    const [commentTotalPage, setCommentTotalPage] = useState(0); // [{
+    const [commentTotalResult, setCommentTotalResult] = useState(0); // [{}
 
     const navigate = useNavigate();
     const contentRefs = useRef(null);
@@ -140,7 +150,7 @@ const CourseLearn = () => {
         setLoading(false);
     };
     const handleContentClick = async (clickedContent) => {
-        setCurrentCourse({});
+        // await setCurrentCourse({});
         setLoadingVideo(true);
         setCurrentCourse(clickedContent);
         const data = {
@@ -149,6 +159,9 @@ const CourseLearn = () => {
             current_course: clickedContent.id
         };
         const res = await apiSaveEnrollment(data);
+
+        // handleReloadComment();
+
         contentRefs.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
     const handleCheckComplete = (courseId, checked) => {
@@ -160,6 +173,38 @@ const CourseLearn = () => {
             );
         }
     };
+
+    const getCourseComment = async () => {
+        const param = {
+            current_page: commentPage,
+            reference_id: currentCourse.id,
+            max_result: 5
+        }
+        if (commentLoading) return;
+        setCommentLoading(true);
+        try {
+            const response = await apiGetComment(param);
+            if (response.status === 1 && response.data?.data) {
+                // console.log("Comment", response.data.total_page);
+                // console.log("Comment", commentPage);
+                // console.log("Comment", commentPage < response.data.total_page);
+                setCommentTotalPage(response.data.total_page);
+                setCommentTotalResult(response.data.total_result);
+                if (commentPage === 1)
+                    setComment(response.data.data);
+                else
+                    setComment((prev) => [...prev, ...response.data.data]);
+                // setComment(response.data.data);
+            } else {
+                toast.error(`${response.message}`, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+        } catch (error) {
+            console.error("Error fetching course comment", error);
+        }
+        setCommentLoading(false);
+    }
     useEffect(() => {
         document.title = "Học";
         if (!isLoggedIn) {
@@ -171,6 +216,22 @@ const CourseLearn = () => {
         }
         checkEnroll(extractIdSlug(slug));
     }, [isLoggedIn]);
+
+    const handleReloadComment = async () => {
+        await setComment([]);
+        if (commentPage === 1) {
+            await getCourseComment()
+        } else {
+            await setCommentPage(1)
+        }
+    }
+
+    useEffect(() => {
+        getCourseComment();
+    }, [commentPage, currentCourse]);
+    // useEffect(() => {
+    //     console.log("Current Course", currentCourse.id);
+    // }, [currentCourse]);
     return (
         <>
             {loading ? (
@@ -342,6 +403,41 @@ const CourseLearn = () => {
                                                         </div>
                                                     </div>
                                                 </span>
+                                            </TabPanel>
+                                            <TabPanel header="Thảo luận">
+                                                <div className='my-0 mx-auto pb-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6'>
+                                                    <div className='max-w-[46rem] flex justify-between items-center'>
+                                                        <h1 className='font-bold text-2xl'>
+                                                            BÌNH LUẬN
+                                                        </h1>
+                                                        <button className='font-bold text-2xl'
+                                                            title='Tải lại bình luận'
+                                                            onClick={() => {
+                                                                handleReloadComment();
+                                                            }}>
+                                                            <FontAwesomeIcon icon={faSync} />
+                                                        </button>
+                                                    </div>
+                                                    <div className='relative mt-4 max-w-[46rem]'>
+                                                        {/* <div className='' dangerouslySetInnerHTML={{
+                                    __html: `${course.data[0].requirement || `Không có yêu cầu`}`
+                                }} /> */}
+                                                        {commentLoading && (
+                                                            <div className='absolute w-full h-full'>
+                                                                <div className='absolute bg-gray-400 w-full h-full opacity-50'></div>
+                                                                <div className='absolute flex items-center z-10 top-72 left-0 right-0 justify-center'>
+                                                                    <Spinner color="teal" width={100} height={100} />
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                        <Comments comments={comment} currentUser={userData?.id} courseId={currentCourse.id} reload={handleReloadComment} />
+                                                        {(commentPage < commentTotalPage) ? (
+                                                            <div className='flex justify-center mt-4'>
+                                                                <Button handleOnClick={() => setCommentPage(commentPage + 1)} style="w-full h-[40px] shadow-lg bg-white ring-gray-300 hover:bg-gray-100" label={'Xem thêm'} severity="info" rounded />
+                                                            </div>
+                                                        ) : null}
+                                                    </div>
+                                                </div>
                                             </TabPanel>
                                             <TabPanel header="Ghi Chú" disabled title="Sẽ cập nhật">
 

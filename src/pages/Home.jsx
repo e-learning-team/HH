@@ -163,14 +163,14 @@ const Home = () => {
         </div>
       </div>
 
-      <div class="mb-10 py-[30px] bg-gradient-to-r from-[#f7b9b9] to-[#afe6f0]">
+      <div className="mb-10 py-[30px] bg-gradient-to-r from-[#f7b9b9] to-[#afe6f0]">
         <div className="flex justify-center">
           <div className="container lg:mx-32 gap-4 px-4 grid grid-cols-1 lg:grid-cols-3 lg:gap-8">
             <div className="bg-white p-5 rounded-lg w-full flex items-center">
               <a className="bg-[#29aae1] rounded-[50%] h-[45px] w-[45px] text-20 leading-[50px] text-center">
                 <FontAwesomeIcon className='leading-[45px] text-center text-[20px] text-white' icon={faBook} />
               </a>
-              <div class="py-[10px] pl-[13px]">
+              <div className="py-[10px] pl-[13px]">
                 <h4 className="text-xl font-bold">409 Khóa học trực tuyến</h4>
                 <p className="text-sm text-[#9f9f9f]">Khám phá nhiều chủ đề mới</p>
               </div>
@@ -179,7 +179,7 @@ const Home = () => {
               <a className="bg-[#29aae1] rounded-[50%] h-[45px] w-[45px] text-20 leading-[50px] text-center">
                 <FontAwesomeIcon className='leading-[45px] text-center text-[20px] text-white' icon={faCheck} />
               </a>
-              <div class="py-[10px] pl-[13px]">
+              <div className="py-[10px] pl-[13px]">
                 <h4 className="text-xl font-bold">Giảng viên kinh nghiệm</h4>
                 <p className="text-sm text-[#9f9f9f]">Tìm khóa học phù hợp với bạn</p>
               </div>
@@ -188,7 +188,7 @@ const Home = () => {
               <a className="bg-[#29aae1] rounded-[50%] h-[45px] w-[45px] text-20 leading-[50px] text-center">
                 <FontAwesomeIcon className='leading-[45px] text-center text-[20px] text-white' icon={faClock} />
               </a>
-              <div class="py-[10px] pl-[13px]">
+              <div className="py-[10px] pl-[13px]">
                 <h4 className="text-xl font-bold">Truy cập trọn đời</h4>
                 <p className="text-sm text-[#9f9f9f]">Học theo lịch trình của bạn</p>
               </div>
@@ -205,7 +205,7 @@ const Home = () => {
                 <div className="w-full flex justify-between mb-6">
                   <h4 className="uppercase font-semibold text-2xl">Đăng ký nhiều nhất</h4>
                   <a className="flex items-center text-sm" href="#">Xem thêm <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6 12L10 8L6 4" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M6 12L10 8L6 4" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                   </svg>
                   </a>
                 </div>
@@ -227,7 +227,7 @@ const Home = () => {
                     ) : (highestSubCourses.data?.length > 0 ?
                       <>
                         {highestSubCourses.data.map((course, index) => (
-                          <SwiperSlide><HomeCard key={index} content={course} /></SwiperSlide>
+                          <SwiperSlide key={index}><HomeCard content={course} /></SwiperSlide>
 
                         ))}
                       </>
@@ -271,7 +271,7 @@ const Home = () => {
                 <div className="w-full flex justify-between mb-6">
                   <h4 className="uppercase font-semibold text-2xl">Đánh giá cao</h4>
                   <a className="flex items-center text-sm" href="#">Xem thêm <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6 12L10 8L6 4" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M6 12L10 8L6 4" stroke="black"  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                   </svg>
                   </a>
                 </div>
@@ -293,7 +293,7 @@ const Home = () => {
                     ) : (highestRatingCourses.data?.length > 0 ?
                       <>
                         {highestRatingCourses.data.map((course, index) => (
-                          <SwiperSlide><HomeCard key={index} content={course} /></SwiperSlide>
+                          <SwiperSlide  key={index}><HomeCard content={course} /></SwiperSlide>
                         ))}
                       </>
                       : (

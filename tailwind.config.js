@@ -3,6 +3,8 @@ export default {
   content: ["./index.html",
   "./src/**/*.{jsx,js,ts,tsx}",
   './node_modules/primereact/**/*.{js,ts,jsx,tsx}',
+  "./node_modules/flowbite/**/*.js",
+  'node_modules/flowbite-react/lib/esm/**/*.js',
 ],
   theme: {
     extend: {
@@ -15,6 +17,7 @@ export default {
   important: true, 
   plugins: [
     require('@tailwindcss/typography'),
+    require('flowbite/plugin'),
   ],
 }
 

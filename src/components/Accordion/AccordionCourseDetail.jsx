@@ -116,19 +116,19 @@ const CourseAccordion = React.memo(
                                                 <div className="flex gap-3">
                                                     <FontAwesomeIcon className="text-lg" icon={faFileVideo} />
                                                     <div
-                                                        className="max-w-[16rem]  line-clamp-1 hover:text-clip text-[14px]"
+                                                        className="line-clamp-1 hover:text-clip text-[14px]"
                                                         title={ct.name}>
                                                         {ct.name}
                                                     </div>
 
                                                 </div>
-                                                {(isEnrolled && completeCourse) && (
+                                                {(isEnrolled && completeCourse) ? (
                                                     <div className="">
                                                         <Tooltip title="Đánh dấu đã hoàn thành" placement="left">
                                                             <Checkbox color="success" defaultChecked={completeCourse.includes(ct.id)} onClick={(e) => handleCheckComplete(e, ct)} />
                                                         </Tooltip>
                                                     </div>
-                                                )}
+                                                ) : null}
                                             </div>
                                         </div>
                                     ))
