@@ -118,7 +118,7 @@ const UserPrfileView = () => {
                         <div className='flex mt-[16px]'>
                             <div>
                                 <div className='text-[#6a6f73] min-w-[105px] mb-[8px] text-[16px] font-bold'>Tổng học viên</div>
-                                <div className='font-bold max-w-[36rem] text-[24px]'>{(1000).toLocaleString()}</div>
+                                <div className='font-bold max-w-[36rem] text-[24px]'>{user?.total_subscriptions.toLocaleString()}</div>
                             </div>
                             <div className='ml-[24px]'>
                                 <div className='text-[#6a6f73] min-w-[105px] mb-[8px] text-[16px] font-bold'>Khóa học</div>
@@ -126,7 +126,7 @@ const UserPrfileView = () => {
                             </div>
                             <div className='ml-[24px]'>
                                 <div className='text-[#6a6f73] min-w-[105px] mb-[8px] text-[16px] font-bold'>Đánh giá</div>
-                                <div className='font-bold max-w-[36rem] text-[24px]'>{(1000).toLocaleString()}</div>
+                                <div className='font-bold max-w-[36rem] text-[24px]'>{user?.average_rating.toFixed(1)}</div>
                             </div>
                         </div>
 
@@ -155,7 +155,7 @@ const UserPrfileView = () => {
                     <div className='md:max-w-[calc(100%-15rem)] md:pr-[6.4rem]'>
                         <div className='max-w-[60rem] pb-[3.2rem] relative'>
                             <h2 className=' pb-[16px] text-[22px] font-bold max-w-[36rem] '>Khóa học {`(${totalCourses.toLocaleString()})`}</h2>
-                            <div className='md:grid hidden lg:grid-cols-3 md:grid-cols-2 gap-4'>
+                            <div className='md:grid  lg:grid-cols-3 md:grid-cols-2 gap-4'>
                                 {myCourses.map((course, index) => (
                                     <div className='pb-[16px]'>
                                         <HomeCard key={index} content={course} />
