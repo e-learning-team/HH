@@ -18,6 +18,8 @@ const Path = {
     USER_ENROLLMENT: "enrollment",
     USER_BOOKMARK: "bookmark",
     USER_HISTORY: "payment-history",
+    USER_PROFILE_VIEW: "profile/:userId",
+
 
 
     //lecture

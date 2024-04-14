@@ -26,6 +26,7 @@ import AdminCategory from './pages/Admin/Admin/AdminCategory';
 import VnPayReturn from './pages/Invoice/VnPayReturn';
 import LecturerCourseEnroll from './pages/Lecturer/Lecturer/LecturerCourseEnroll';
 import AdminInvoice from './pages/Admin/Admin/AdminInvoice';
+import UserPrfileView from './pages/User/UserProfileView';
 
 function App() {
   return (
@@ -42,6 +43,8 @@ function App() {
             <Route path={Path.USER_P + Path.USER_BOOKMARK} element={<UserBookmark />} />
             <Route path={Path.USER_P + Path.USER_HISTORY} element={<PaymentHistory />} />
           </Route>
+
+          <Route path={Path.USER_PROFILE_VIEW} element={<UserPrfileView />} />
         </Route>
 
         <Route path={Path.LECTURER_P + Path.LECTURER_REGISTER} element={<LecturerRegister />} />

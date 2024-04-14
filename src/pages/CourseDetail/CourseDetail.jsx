@@ -8,7 +8,8 @@ import {
     faCirclePlay,
     faPenToSquare,
     faPersonChalkboard,
-    faInfinity
+    faInfinity,
+    faSync
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faBookmark,
@@ -27,6 +28,8 @@ import { apiCheckEnrollment, apiSaveEnrollment } from '../../apis/enrollment';
 import { apiGetPaymentUrl } from '../../apis/invoice';
 import { coursePay } from '../../store/User/userSlice';
 import noImg from '../../assets/no-image-icon.jpg';
+import { apiGetComment } from '../../apis/comment';
+import { Comments } from '../../components/Comments/Comments';
 
 const CourseDeTail = () => {
     const { isLoggedIn, userData, token, isLoading, message } = useSelector((state) => state.user);
@@ -36,6 +39,12 @@ const CourseDeTail = () => {
     const [isError, setIsError] = useState(false);
     const [isEnrolled, setIsEnrolled] = useState(false);
     const [totalRatings, setTotalRatings] = useState({});
+    const [comment, setComment] = useState([]); // [{}]
+    const [commentPage, setCommentPage] = useState(1); // [{}]
+    const [commentLoading, setCommentLoading] = useState(false); // [{}]
+    const [commentTotalPage, setCommentTotalPage] = useState(0); // [{
+    const [commentTotalResult, setCommentTotalResult] = useState(0); // [{}
+    // const [commentReload, setCommentReload] = useState(false); // [{}
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const getCurrentCourse = async () => {
@@ -66,6 +75,38 @@ const CourseDeTail = () => {
             setLoading(false);
         }
     };
+
+    const getCourseComment = async () => {
+        const param = {
+            current_page: commentPage,
+            reference_id: extractIdSlug(slug),
+            max_result: 5
+        }
+        if (commentLoading) return;
+        setCommentLoading(true);
+        try {
+            const response = await apiGetComment(param);
+            if (response.status === 1 && response.data?.data) {
+                // console.log("Comment", response.data.total_page);
+                // console.log("Comment", commentPage);
+                // console.log("Comment", commentPage < response.data.total_page);
+                setCommentTotalPage(response.data.total_page);
+                setCommentTotalResult(response.data.total_result);
+                if (commentPage === 1)
+                    setComment(response.data.data);
+                else
+                    setComment((prev) => [...prev, ...response.data.data]);
+                // setComment(response.data.data);
+            } else {
+                toast.error(`${response.message}`, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+        } catch (error) {
+            console.error("Error fetching course comment", error);
+        }
+        setCommentLoading(false);
+    }
     const handleEnroll = async () => {
         console.log("CLICK enroll");
         setLoading(true);
@@ -118,6 +159,18 @@ const CourseDeTail = () => {
         getCurrentCourse();
     }, [slug, isLoggedIn]);
 
+    const handleReloadComment = async () => {
+        await setComment([]);
+        if (commentPage === 1) {
+            await getCourseComment()
+        } else {
+            await setCommentPage(1)
+        }
+    }
+    useEffect(() => {
+        getCourseComment();
+    }, [commentPage]);
+
     const [openVideoReviewDialog, setOpenVideoReviewDialog] = React.useState(false);
     const handleOpenVideoReviewDialog = () => setOpenVideoReviewDialog(!openVideoReviewDialog);
     return (
@@ -151,7 +204,7 @@ const CourseDeTail = () => {
                                                     <FontAwesomeIcon icon={faPersonChalkboard} className='mr-1 text-[#faaf00]' />
                                                     Được tạo bởi:
                                                 </span>
-                                                <span className='text-[#64ceeb]'> {course.data[0].created_user_info[course.data[0].created_by]}</span>
+                                                <NavLink to={`/profile/${course.data[0].created_by}`} className='text-[#64ceeb] underline'> {course.data[0].created_user_info[course.data[0].created_by]}</NavLink>
                                             </div>
                                             <div className='font-normal text-sm mb-2'>
                                                 <span>
@@ -286,9 +339,42 @@ const CourseDeTail = () => {
                                 }} />
                             </div>
                         </div>
+                        <div className='my-0 mx-auto pb-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6'>
+                            <div className='max-w-[46rem] flex justify-between items-center'>
+                                <h1 className='font-bold text-2xl'>
+                                    BÌNH LUẬN
+                                </h1>
+                                <button className='font-bold text-2xl'
+                                    title='Tải lại bình luận'
+                                    onClick={() => {
+                                        handleReloadComment();
+                                    }}>
+                                    <FontAwesomeIcon icon={faSync} />
+                                </button>
+                            </div>
+                            <div className='relative mt-4 max-w-[46rem]'>
+                                {/* <div className='' dangerouslySetInnerHTML={{
+                                    __html: `${course.data[0].requirement || `Không có yêu cầu`}`
+                                }} /> */}
+                                {commentLoading && (
+                                    <div className='absolute w-full h-full'>
+                                        <div className='absolute bg-gray-400 w-full h-full opacity-50'></div>
+                                        <div className='absolute flex items-center z-10 top-72 left-0 right-0 justify-center'>
+                                            <Spinner color="teal" width={100} height={100} />
+                                        </div>
+                                    </div>
+                                )}
+                                <Comments comments={comment} currentUser={userData?.id} courseId={extractIdSlug(slug)} reload={handleReloadComment} />
+                                {(commentPage < commentTotalPage) ? (
+                                    <div className='flex justify-center mt-4'>
+                                        <Button handleOnClick={() => setCommentPage(commentPage + 1)} style="w-full h-[40px] shadow-lg bg-white ring-gray-300 hover:bg-gray-100" label={'Xem thêm'} severity="info" rounded />
+                                    </div>
+                                ) : null}
+                            </div>
+                        </div>
                     </div>
                     {openVideoReviewDialog && course.data[0].video_path && (
-                        <VideoReviewDialog course={course.data[0]} open={openVideoReviewDialog} setOpen={handleOpenVideoReviewDialog} />
+                        <VideoReviewDialog videoPath={course.data[0].video_path} course={course.data[0]} open={openVideoReviewDialog} setOpen={handleOpenVideoReviewDialog} />
                     )}
                 </div>))}
         </>

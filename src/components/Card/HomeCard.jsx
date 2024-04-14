@@ -49,15 +49,15 @@ const HomeCard = ({ content, isEnrolled, enrollmentContent }) => {
                             <div className="text-sm mb-2 font-light">{content.created_user_info[content.created_by]}</div>
                             <div className="flex items-center gap-1 mb-2">
                                 <div className="text-sm font-medium">{totalRatings.averageRate.toFixed(1)}</div>
-                                {/* <div className="text-[#F77321] flex gap-0.5"><i class="fa fa-star co-or" aria-hidden="true"></i><i class="fa fa-star co-or" aria-hidden="true"></i><i class="fa fa-star co-or" aria-hidden="true"></i><i class="fa fa-star co-or" aria-hidden="true"></i><i class="fa fa-star co-or" aria-hidden="true"></i></div> */}
-                                <StarRatingComponent value={totalRatings.averageRate} editing={false}/>
+                                {/* <div className="text-[#F77321] flex gap-0.5"><i className="fa fa-star co-or" aria-hidden="true"></i><i className="fa fa-star co-or" aria-hidden="true"></i><i className="fa fa-star co-or" aria-hidden="true"></i><i className="fa fa-star co-or" aria-hidden="true"></i><i className="fa fa-star co-or" aria-hidden="true"></i></div> */}
+                                <StarRatingComponent name={`rating`} value={totalRatings.averageRate} editing={false}/>
                                 {/* <Rating readOnly value={totalRatings.averageRate} precision={0.5} size='small'></Rating> */}
                                 {/* <Rating readOnly  /> */}
-                                <div class="text-xs text-[#5C5C5C]">({totalRatings.totalRatings})</div>
+                                <div className="text-xs text-[#5C5C5C]">({totalRatings.totalRatings})</div>
                             </div>
-                            <div class="flex gap-1.5 items-center mb-2">
-                                <div class="text-lg font-medium">{content.price_sell ? (<>{content.price_sell.toLocaleString()} <sup>đ</sup></>) : (<>Miễn phí</>) } </div>
-                                {/* <div class="text-sm line-through text-[#929292]">800.000<sup>đ</sup></div> */}
+                            <div className="flex gap-1.5 items-center mb-2">
+                                <div className="text-lg font-medium">{content.price_sell ? (<>{content.price_sell.toLocaleString()} <sup>đ</sup></>) : (<>Miễn phí</>) } </div>
+                                {/* <div className="text-sm line-through text-[#929292]">800.000<sup>đ</sup></div> */}
                             </div>  
                         </a>
                     </span>
