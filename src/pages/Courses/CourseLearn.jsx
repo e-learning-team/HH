@@ -6,7 +6,7 @@ import { Typography } from "@material-tailwind/react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Spinner } from "@material-tailwind/react";
 import {
-    faXmark
+    faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { extractIdSlug } from '../../utils/helper';
@@ -24,6 +24,7 @@ import { apiGetCourse } from '../../apis/course';
 const CourseLearn = () => {
     const { isLoggedIn, userData, token, isLoading, message } = useSelector((state) => state.user);
     const { slug } = useParams();
+    const [isPreview, setIsPreview] = useState("/courses/learn/" + slug + "/preview" === window.location.pathname);
     const [courseName, setCourseName] = useState("");
     const [course, setCourse] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -53,9 +54,10 @@ const CourseLearn = () => {
         } else {
             setLoading(true);
             const res_lecture = await apiGetCourse({ slug: slug, build_child: true });
-            if (res_lecture?.data?.data?.length > 0 && userData?.id == res_lecture.data.data[0].created_by) {
+            if ((res_lecture?.data?.data?.length > 0 && userData?.id == res_lecture.data.data[0].created_by) || isPreview) {
+                console.log(res_lecture.data.data[0]);
                 setCourse(res_lecture.data.data[0]);
-
+                
                 setRate(res_lecture.data.data[0].course_ratings);
 
                 setCourseName(res_lecture.data.data[0].name);
@@ -140,6 +142,7 @@ const CourseLearn = () => {
         setLoading(false);
     };
     const handleContentClick = async (clickedContent) => {
+
         setCurrentCourse({});
         setLoadingVideo(true);
         setCurrentCourse(clickedContent);
@@ -148,7 +151,9 @@ const CourseLearn = () => {
             course_id: extractIdSlug(slug),
             current_course: clickedContent.id
         };
-        const res = await apiSaveEnrollment(data);
+        if(!isPreview){
+            const res = await apiSaveEnrollment(data);
+        }
         contentRefs.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
     const handleCheckComplete = (courseId, checked) => {
@@ -161,7 +166,6 @@ const CourseLearn = () => {
         }
     };
     useEffect(() => {
-        document.title = "Học";
         if (!isLoggedIn) {
             toast.error("Vui lòng đăng nhập", {
                 position: toast.POSITION.TOP_RIGHT,
@@ -208,7 +212,7 @@ const CourseLearn = () => {
                                         </Typography>
                                     )}
                                 </div>
-                                {!(userData?.id == course.created_by) && (
+                                {!((userData?.id == course.created_by) || isPreview) && (
                                     <div className='h-full gap-2 flex  justify-center items-center'>
                                         {/* <CircularProgressBar progress={enrollmentData.percent_complete} /> */}
                                         <CircularProgressBar progress={Math.floor((completedCourse.length / enrollmentData.course?.total_lesson) * 100)} />
@@ -368,6 +372,7 @@ const CourseLearn = () => {
                                                     onContentCheck={handleCheckComplete}
                                                     currentCourse={enrollmentData.current_course}
                                                     completeCourse={enrollmentData.completed_course_ids}
+                                                    isPreview={isPreview}
                                                 />
                                             ))}
                                         </>

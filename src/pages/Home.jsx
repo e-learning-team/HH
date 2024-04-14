@@ -140,12 +140,12 @@ const Home = () => {
             <div className="max-w-[490px] leading-16 px-4">
               <h2 className="text-5xl font-bold mb-4">Nền tảng học online tốt nhất</h2>
               <p className="text-base mb-12">Khám phá hàng nghìn khóa học với mức giá thấp nhất chưa từng có!</p>
-                <div className="p-inputgroup flex-1">
-                  <InputText placeholder="Bạn muốn học gì?" className="shadow-none hover:border border-solid hover:border-[#212529]" value={payload.keyword}
-                    onChange={e => setPayload(prev => ({ ...prev, keyword: e.target.value }))}
-                    onKeyDown={(e) => handleEnter(e)} />
-                  <Button label="Tìm kiếm " onClick={handleSubmit} className="bg-[#2977ff] border-[#2977ff] border-transparent" />
-                </div>
+              <div className="p-inputgroup flex-1">
+                <InputText placeholder="Bạn muốn học gì?" className="shadow-none hover:border border-solid hover:border-[#212529]" value={payload.keyword}
+                  onChange={e => setPayload(prev => ({ ...prev, keyword: e.target.value }))}
+                  onKeyDown={(e) => handleEnter(e)} />
+                <Button label="Tìm kiếm " onClick={handleSubmit} className="bg-[#2977ff] border-[#2977ff] border-transparent" />
+              </div>
             </div>
           </div>
         </div>
@@ -200,6 +200,71 @@ const Home = () => {
       <div className="mb-[80px] lg:mx-32 px-4 grid justify-center gap-6">
         <div className="mt-5 grid justify-center">
           <div className="container grid justify-center">
+            <div id="rate-course-most">
+              <div className="w-full mx-auto max-w-8xl px-4">
+                <div className="w-full flex justify-between mb-6">
+                  <h4 className="uppercase font-semibold text-2xl">Đánh giá cao</h4>
+                  <a className="flex items-center text-sm" href="#">Xem thêm <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 12L10 8L6 4" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                  </a>
+                </div>
+                <div className="md:hidden">
+                  <Swiper
+                    slidesPerView={'auto'}
+                    spaceBetween={30}
+                    pagination={{
+                      clickable: true,
+                    }}
+                    className="mySwiper"
+                  >
+                    {loadingRating ? (
+                      <>
+                        {Array.from({ length: 8 }).map(
+                          (_, index) => <Card key={index} />
+                        )}
+                      </>
+                    ) : (highestRatingCourses.data?.length > 0 ?
+                      <>
+                        {highestRatingCourses.data.map((course, index) => (
+                          <SwiperSlide><HomeCard key={index} content={course} /></SwiperSlide>
+                        ))}
+                      </>
+                      : (
+                        <>
+                          Không có kết quả!
+                        </>
+                      )
+                    )}
+
+                  </Swiper>
+                </div>
+                <div className="md:grid hidden lg:grid-cols-5 md:grid-cols-2 gap-4">
+                  {loadingRating ? (
+                    <>
+                      {Array.from({ length: 8 }).map(
+                        (_, index) => <Card key={index} />
+                      )}
+                    </>
+                  ) : (highestRatingCourses.data?.length > 0 ?
+                    <>
+                      {highestRatingCourses.data.map((course, index) => (
+                        <HomeCard key={index} content={course} />
+                      ))}
+                    </>
+                    : (
+                      <>
+                        Không có kết quả!
+                      </>
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="mt-5 grid justify-center">
+          <div className="container grid justify-center">
             <div id="sell-course-most">
               <div className="w-full mx-auto max-w-8xl  px-4">
                 <div className="w-full flex justify-between mb-6">
@@ -250,71 +315,6 @@ const Home = () => {
                   ) : (highestSubCourses.data?.length > 0 ?
                     <>
                       {highestSubCourses.data.map((course, index) => (
-                        <HomeCard key={index} content={course} />
-                      ))}
-                    </>
-                    : (
-                      <>
-                        Không có kết quả!
-                      </>
-                    )
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="mt-5 grid justify-center">
-          <div className="container grid justify-center">
-            <div id="rate-course-most">
-              <div className="w-full mx-auto max-w-8xl px-4">
-                <div className="w-full flex justify-between mb-6">
-                  <h4 className="uppercase font-semibold text-2xl">Đánh giá cao</h4>
-                  <a className="flex items-center text-sm" href="#">Xem thêm <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6 12L10 8L6 4" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                  </svg>
-                  </a>
-                </div>
-                <div className="md:hidden">
-                  <Swiper
-                    slidesPerView={'auto'}
-                    spaceBetween={30}
-                    pagination={{
-                      clickable: true,
-                    }}
-                    className="mySwiper"
-                  >
-                    {loadingRating ? (
-                      <>
-                        {Array.from({ length: 8 }).map(
-                          (_, index) => <Card key={index} />
-                        )}
-                      </>
-                    ) : (highestRatingCourses.data?.length > 0 ?
-                      <>
-                        {highestRatingCourses.data.map((course, index) => (
-                          <SwiperSlide><HomeCard key={index} content={course} /></SwiperSlide>
-                        ))}
-                      </>
-                      : (
-                        <>
-                          Không có kết quả!
-                        </>
-                      )
-                    )}
-
-                  </Swiper>
-                </div>
-                <div className="md:grid hidden lg:grid-cols-5 md:grid-cols-2 gap-4">
-                  {loadingRating ? (
-                    <>
-                      {Array.from({ length: 8 }).map(
-                        (_, index) => <Card key={index} />
-                      )}
-                    </>
-                  ) : (highestRatingCourses.data?.length > 0 ?
-                    <>
-                      {highestRatingCourses.data.map((course, index) => (
                         <HomeCard key={index} content={course} />
                       ))}
                     </>

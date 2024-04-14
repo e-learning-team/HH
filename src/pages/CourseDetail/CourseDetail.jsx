@@ -168,7 +168,7 @@ const CourseDeTail = () => {
                         <div className='my-0 mx-auto max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6 '>
                             <div className='shadow-lg  !bg-none rounded-lg transition border-solid border bg-[#003a47] stroke-white lg:w-[22rem] lg:absolute sm:relative lg:ml-[50rem] sm:ml-0 lg:top-28'>
                                 <div className='w-full rounded-lg overflow-hidden'>
-                                    <div className=''>
+                                    <div >
                                         <div className='relative border-solid border-b stroke-white'>
                                             <span onClick={handleOpenVideoReviewDialog} className='cursor-pointer absolute z-10 flex  justify-center items-center mx-auto my-0 w-full h-full'>
                                                 <FontAwesomeIcon className='h-20 text-white border-solid border-b-2 stroke-white rounded-full bg-[#003a47]' icon={faCirclePlay} />
@@ -182,7 +182,7 @@ const CourseDeTail = () => {
 
                                             <img className='h-full w-full bg-cover object-contain' src={course.data[0].image_path
                                                 ? course.data[0].image_path
-                                                : noImg}/>
+                                                : noImg} />
                                         </div>
                                     </div>
                                     <div className='p-6  bg-white rounded-b-lg'>
@@ -250,10 +250,18 @@ const CourseDeTail = () => {
                             </div>
                         </div>
                         <div className='my-0 mx-auto pb-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6'>
-                            <div className='max-w-[46rem] '>
+                            <div className='max-w-[46rem] justify-between flex'>
                                 <h1 className='font-bold text-2xl'>
                                     NỘI DUNG KHÓA HỌC
                                 </h1>
+                                {/* <a className="flex items-center text-sm" href="/course/learn/">Xem trước <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 12L10 8L6 4" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                </a> */}
+                                <NavLink to={`/courses/learn/${slug}/preview`} className="flex items-center text-sm">Xem trước <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 12L10 8L6 4" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                </NavLink>
                             </div>
                             <div className='mt-4 max-w-[46rem]'>
                                 {course.data.length > 0 && (
@@ -280,7 +288,7 @@ const CourseDeTail = () => {
                         </div>
                     </div>
                     {openVideoReviewDialog && course.data[0].video_path && (
-                        <VideoReviewDialog videoTitle={course.data[0].name} videoPath={course.data[0].video_path} open={openVideoReviewDialog} setOpen={handleOpenVideoReviewDialog} />
+                        <VideoReviewDialog course={course.data[0]} open={openVideoReviewDialog} setOpen={handleOpenVideoReviewDialog} />
                     )}
                 </div>))}
         </>

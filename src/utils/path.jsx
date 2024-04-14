@@ -5,6 +5,7 @@ const Path = {
     COURSES_CATEGORY: 'courses/search/',
     COURSES_DETAIL: `courses/:slug`,
     COURSE_LEARN: 'courses/learn/:slug',
+    COURSE_PREVIEW_DETAIL: 'courses/learn/:slug/preview',
     LOGIN: 'login',
     REGISTER: 'register',
     FORGET_PASSWORD: 'forget-password',

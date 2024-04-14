@@ -36,7 +36,6 @@ function App() {
           <Route path={Path.COURSES_DETAIL} element={<CourseDeTail />} />
           <Route path={Path.COURSES} element={<Courses />} />
           <Route path={Path.VNPAY_RETURN} element={<VnPayReturn />} />
-
           <Route path={Path.USER_P} element={<User />}>
             <Route path={Path.USER_P + Path.USER_PROFILE} element={<UserProfile />} />
             <Route path={Path.USER_P + Path.USER_ENROLLMENT} element={<UserEnrollment />} />
@@ -68,7 +67,7 @@ function App() {
         </Route>
 
         <Route path={Path.COURSE_LEARN} element={<CourseLearn />} />
-
+        <Route path={Path.COURSE_PREVIEW_DETAIL} element={<CourseLearn />} />
         <Route path={Path.LOGIN} element={<Login />} />
         <Route path={Path.REGISTER} element={<Register />} />
         <Route path={Path.FORGET_PASSWORD} element={<ForgetPasword />} />

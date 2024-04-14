@@ -5,6 +5,9 @@ import {
     AccordionBody,
     Typography,
 } from "@material-tailwind/react";
+import {
+    faLock,
+} from '@fortawesome/free-solid-svg-icons';
 import Checkbox from '@mui/material/Checkbox';
 import { faFileVideo } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,7 +29,7 @@ function Icon({ open }) {
     );
 }
 const CourseAccordion = React.memo(
-    ({ isEnrolled, title, content, onContentClick, onContentCheck, currentCourse, completeCourse, enrollmentId }) => {
+    ({ isEnrolled, title, content, onContentClick, onContentCheck, currentCourse, completeCourse, enrollmentId, isPreview}) => {
         const [alwaysOpen, setAlwaysOpen] = React.useState(false);
         const [activeIndex, setActiveIndex] = useState(null);
         const contentRefs = useRef([]);
@@ -107,26 +110,30 @@ const CourseAccordion = React.memo(
                                     content.map((ct, index) => (
                                         <div key={ct.id}
                                             ref={(ref) => (contentRefs.current[index] = ref)}
-                                            className={`${isEnrolled && "hover:bg-slate-200 cursor-pointer py-2"} 
+                                            className={`${(isPreview ?  ct.is_preview : isEnrolled)  && "hover:bg-slate-200 cursor-pointer py-2"} 
                                                         ${(index % 2 == 0 && !isEnrolled) ? "bg-slate-200" : ""} 
                                                         ${index === activeIndex ? "bg-slate-200" : ""}
                                                         text-sm flex items-center justify-between p-4`}
-                                            onClick={() => isEnrolled && handleContentClick(ct, index)}>
+                                            onClick={() => (isPreview ?  ct.is_preview : isEnrolled) && handleContentClick(ct, index)}>
                                             <div className="flex w-full justify-between items-center py-2">
                                                 <div className="flex gap-3">
                                                     <FontAwesomeIcon className="text-lg" icon={faFileVideo} />
                                                     <div
-                                                        className="max-w-[16rem]  line-clamp-1 hover:text-clip text-[14px]"
+                                                        className="line-clamp-1 hover:text-clip text-[14px]"
                                                         title={ct.name}>
                                                         {ct.name}
                                                     </div>
-
                                                 </div>
-                                                {(isEnrolled && completeCourse) && (
+                                                {(!isPreview && isEnrolled && completeCourse) && (
                                                     <div className="">
                                                         <Tooltip title="Đánh dấu đã hoàn thành" placement="left">
                                                             <Checkbox color="success" defaultChecked={completeCourse.includes(ct.id)} onClick={(e) => handleCheckComplete(e, ct)} />
                                                         </Tooltip>
+                                                    </div>
+                                                )}
+                                                {(isPreview && !ct.is_preview) && (
+                                                    <div className="">
+                                                        <FontAwesomeIcon className='pr-2 rounded-lg' icon={faLock} />
                                                     </div>
                                                 )}
                                             </div>
