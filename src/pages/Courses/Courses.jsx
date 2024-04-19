@@ -120,7 +120,7 @@ const Courses = () => {
 
     return (
         <div className={`pt-[40px] relative pb-[80px] h-screen justify-center ${loading ? 'pointer-events-none bg-slate-200 opacity-60 ' : ''}`}>
-            <div className="container mx-auto md:max-w-6xl">
+            <div className="container mx-auto md:max-w-7xl">
                 {/* {loading || ( */}
                 <div className='flex w-full ml-3 justify-between mb-8 pb-3'>
                     <div className='flex gap-3 justify-between items-center'>

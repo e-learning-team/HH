@@ -33,7 +33,7 @@ const Navbar = () => {
     });
 
     const handleEnter = (event) => {
-        if (event.key === 'Enter') {
+        if (event.key === 'Enter' || event.type === 'click') {
             const trimmedKeyword = payload.keyword.trim();
             const params = new URLSearchParams(window.location.search);
             params.set('keyword', trimmedKeyword);
@@ -80,26 +80,26 @@ const Navbar = () => {
         fetchCategory();
     }, []);
 
-    const renderCategory = (category) => {
-        return (
-            <Dropdown.Item key={category.id} position='right'>
-                {
-                    <span onClick={() => handleCategory(category)} classNameName='flex justify-between w-full'>
-                        <span>
-                            {category.title}
-                        </span>
-                        {category.children.length > 0 && (<span>{'>'}</span>)}
-                    </span>
+    // const renderCategory = (category) => {
+    //     return (
+    //         <Dropdown.Item key={category.id} position='right'>
+    //             {
+    //                 <span onClick={() => handleCategory(category)} classNameName='flex justify-between w-full'>
+    //                     <span>
+    //                         {category.title}
+    //                     </span>
+    //                     {category.children.length > 0 && (<span>{'>'}</span>)}
+    //                 </span>
 
-                }
-                {category.children.length > 0 && (
-                    <Dropdown.Submenu position='right'>
-                        {category.children.map((child) => renderCategory(child))}
-                    </Dropdown.Submenu>
-                )}
-            </Dropdown.Item>
-        );
-    };
+    //             }
+    //             {category.children.length > 0 && (
+    //                 <Dropdown.Submenu position='right'>
+    //                     {category.children.map((child) => renderCategory(child))}
+    //                 </Dropdown.Submenu>
+    //             )}
+    //         </Dropdown.Item>
+    //     );
+    // };
     const handleLogout = async () => {
         console.log("logout");
         try {
@@ -179,34 +179,33 @@ const Navbar = () => {
                                 <img src={logo} className='h-[45px]' />
                             </NavLink>
                             <div className="wisdom-menu-cate my-auto">
-                                <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10 3.5H3V10.5H10V3.5Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M21 3.5H14V10.5H21V3.5Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M21 14.5H14V21.5H21V14.5Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M10 14.5H3V21.5H10V14.5Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <svg className=' cursor-pointer' width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10 3.5H3V10.5H10V3.5Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                                    <path d="M21 3.5H14V10.5H21V3.5Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                                    <path d="M21 14.5H14V21.5H21V14.5Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                                    <path d="M10 14.5H3V21.5H10V14.5Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                                 </svg>
                                 <nav id="mysidebarmenu" className="amazonmenu">
                                     <ul>
-                                        {category.map((level1) =>
-                                        (
-                                            <li className="hassub group/item">
-                                                <a title={level1.title} href="/course/ngoai-ngu" className={clsx((level1.children.length > 0) && "after:@apply after:content-[''] after:h-0 after:absolute after:w-0 after:border-l-[gray] after:border-[5px] after:border-solid after:border-transparent after:right-[5px] after:top-[35%]")}>
+                                        {category.map((level1, indexLevel1) => (
+                                            <li key={indexLevel1} className="hassub group/item">
+                                                <span title={level1.title} onClick={() => handleCategory(level1)} className={clsx((level1.children.length > 0) && "group-hover/item:bg-[#eaebee] group-hover/item:text-[#0975b4] after:@apply after:content-[''] after:h-0 after:absolute after:w-0 after:border-l-[gray] after:border-[5px] after:border-solid after:border-transparent after:right-[5px] after:top-[35%]")}>
                                                     {level1.title}
-                                                </a>
+                                                </span>
                                                 {level1.children.length > 0 && (
-                                                    <ul class="issub" className={clsx('index-[1006] none group-hover/item:block group/child')}>
-                                                        {level1.children.map((level2) => (
-                                                            <li className="group/item2">
-                                                                <a href="/course/ngoai-ngu" className={clsx((level2.children.length > 0) && "after:@apply after:content-[''] after:h-0 after:absolute after:w-0 after:border-l-[gray] after:border-[5px] after:border-solid after:border-transparent after:right-[5px] after:top-[35%]")}>
+                                                    <ul className={clsx('issub index-[1006] none group-hover/item:block group/child')}>
+                                                        {level1.children.map((level2, indexLevel2) => (
+                                                            <li key={indexLevel2} className="group/item2">
+                                                                <span onClick={() => handleCategory(level2)} className={clsx((level2.children.length > 0) && "group-hover/item2:bg-[#eaebee] group-hover/item2:text-[#0975b4] after:@apply after:content-[''] after:h-0 after:absolute after:w-0 after:border-l-[gray] after:border-[5px] after:border-solid after:border-transparent after:right-[5px] after:top-[35%]")}>
                                                                     {level2.title}
-                                                                </a>
+                                                                </span>
                                                                 {level2.children.length > 0 && (
-                                                                    <ul class="issub" className={clsx('index-[1007] none group-hover/item2:block')}>
-                                                                        {level2.children.map((level3) => (
-                                                                            <li>
-                                                                                <a href="/course/ngoai-ngu">
+                                                                    <ul className={clsx('issub index-[1007] group-hover/item3:bg-[#eaebee] group-hover/item3:text-[#0975b4] none group-hover/item2:block')}>
+                                                                        {level2.children.map((level3, indexLevel3) => (
+                                                                            <li key={indexLevel3}>
+                                                                                <span onClick={() => handleCategory(level3)}>
                                                                                     {level3.title}
-                                                                                </a>
+                                                                                </span>
                                                                             </li>
                                                                         ))}
                                                                     </ul>
@@ -222,23 +221,25 @@ const Navbar = () => {
                             </div>
 
                             <div className="w-full">
-                                <form className="relative" action="/courses/search">
-                                    <input autocomplete="off"
+                                <div className="relative" >
+                                    <input autoComplete="off"
                                         name="keyword"
                                         id="text_search"
                                         type="text"
-                                        className="block w-full px-4 py-2.5 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-gray-500 focus:border-gray-500 ui-autocomplete-input"
+                                        className="block w-full px-4 py-2.5 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-gray-500 focus:border-gray-500 ui-autoComplete-input"
                                         placeholder="Tìm kiếm nội dung bất kỳ"
                                         required=""
                                         value={payload.keyword}
-                                        onChange={e => setPayload(prev => ({ ...prev, keyword: e.target.value }))} />
-                                    <button type="submit" className="absolute top-0 right-0 h-full pr-4">
+                                        onChange={e => setPayload(prev => ({ ...prev, keyword: e.target.value }))}
+                                        onKeyDown={(e) => handleEnter(e)}
+                                    />
+                                    <button type="submit" className="absolute top-0 right-0 h-full pr-4" onClick={(e) => handleEnter(e)}>
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#929495" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                            <path d="M20.9999 21L16.6499 16.65" stroke="#929495" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#929495" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                                            <path d="M20.9999 21L16.6499 16.65" stroke="#929495" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                                         </svg>
                                     </button>
-                                </form>
+                                </div>
                             </div>
                         </div>
                         <div className="2xl:basis-5/12 lg:basis-6/12 basis-5/12 flex justify-end xl:gap-6 gap-4">
@@ -282,14 +283,14 @@ const Navbar = () => {
                     </NavLink>
                     {/* <div className="flex justify-end items-center gap-6">
                         <svg data-modal-target="search-modal" data-modal-toggle="search-modal" data-modal-placement="top" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M20.9999 21L16.6499 16.65" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                            <path d="M20.9999 21L16.6499 16.65" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                         </svg>
                         <a href="/cart" className="relative">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                                <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                                <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                             </svg>
                         </a>
                     </div> */}
@@ -297,7 +298,7 @@ const Navbar = () => {
                 <div className="mb-input-search hidden">
                     <div className="c_quick-search__form">
                         <form className="searchbox" method="GET" action="/search">
-                            <input autocomplete="off" type="text" className="form-control sm-form" name="key" placeholder="Tìm khóa học, giảng viên" required="" />
+                            <input autoComplete="off" type="text" className="form-control sm-form" name="key" placeholder="Tìm khóa học, giảng viên" required="" />
                             <button type="submit" className="btn sm-btn-search"><i className="fa fa-search" aria-hidden="true"></i></button>
                         </form>
                     </div>

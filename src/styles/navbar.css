@@ -17,12 +17,12 @@
 
 .amazonmenu:after {
     border-color: transparent transparent #fff;
-    top: 5px;
+    top: 3px;
 }
 
 .amazonmenu:before {
     border-color: transparent transparent #282828;
-    top: 5px;
+    top: 3px;
 }
 
 .amazonmenu:after, .amazonmenu:before {
@@ -65,7 +65,7 @@
     z-index: 99
 }
 
-.amazonmenu > ul li a {
+.amazonmenu > ul li span {
     color: #242424;
     display: block;
     overflow: auto;
@@ -73,6 +73,12 @@
     position: relative;
     text-decoration: none;
     text-indent: 10px;
+    cursor: pointer;
+}
+
+.amazonmenu > ul li span:hover{
+    background: #eaebee;
+    color: #0975b4;
 }
 
 /* .after {
