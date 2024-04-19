@@ -319,7 +319,7 @@ const AdminCategory = () => {
                     <label htmlFor="parent" className="font-bold">
                         Danh mục cha:
                     </label>
-                    <Dropdown id="parent" className="w-full" value={category?.parent} options={categories} onChange={(e) => setCategory((category) => ({ ...category, parent: e.value, }))} optionLabel="title" placeholder="Danh mục cha" />
+                    <Dropdown filter  id="parent" className="w-full" value={category?.parent} options={categories} onChange={(e) => setCategory((category) => ({ ...category, parent: e.value, }))} optionLabel="title" placeholder="Danh mục cha" />
                 </div>
             </Dialog>
         </div>

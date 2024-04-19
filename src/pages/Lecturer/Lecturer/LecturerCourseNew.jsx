@@ -157,6 +157,7 @@ const LecturerCourseNew = () => {
                                         onChange={(e) => handleCategorySelect(e.value)}
                                         options={categoryList} optionLabel="title"
                                         display="chip"
+                                        filter
                                         placeholder="Chọn danh mục"
                                         className="w-full md:w-20rem" />
                                 </div>
