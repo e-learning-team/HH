@@ -1,13 +1,11 @@
 .amazonmenu {
-    visibility: hidden;
-    opacity: 0;
+    display: none;
     position: absolute;
     padding-top: 16px;
 }
 
 .wisdom-menu-cate:hover .amazonmenu {
-    visibility: visible;
-    opacity: 1;
+    display: block;
 }
 
 .amazonmenu:after, .amazonmenu:before {

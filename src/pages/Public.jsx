@@ -6,7 +6,7 @@ const Public = () => {
   return (
     <div>
       <Navbar />
-      <div className='pt-[10px]'>
+      <div className=''>
         <Outlet />
       </div>
     </div>

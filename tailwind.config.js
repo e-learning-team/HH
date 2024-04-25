@@ -10,7 +10,15 @@ export default {
     extend: {
       width:{
         main:'100vw',
-        second:'1400px'
+        second:'1280px'
+      },
+    },
+    container: {
+      center: true,
+      screens: {
+        mobile: "600px",
+        tablet: "900px",
+        desktop: "1200px",
       },
     },
   },
