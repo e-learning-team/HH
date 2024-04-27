@@ -43,7 +43,6 @@ function App() {
             <Route path={Path.USER_P + Path.USER_BOOKMARK} element={<UserBookmark />} />
             <Route path={Path.USER_P + Path.USER_HISTORY} element={<PaymentHistory />} />
           </Route>
-
           <Route path={Path.USER_PROFILE_VIEW} element={<UserPrfileView />} />
         </Route>
 
