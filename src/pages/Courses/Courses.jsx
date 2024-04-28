@@ -8,12 +8,15 @@ import { apiCategory } from '../../apis/category';
 import HorizontalSkeletonCard from '../../components/Skeleton/HorizontalSkeletonCard';
 import Path from '../../utils/path';
 import { Spinner } from '@material-tailwind/react';
+import SpinnerCustom from '../../components/Spinner/SpinnerCustom';
 import { Typography } from '@material-tailwind/react';
 import { Paginator } from 'primereact/paginator';
 import { Pagination } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { Dropdown } from 'primereact/dropdown';
 import noImg from "../../assets/no-image-icon.jpg";
+import { extractIdSlug } from '../../utils/helper';
+import { Button } from 'primereact/button';
 //icon
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -49,28 +52,17 @@ const Courses = () => {
     };
     const getParams = (pageIndex) => {
         setLoading(true);
-        const categoryIds = searchParams.getAll('category');
-        const subcategoryIds = searchParams.getAll('subcategory');
+        const categoryId = searchParams.get('category');
         const paramsAPI = new URLSearchParams();
 
         paramsAPI.set('multi_value', searchParams.get('keyword') || '');
         // paramsAPI.set('search_type', 'OFFICIAL');
         // paramsAPI.set('current_page', searchParams.get('page') || 1)
-        paramsAPI.set('max_result', 3);
+        paramsAPI.set('max_result', 10);
         paramsAPI.set('is_deleted', 'false');
         paramsAPI.set('current_page', pageIndex || 1);
-        if (categoryIds.length > 0) {
-            categoryIds.forEach(categoryId => {
-                paramsAPI.append('categories_ids', categoryId);
-            });
-        }
-        if (subcategoryIds.length > 0) {
-            subcategoryIds.forEach(categoryId => {
-                paramsAPI.append('categories_ids', categoryId);
-            });
-            categoryIds.forEach(categoryId => {
-                paramsAPI.delete('categories_ids', categoryId);
-            });
+        if (categoryId) {
+            paramsAPI.append('categories_ids', categoryId);
         }
         // setLoading(false)
         return paramsAPI;
@@ -85,7 +77,6 @@ const Courses = () => {
             else {
                 setCourseList([]);
             }
-            setLoading(false);
         } catch (error) {
             console.error("Error fetching course data", error);
             setCourseList([]);
@@ -94,9 +85,13 @@ const Courses = () => {
         }
     };
 
+    const getCategoryName = (categoryId) => {
+        const category = categories.find(category => category.id === categoryId);
+        return category?.title;
+    }
+
     const searchCategory = async () => {
         try {
-            setLoading(true);
             const params = {
                 build_type: "TREE",
                 level: 1,
@@ -112,8 +107,6 @@ const Courses = () => {
         } catch (error) {
             console.error("Error fetching course data", error);
             setCategories([]);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -121,6 +114,7 @@ const Courses = () => {
         setCurrentPage(value);
         searchCourse(value);
     };
+
     const handleDeleteFilters = () => {
         console.log("Delete Filters");
         setLoading(true);
@@ -128,8 +122,6 @@ const Courses = () => {
         setSearchParams((currentSearchParams) => {
             const newSearchParams = new URLSearchParams(currentSearchParams.toString());
             const keywordValue = newSearchParams.get('keyword');
-
-            newSearchParams.delete('subcategory');
             newSearchParams.delete('category');
 
             if (keywordValue) {
@@ -144,6 +136,18 @@ const Courses = () => {
             return newSearchParams;
         });
     };
+
+    const handleClickCategory = (category) => {
+        setLoading(true);
+        setSearchParams((currentSearchParams) => {
+            const newSearchParams = new URLSearchParams(currentSearchParams.toString());
+            newSearchParams.delete('category');
+            newSearchParams.append('category', category?.id);
+            return newSearchParams;
+        });
+        setLoading(false);
+    };
+
     useEffect(() => {
         setLoading(true);
         setCurrentPage(1);
@@ -259,12 +263,12 @@ const Courses = () => {
             <div className="breadcrumbs section-padding bg-[url('../assets/bred.png')] bg-cover bg-center bg-no-repeat">
                 <div class="container text-center">
                     <nav>
-                        <ol class="flex items-center justify-center space-x-3">
+                        <ol class="flex flex-col items-center justify-center">
                             {keySearch?.trim().length > 0 ? (
-                                <>
-                                    <h2 class="text-lg font-bold text-[#555]">Tìm kiếm:</h2>
-                                    <span class="space-x-2 text-[#676e7b]">{keySearch}</span>
-                                </>) : 
+                                <span class="uppercase mx-2 text-[#676e7b]">Tìm kiếm : {keySearch}</span>) :
+                                (<></>)}
+                            {searchParams.get('category')?.trim().length > 0 ? (
+                                <span class="uppercase mx-2 text-[#676e7b]">Danh mục : {getCategoryName(searchParams.get('category'))}</span>) :
                                 (<></>)}
                         </ol>
                     </nav>
@@ -292,12 +296,12 @@ const Courses = () => {
                                         <>
                                             {categories?.map((category, index) => (
                                                 <li class="block">
-                                                    <NavLink className="flex justify-between items-center bg-[#F8F8F8] py-[17px] px-5 rounded hover:bg-[#4cbdff] hover:text-white transition-all duration-150 text-[#676e7b]">
+                                                    <span onClick={() => handleClickCategory(category)} className="cursor-pointer flex justify-between items-center bg-[#F8F8F8] py-[17px] px-5 rounded hover:bg-[#4cbdff] hover:text-white transition-all duration-150 text-[#676e7b]">
                                                         <span className="text-inherit">{category.title}</span>
                                                         <span class=" text-2xl">
                                                             <FontAwesomeIcon icon={faAngleRight} className="text-inherit" />
                                                         </span>
-                                                    </NavLink>
+                                                    </span>
                                                 </li>
                                             ))}
                                         </> : (<></>)}
@@ -307,25 +311,24 @@ const Courses = () => {
                         <div className="lg:col-span-9 col-span-12">
                             {loading ? (
                                 <>
-                                    <div className='w-full pl-[18rem]'>
-                                        <Spinner className='w-[60px] h-auto' color='teal' />
-                                    </div>
+                                    <SpinnerCustom />
                                 </>
                             ) : (courseList?.data?.length > 0 ?
                                 <>
                                     <div class="wdiget py-4 flex md:flex-row flex-col items-center mb-8 space-y-6 md:space-y-0 justify-between">
                                         <span className="text-lg text-[#676e7b]">Hiển thị {(courseList?.data?.length)?.toLocaleString()} của {(courseList?.total)?.toLocaleString()} khoá học tìm thấy</span>
-                                        <div class="flex-0 md:flex md:content-center">
+                                        <div class="flex md:flex-row flex-col flex-0 md:flex md:content-center">
+                                            {filterNumber > 0 && (
+                                                <Button onClick={() => handleDeleteFilters()} className="mb-4 md:mb-0 md:mr-2 border-[#ced4da] text-base" label="Xoá bộ lọc" icon="pi pi-filter-slash" outlined severity="secondary"></Button>
+                                            )}
                                             <div class="min-w-[272px]">
                                                 <Dropdown value={sortBy} onChange={(e) => setSortBy(e.value)} options={sorts} optionLabel="name"
-                                                    placeholder="Sắp xếp khoá học" className="w-full p-0 hover:border-[#ced4da]" checkmark={true} highlightOnSelect={false} />
+                                                    placeholder="Sắp xếp khoá học" className="w-full p-0 hover:border-[#ced4da]" />
                                             </div>
                                         </div>
                                     </div>
                                     <div id="content">
                                         <div className="flex flex-col gap-[30px]">
-
-
                                             {courseList?.data.map((course, index) => (
                                                 // <HorizontalCard key={index} content={course} />
                                                 <>
@@ -337,13 +340,20 @@ const Courses = () => {
                                                             </div>
                                                         </div>
                                                         <div class="course-content flex-1">
-                                                            <div className="flex justify-between items-center">
-                                                                <div className="line-clamp-1 flex-1">
+                                                            <div className="flex justify-between">
+                                                                <div className="line-clamp-1 flex-1 items-center">
                                                                     <h4 class="text-2xl leading-[36px] mb-4 font-bold text-[#333] line-clamp-2">{course.name}</h4>
                                                                 </div>
-                                                                <div class="text-2xl font-bold text-[#555] items-end flex-col flex">
-                                                                    <span class="price-sale webkit-fill-available" data-value="399000">399.000đ</span>
-                                                                    <span class="pl-1 text-[#929292] line-through text-lg webkit-fill-available">600.000đ</span>
+                                                                <div class="text-2xl leading-[36px] ml-2 mb-4 font-bold text-[#4cbdff] items-start flex-col flex">
+                                                                    {(course?.price_sell > 0) ? (
+                                                                        <>
+                                                                            <span class="price-sale webkit-fill-available">{(course?.price_sell.toLocaleString())}đ</span>
+                                                                            {/* <span class="pl-1 text-[#929292] line-through text-lg webkit-fill-available">600.000đ</span>
+                                                                            &nbsp;<span className='font-bold text-lg text-black underline mx-1'></span>&nbsp;Vnđ */}
+                                                                        </>
+                                                                    ) : (
+                                                                        <span className='font-bold'> Miễn phí</span>
+                                                                    )}
                                                                 </div>
                                                             </div>
 
@@ -358,9 +368,8 @@ const Courses = () => {
                                                                 </span>
                                                             </div>
                                                             <div className=" text-[#676e7b]">
-                                                                <span className="line-clamp-2">Xã hội ngày càng phát triển, Tiếng Anh trở thành một ngôn ngữ mang tính chất toàn cầu mà bất cứ ai cũng muốn sở hữu nó.
-                                                                    Giao tiếp tiếng Anh tốt không chỉ giúp bạn khám phá nền văn hóa của nhiều nước thế giới, là cơ hội để học hỏi và hội nhập mà nó còn là một
-                                                                    “vũ khí lợi hại” để bạn mở rộng cơ hội việc làm với mức lương cao. Để làm được điều này, bạn cần nắm chắc 4 kỹ năng: Nghe, nói, đọc, viết trong Tiếng Anh. </span>
+                                                                <span className="line-clamp-2" dangerouslySetInnerHTML={{
+                                                                    __html: `${course.description || ``}`}}></span>
                                                             </div>
                                                         </div>
                                                     </NavLink>
@@ -368,6 +377,12 @@ const Courses = () => {
                                             ))}
                                         </div>
                                     </div>
+
+                                    {courseList?.total_page > 1 && (
+                                        <div className='flex justify-center mt-12 mb-[40px] pb-[40px]'>
+                                            <Pagination size='large' className='text-xl' page={currentPage} onChange={handleChangePage} count={courseList?.total_page} showFirstButton showLastButton />
+                                        </div>
+                                    )}
                                 </>
                                 : (
                                     <>
