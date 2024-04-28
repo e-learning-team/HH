@@ -6,7 +6,12 @@ export const apiCategory=(params)=>axios({
     params,
     // withCredentials: true
 })
-
+export const apiTopCategory=(top)=>axios({
+    url:`/category/top-${top}-categories`,
+    method:'get',
+    // params,
+    // withCredentials: true
+})
 export const apiCreateCategory=(data) =>axios({
     url:'/category/create',
     method:'post',

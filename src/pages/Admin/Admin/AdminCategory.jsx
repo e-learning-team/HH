@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { NavLink, useNavigate, useOutletContext } from 'react-router-dom';
-import { faMagnifyingGlass, faL } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faL, faEye, faXmark, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DataTable } from 'primereact/datatable';
 import { classNames } from 'primereact/utils';
@@ -10,9 +10,18 @@ import { Skeleton } from 'primereact/skeleton';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { toast } from 'react-toastify';
+import { Image } from 'primereact/image';
+import { Avatar } from 'primereact/avatar';
 import { Dialog } from 'primereact/dialog';
+import { Toast } from 'primereact/toast';
 import { TreeTable } from 'primereact/treetable';
 import { Dropdown } from 'primereact/dropdown';
+import { OverlayPanel } from 'primereact/overlaypanel';
+import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
+import chooseImage from '../../../assets/choose-image.png';
+import { apiDeleteFileByPathFile, apiUploadFile } from '../../../apis/fileRelationship';
 const AdminCategory = () => {
     const { isLoggedIn, avatarURL, userData, token, isLoading, message } = useOutletContext();
     const navigate = useNavigate();
@@ -220,6 +229,182 @@ const AdminCategory = () => {
             </div>
         </div>
     );
+    const CategoryIcon = (rowData) => {
+        const [img, setImg] = useState(rowData.data.image ? rowData.data.image : null);
+        const [newImg, setNewImg] = useState(null);
+        const [visibleDialog, setVisibleDialog] = useState(false);
+        const [imgLoading, setImgLoading] = useState(false);
+        const [fileInputRef, setFileInputRef] = useState(null);
+        // const toast = useRef(null);
+        const op = useRef(null);
+
+        const handleImgChange = (e) => {
+            setImgLoading(true);
+            const file = e.target.files[0];
+            if (file) {
+                if (file.type.includes("image")) {
+                    console.log(file)
+                    // setImg(file);
+                    uploadAvatar(file);
+                } else {
+                    toast.error("Ảnh không hợp lệ!", {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                    handleRemoveImg();
+                }
+            }
+            setImgLoading(false);
+        };
+        const handleRemoveImg = () => {
+            setImg(null);
+            if (fileInputRef && fileInputRef.value) {
+                fileInputRef.value = ''; // Reset the file input
+            }
+        };
+        const deleteAvatar = async () => {
+
+            if (rowData.data.image || newImg) {
+                const params = {
+                    path_file: newImg ?? rowData.data.image,
+                    // parent_type: "USER_AVATAR"
+                };
+                try {
+                    setImgLoading(true);
+                    const res = await apiDeleteFileByPathFile(params);
+                    if (res.status == 1) {
+                        // toast.current.show({ severity: 'info', summary: 'Thành công', detail: 'Xóa ảnh cũ thành công!' + rowData.data.title, life: 3000 });
+
+                        toast.success(`Xóa ảnh cũ thành công!`, {
+                            position: toast.POSITION.TOP_RIGHT,
+                        });
+                    } else {
+                        toast.error(`Xóa ảnh cũ không thành công thành công! ${res.message}`, {
+                            position: toast.POSITION.TOP_RIGHT,
+                        });
+                        // toast.current.show({ severity: 'warn', summary: 'Thất bại', detail: 'Xóa ảnh cũ không thành công!, vui lòng thử lại', life: 3000 });
+
+                    }
+                    setImgLoading(false);
+                } catch (e) {
+                    console.error('Upload failed:', e);
+                    setImgLoading(false);
+                    toast.error(`Xóa ảnh cũ không thành công!`, {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                    // toast.current.show({ severity: 'warn', summary: 'Thất bại', detail: 'Xóa ảnh cũ không thành công!, vui lòng thử lại', life: 3000 });
+
+
+                }
+            }
+        };
+        const uploadAvatar = async (file) => {
+            const params = {
+                parent_id: rowData.data.id,
+                parent_type: "CATEGORY_IMAGE"
+            };
+            try {
+                setImgLoading(true);
+                const formData = new FormData();
+                formData.append('file', file);
+                const newAvatarUrl = await apiUploadFile(formData, params);
+
+                if (newAvatarUrl && newAvatarUrl.data?.path_file) {
+                    // dispatch(updateAvatarURL({
+                    //     avatarURL: newAvatarUrl.data?.path_file
+                    // }));
+                    setNewImg(newAvatarUrl.data?.path_file);
+                    // toast.current.show({ severity: 'info', summary: 'Thành công', detail: 'Tải lên thành công' + rowData.data.title, life: 3000 });
+
+                    toast.success("Tải lên thành công!", {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                    handleRemoveImg();
+                }
+                setImgLoading(false);
+            } catch (e) {
+                console.error('Upload failed:', e);
+                setImgLoading(false);
+                // toast.current.show({ severity: 'warn', summary: 'Thất bại', detail: 'Tải lên thất bại, vui lòng thử lại', life: 3000 });
+
+                toast.error(`Tải lên không thành công!`, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+        };
+        const accept = (category) => {
+            setImg(null);
+            setNewImg(null);
+            deleteAvatar();
+            // toast.current.show({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted ' + rowData.data.title, life: 3000 });
+        }
+
+        const reject = (category) => {
+            // toast.current.show({ severity: 'warn', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
+        }
+        // useEffect(() => {
+        //     console.log(img)
+        //     if (img) {
+        //         uploadAvatar();
+        //     }
+        // }, [img]);
+        useEffect(() => {
+            console.log(newImg)
+        }, [newImg]);
+        return (
+            <>
+                <div className="card relative group/icon inline-block bg-white cursor-pointer">
+                    <Avatar image={img ?? newImg} size="xlarge" shape="square" />
+                    {/* <img src={img ?? newImg} className='w-[64px]  h-[64px]' /> */}
+
+                    {(img || newImg) ? (
+                        <>
+                            <div onClick={(e) => op.current.toggle(e)} className='w-[64px] hidden h-[64px]  bg-black absolute top-0 bottom-0 left-0 right-0 opacity-50  group-hover/icon:block'>
+                                <FontAwesomeIcon icon={faEye} className="text-white fill-white text-2xl m-auto absolute top-0 bottom-0 left-0 right-0" />
+                            </div>
+                            <div className='absolute top-[-5px] right-[-10px] '>
+                                <FontAwesomeIcon onClick={() => setVisibleDialog(true)} className=' text-red-600' icon={faCircleXmark} />
+                                {/* <Toast ref={toast} /> */}
+                                <ConfirmDialog
+                                    group="declarative"
+                                    visible={visibleDialog}
+                                    onHide={() => setVisibleDialog(false)}
+                                    message={() => (
+                                        <>
+                                            <p>Bạn có chắc chắn muốn xóa ảnh của danh mục <span className='font-bold underline italic'>{rowData.data.title}</span> không?</p>
+                                        </>
+                                    )}
+                                    header="Xác nhận xóa ảnh"
+                                    icon="pi pi-info-circle"
+                                    accept={accept}
+                                    reject={reject}
+                                // style={{ width: '50vw' }}
+                                // breakpoints={{ '1100px': '75vw', '960px': '100vw' }}
+                                />
+                            </div>
+                        </>
+                    ) : (
+                        <div className='w-[64px] h-[64px] absolute top-0 bottom-0 left-0 right-0' title='Upload'>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                onChange={handleImgChange}
+                                ref={(fileInput) => (setFileInputRef(fileInput))}
+                            />
+                            <img onClick={() => fileInputRef && fileInputRef.click()} className='w-full h-full hover:opacity-40' src={chooseImage} />
+                            {/* <FontAwesomeIcon onClick={() => fileInputRef && fileInputRef.click()} className=" text-2xl m-auto absolute top-0 bottom-0 left-0 right-0" icon={faUpload} /> */}
+                        </div>
+                    )}
+                    {/* <Image className='w-[80px] h-[80px] object-cover' src="https://primefaces.org/cdn/primereact/images/galleria/galleria14.jpg"  zoomSrc="https://primefaces.org/cdn/primereact/images/galleria/galleria14.jpg" width='80' height='80' alt="Image" preview /> */}
+                </div>
+
+
+                <OverlayPanel ref={op}>
+                    <Image src={img ?? newImg} alt="Image" width="250" />
+                </OverlayPanel>
+            </>
+        );
+    }
 
     const productDialogFooter = (
         <React.Fragment>
@@ -282,6 +467,7 @@ const AdminCategory = () => {
                 paginator rows={10} rowsPerPageOptions={[10, 20, 60]}
                 tableStyle={{ minWidth: '50rem' }}
                 globalFilter={keyWord}
+
                 editMode="cell"
             >
                 <Column
@@ -292,10 +478,19 @@ const AdminCategory = () => {
                     headerStyle={{ width: '10%' }}
                 ></Column>
                 <Column
+                    field="image"
+                    header="Icon"
+                    body={loading ? <Skeleton /> : CategoryIcon}
+                    headerStyle={{ width: '10%' }}
+                // editor={}
+                // editor={textEditor}
+                // onCellEditComplete={onCellEditComplete}
+                ></Column>
+                <Column
                     field="title"
                     header="Tên"
                     body={loading ? <Skeleton /> : null}
-                    headerStyle={{ width: '25%' }}
+                    // headerStyle={{ width: '25%' }}
                     editor={textEditor}
                     onCellEditComplete={onCellEditComplete}
                 ></Column>
@@ -319,7 +514,7 @@ const AdminCategory = () => {
                     <label htmlFor="parent" className="font-bold">
                         Danh mục cha:
                     </label>
-                    <Dropdown filter  id="parent" className="w-full" value={category?.parent} options={categories} onChange={(e) => setCategory((category) => ({ ...category, parent: e.value, }))} optionLabel="title" placeholder="Danh mục cha" />
+                    <Dropdown filter id="parent" className="w-full" value={category?.parent} options={categories} onChange={(e) => setCategory((category) => ({ ...category, parent: e.value, }))} optionLabel="title" placeholder="Danh mục cha" />
                 </div>
             </Dialog>
         </div>

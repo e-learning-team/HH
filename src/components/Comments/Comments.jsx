@@ -104,7 +104,7 @@ const CommentItem = ({ comment, currentUser, reload, isReply }) => {
                                 setNewComment(e.target.value)
                                 setError(null);
                             }}
-                            autoFocus
+                            // autoFocus
                             onFocus={(e) => e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length)}
                             value={newComment}
                             className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none  dark:placeholder-gray-400 "

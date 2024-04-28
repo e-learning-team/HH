@@ -54,7 +54,7 @@ const Courses = () => {
         const paramsAPI = new URLSearchParams();
 
         paramsAPI.set('multi_value', searchParams.get('keyword') || '');
-        paramsAPI.set('search_type', 'OFFICIAL');
+        // paramsAPI.set('search_type', 'OFFICIAL');
         // paramsAPI.set('current_page', searchParams.get('page') || 1)
         paramsAPI.set('max_result', 3);
         paramsAPI.set('is_deleted', 'false');

@@ -23,6 +23,10 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import { apiTopCategory } from '../apis/category';
+
+
+
 const Home = () => {
   const navigate = useNavigate();
   const [loadingRating, setLoadingRating] = useState(true);
@@ -32,7 +36,28 @@ const Home = () => {
   const [payload, setPayload] = useState({
     keyword: "",
   });
-
+  const [loadingTopCategory, setLoadingTopCategory] = useState(false);
+  const [topCategory, setTopCategory] = useState([]);
+  const categoryColor = [
+    "#FFE8E8",
+    "#e9fbfa",
+    "#E8F5FF",
+    "#E3F9F6",
+    "#EEE8FF",
+    "#FFF6EB",
+    "#E8FFEA",
+    '#caf7ec'
+  ]
+  const categoryHoverColor = [
+    "#f5b4b4",
+    "#5bbf8a",
+    "#CCE4FF",
+    "#B3ECE9",
+    "#D6C7FF",
+    "#FFE8D9",
+    "#D7FFD9",
+    '#7eab9f'
+  ]
   const handleEnter = (event) => {
     if (event.key === 'Enter') {
       handleSubmit()
@@ -60,7 +85,7 @@ const Home = () => {
       const params = {
         search_type: "OFFICIAL",
         sort_by: "HIGHEST_RATING",
-        max_result: "5",
+        max_result: "4",
         is_deleted: false
       };
       const response = await apiGetCourse(params);
@@ -76,7 +101,7 @@ const Home = () => {
       const params = {
         search_type: "OFFICIAL",
         sort_by: "HIGHEST_SUB",
-        max_result: "5",
+        max_result: "4",
         is_deleted: false
       };
       const response = await apiGetCourse(params);
@@ -88,9 +113,23 @@ const Home = () => {
       setLoadingSub(true);
     }
   };
+  const getTopCategory = async () => {
+    setLoadingTopCategory(true);
+    try {
+      const response = await apiTopCategory(8);
+      if (response.status === 1) {
+        setTopCategory(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setLoadingTopCategory(false);
+  }
   useEffect(() => {
     document.title = "Trang chủ";
     buildCouses();
+    getTopCategory();
+    // console.log(categoryColor[1])
   }, []);
 
 
@@ -140,12 +179,12 @@ const Home = () => {
             <div className="max-w-[490px] leading-16 px-4">
               <h2 className="text-5xl font-bold mb-4">Nền tảng học online tốt nhất</h2>
               <p className="text-base mb-12">Khám phá hàng nghìn khóa học với mức giá thấp nhất chưa từng có!</p>
-              <div className="p-inputgroup flex-1">
+              {/* <div className="p-inputgroup flex-1">
                 <InputText placeholder="Bạn muốn học gì?" className="shadow-none hover:border border-solid hover:border-[#212529]" value={payload.keyword}
                   onChange={e => setPayload(prev => ({ ...prev, keyword: e.target.value }))}
                   onKeyDown={(e) => handleEnter(e)} />
                 <Button label="Tìm kiếm " onClick={handleSubmit} className="bg-[#2977ff] border-[#2977ff] border-transparent" />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -197,17 +236,24 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="mb-[80px] lg:mx-32 px-4 grid justify-center gap-6">
+
+
+      <div className="mb-[80px] lg:mx-32 px-4 grid justify-center gap-6 bg-[url('../assets/insbg.png')] bg-no-repeat">
+
+        {/* most rated course */}
         <div className="mt-5 grid justify-center">
           <div className="container grid justify-center">
             <div id="rate-course-most">
               <div className="w-full mx-auto max-w-8xl px-4">
                 <div className="w-full flex justify-between mb-6">
-                  <h4 className="uppercase font-semibold text-2xl">Đánh giá cao</h4>
-                  <a className="flex items-center text-sm" href="#">Xem thêm <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <h4 className="relative uppercase font-semibold text-2xl">
+                    Đánh giá cao
+                    <span className='absolute bottom-[-3px] left-0 w-full h-[3px] bg-[#1d68da]'></span>
+                  </h4>
+                  {/* <a className="flex items-center text-sm" href="#">Xem thêm <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M6 12L10 8L6 4" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                   </svg>
-                  </a>
+                  </a> */}
                 </div>
                 <div className="md:hidden">
                   <Swiper
@@ -220,14 +266,14 @@ const Home = () => {
                   >
                     {loadingRating ? (
                       <>
-                        {Array.from({ length: 8 }).map(
+                        {Array.from({ length: 4 }).map(
                           (_, index) => <Card key={index} />
                         )}
                       </>
                     ) : (highestRatingCourses.data?.length > 0 ?
                       <>
                         {highestRatingCourses.data.map((course, index) => (
-                          <SwiperSlide><HomeCard key={index} content={course} /></SwiperSlide>
+                          <SwiperSlide key={index}><HomeCard key={index} content={course} /></SwiperSlide>
                         ))}
                       </>
                       : (
@@ -239,10 +285,10 @@ const Home = () => {
 
                   </Swiper>
                 </div>
-                <div className="md:grid hidden lg:grid-cols-5 md:grid-cols-2 gap-4">
+                <div className="md:grid hidden lg:grid-cols-4 md:grid-cols-2 gap-4">
                   {loadingRating ? (
                     <>
-                      {Array.from({ length: 8 }).map(
+                      {Array.from({ length: 4 }).map(
                         (_, index) => <Card key={index} />
                       )}
                     </>
@@ -263,16 +309,20 @@ const Home = () => {
             </div>
           </div>
         </div>
+        {/* most sub course */}
         <div className="mt-5 grid justify-center">
           <div className="container grid justify-center">
             <div id="sell-course-most">
               <div className="w-full mx-auto max-w-8xl  px-4">
-                <div className="w-full flex justify-between mb-6">
-                  <h4 className="uppercase font-semibold text-2xl">Đăng ký nhiều nhất</h4>
-                  <a className="flex items-center text-sm" href="#">Xem thêm <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <div className=" w-full flex justify-between mb-6">
+                  <h4 className="relative uppercase font-semibold text-2xl">
+                    Đăng ký nhiều nhất
+                    <span className='absolute bottom-[-3px] left-0 w-full h-[3px] bg-[#1d68da]'></span>
+                  </h4>
+                  {/* <a className="flex items-center text-sm" href="#">Xem thêm <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M6 12L10 8L6 4" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                   </svg>
-                  </a>
+                  </a> */}
                 </div>
                 <div className="md:hidden">
                   <Swiper
@@ -285,7 +335,7 @@ const Home = () => {
                   >
                     {loadingSub ? (
                       <>
-                        {Array.from({ length: 8 }).map(
+                        {Array.from({ length: 4 }).map(
                           (_, index) => <HomeCard key={index} />
                         )}
                       </>
@@ -305,10 +355,10 @@ const Home = () => {
 
                   </Swiper>
                 </div>
-                <div className="md:grid hidden lg:grid-cols-5 md:grid-cols-2 gap-4">
+                <div className="md:grid hidden lg:grid-cols-4 md:grid-cols-2 gap-4">
                   {loadingSub ? (
                     <>
-                      {Array.from({ length: 8 }).map(
+                      {Array.from({ length: 4 }).map(
                         (_, index) => <HomeCard key={index} />
                       )}
                     </>
@@ -324,6 +374,76 @@ const Home = () => {
                       </>
                     )
                   )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* most popular category */}
+        <div className='w-full mx-auto max-w-8xl px-4'>
+          <div className="w-full flex justify-between mb-6">
+            <h4 className="relative uppercase font-semibold text-2xl">
+              Danh mục hàng đầu
+              <span className='absolute bottom-[-3px] left-0 w-full h-[3px] bg-[#1d68da]'></span>
+            </h4>
+          </div>
+
+          <div className="grid lg:grid-cols-4 md:grid-cols-2  grid-cols-1 pt-10 gap-4">
+            {loadingTopCategory ? (<></>) : (
+              <>
+                {topCategory?.map((category, index) => (
+                  <span key={index} className={` rounded-[8px] transition duration-100 hover:shadow-box6 border-b-4 hover:border-[#4cbdff] border-transparent bg-[${categoryColor[index]}]  hover:bg-[${categoryHoverColor[index]}] text-center px-6 py-[65px] hover:-translate-y-2`}
+                    style={{
+                      backgroundColor: categoryColor[index],
+
+                    }}
+                    onMouseOver={`this.style.backgroundcolor='${categoryHoverColor[index]}'`}
+                  >
+                    <div class="w-[72px] h-[72px] rounded-full bg-white relative mx-auto flex flex-col justify-center items-center mb-8 group-hover:bg-[#E3F9F6]">
+                      <img src={category.image} alt="" class=" w-[32px] h-[32px] object-cover " />
+                    </div>
+                    <div className="">
+                      <h4 className=" text-2xl  mb-2 font-bold">{category.title}</h4>
+                      {category.total_course > 0 && (
+                        <p>{category.total_course} Khóa học</p>
+                      )}
+                    </div>
+                  </span>
+                ))}
+              </>
+            )}
+          </div>
+        </div>
+
+        <div class="lg:pt-10 section-padding-bottom bg-white bg-[url('../assets/section-bg-14.png')] bg-center bg-no-repeat 
+            bg-cover">
+          <div class="container">
+            <div class="grid lg:grid-cols-2 grid-cols-1 gap-7">
+              <div class="bg-[url('../images/all-img/bg-ins-1.png')] bg-cover  bg-no-repeat p-10  rounded-md">
+                <div class="max-w-[337px]">
+                  <div class="mini-title">Build Your Career</div>
+                  <div class=" text-[34px] text-black leading-[51px]">
+                    Become an
+                    <span class="shape-bg">Instructor</span>
+                  </div>
+                  <div class=" mt-6 mb-12">
+                    Learn at your own pace, move the between multiple courses.
+                  </div>
+                  <a href="#" class="btn btn-primary">Apply Now</a>
+                </div>
+              </div>
+              <div class="bg-[url('../images/all-img/bg-ins-2.png')]  bg-no-repeat p-10 bg-cover rounded-md">
+                <div class="max-w-[337px]">
+                  <div class="mini-title">Build Your Career</div>
+                  <div class=" text-[34px] text-black leading-[51px]">
+                    Get Free
+                    <span class="shape-bg">Courses</span>
+                  </div>
+                  <div class=" mt-6 mb-12">
+                    Learn at your own pace, move the between multiple courses.
+                  </div>
+                  <a href="#" class="btn btn-black">Contact Us</a>
                 </div>
               </div>
             </div>

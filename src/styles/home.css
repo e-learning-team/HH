@@ -21,3 +21,21 @@
     unicode-bidi: isolate;
     font-weight: 400;
 }
+@media (min-width: 1280px) {
+    .section-padding-bottom {
+        padding-bottom: 130px;
+    }
+}
+@media (min-width: 1024px) {
+    .section-padding-bottom {
+        padding-bottom: 7rem;
+    }
+}
+@media (min-width: 768px) {
+    .section-padding-bottom {
+        padding-bottom: 5rem;
+    }
+}
+.section-padding-bottom {
+    padding-bottom: 65px;
+}

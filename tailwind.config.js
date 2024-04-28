@@ -15,10 +15,11 @@ export default {
     },
     container: {
       center: true,
+      padding: "15px",
       screens: {
         mobile: "600px",
         tablet: "900px",
-        desktop: "1200px",
+        desktop: "1140px",
       },
     },
   },
