@@ -340,13 +340,20 @@ const Courses = () => {
                                                             </div>
                                                         </div>
                                                         <div class="course-content flex-1">
-                                                            <div className="flex justify-between items-center">
-                                                                <div className="line-clamp-1 flex-1">
+                                                            <div className="flex justify-between">
+                                                                <div className="line-clamp-1 flex-1 items-center">
                                                                     <h4 class="text-2xl leading-[36px] mb-4 font-bold text-[#333] line-clamp-2">{course.name}</h4>
                                                                 </div>
-                                                                <div class="text-2xl font-bold text-[#555] items-end flex-col flex">
-                                                                    <span class="price-sale webkit-fill-available" data-value="399000">399.000đ</span>
-                                                                    <span class="pl-1 text-[#929292] line-through text-lg webkit-fill-available">600.000đ</span>
+                                                                <div class="text-2xl leading-[36px] ml-2 mb-4 font-bold text-[#4cbdff] items-start flex-col flex">
+                                                                    {(course?.price_sell > 0) ? (
+                                                                        <>
+                                                                            <span class="price-sale webkit-fill-available">{(course?.price_sell.toLocaleString())}đ</span>
+                                                                            {/* <span class="pl-1 text-[#929292] line-through text-lg webkit-fill-available">600.000đ</span>
+                                                                            &nbsp;<span className='font-bold text-lg text-black underline mx-1'></span>&nbsp;Vnđ */}
+                                                                        </>
+                                                                    ) : (
+                                                                        <span className='font-bold'> Miễn phí</span>
+                                                                    )}
                                                                 </div>
                                                             </div>
 
@@ -361,9 +368,8 @@ const Courses = () => {
                                                                 </span>
                                                             </div>
                                                             <div className=" text-[#676e7b]">
-                                                                <span className="line-clamp-2">Xã hội ngày càng phát triển, Tiếng Anh trở thành một ngôn ngữ mang tính chất toàn cầu mà bất cứ ai cũng muốn sở hữu nó.
-                                                                    Giao tiếp tiếng Anh tốt không chỉ giúp bạn khám phá nền văn hóa của nhiều nước thế giới, là cơ hội để học hỏi và hội nhập mà nó còn là một
-                                                                    “vũ khí lợi hại” để bạn mở rộng cơ hội việc làm với mức lương cao. Để làm được điều này, bạn cần nắm chắc 4 kỹ năng: Nghe, nói, đọc, viết trong Tiếng Anh. </span>
+                                                                <span className="line-clamp-2" dangerouslySetInnerHTML={{
+                                                                    __html: `${course.description || ``}`}}></span>
                                                             </div>
                                                         </div>
                                                     </NavLink>
