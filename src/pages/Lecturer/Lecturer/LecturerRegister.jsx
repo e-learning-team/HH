@@ -17,6 +17,7 @@ const LecturerRegister = () => {
     const [payload, setPayload] = useState({
         phone_number: '',
         profile_link: '',
+        specialization: '',
         description: ''
     });
 
@@ -36,6 +37,13 @@ const LecturerRegister = () => {
         }));
         // console.log("---profileLink---", profileLink)
     };
+    const handleSpecializationChange = (specialization) => {
+        setPayload((prevPayload) => ({
+            ...prevPayload,
+            specialization: specialization,
+        }));
+        // console.log("---specialization---", specialization)
+    }
     const handleEditorData = (editorData) => {
         setPayload((prevPayload) => ({
             ...prevPayload,
@@ -94,6 +102,14 @@ const LecturerRegister = () => {
                             onChange={(e) => handleProfileLinkChange(e.target.value)}
                             className="rounded-l-none p-3 outline-none duration-150 focus:bg-white border-gray-300 focus:!border-gray-900" />
                     </div>
+                </div>
+                <div className='mb-4'>
+                    <Typography className='font-normal text-base mb-2'>Chuyên môn</Typography>
+                    <Input
+                        type="text"
+                        placeholder="Chuyên môn"
+                        onChange={(e) => handleSpecializationChange(e.target.value)}
+                        className="rounded-l-none p-3 outline-none duration-150 focus:bg-white border-gray-300 focus:!border-gray-900" />
                 </div>
                 <div className='mb-5'>
                     <Typography className='font-normal text-base mb-2'>Mô tả về bản thân</Typography>

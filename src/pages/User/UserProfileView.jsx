@@ -86,7 +86,7 @@ const UserPrfileView = () => {
     return (
         <>
             {loading ? (
-                <div className=' flex justify-center h-full mt-[20rem] items-center'>
+                <div className=' flex justify-center h-full my-[8rem] items-center'>
                     <Spinner className='w-20 h-auto' color="teal" />
                 </div>
             ) : (isError ? (
@@ -96,7 +96,7 @@ const UserPrfileView = () => {
                     </Typography>
                 </div>
             ) : (
-                <div className='relative w-full h-screen my-[4.8rem] max-w-[71.2rem] mx-auto mr-auto ml-auto px-[2.4rem]'>
+                <div className='relative w-full h-full my-[4.8rem] max-w-[71.2rem] mx-auto mr-auto ml-auto px-[2.4rem]'>
                     <img src={user?.avatar ? user?.avatar : defaultAvatar} width={200} height={200} className='md:absolute md:top-0 md:right-[2.4rem] rounded-full object-cover aspect-[200/200]' />
                     <div className='pb-[2.4rem] md:max-w-[calc(100%-15rem)] md:pr-[6.4rem]'>
                         <div className='md:pt-0 text-[#6a6f73] uppercase pt-[3.2rem] text-[16px] font-bold leading-[1.2]'>
@@ -112,7 +112,8 @@ const UserPrfileView = () => {
                             }
                             {/* Giảng viên | Học Viên */}
                         </div>
-                        <div className='  text-[2rem] font-bold max-w-[36rem] font-serif' autoCapitalize='words'>{user?.full_name}</div>
+                        <div className='  text-[2rem] font-bold max-w-[36rem] ' autoCapitalize='words'>{user?.full_name}</div>
+                        <div className='py-[8px]  text-[1rem] font-bold max-w-[36rem]'>{user?.specialization}</div>
                         <div className='py-[8px]  text-[1rem] font-bold max-w-[36rem]'>{user?.email}</div>
                         <div className='pb-[8px]'></div>
                         <div className='flex mt-[16px]'>

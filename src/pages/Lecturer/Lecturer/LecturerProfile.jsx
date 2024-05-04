@@ -33,6 +33,7 @@ const LecturerProfile = () => {
         full_name: "",
         address: "",
         phone_number: "",
+        specialization: "",
         profile_link: "",
         description: ""
     });
@@ -144,15 +145,15 @@ const LecturerProfile = () => {
     };
     const saveLectureProfile = async () => {
         setprofileLoading(true)
-        try{
+        try {
             const res = await apiProfileUpdate(profilePayload)
-            if(res?.data){
+            if (res?.data) {
                 dispatch(updateUser({
                     userData: res.data
                 }))
             }
             toast.success("Cập nhật thành công")
-        }catch{
+        } catch {
             toast.error("Đã xãy ra lỗi")
         }
         setOnChangeCKEditor(false)
@@ -169,7 +170,8 @@ const LecturerProfile = () => {
                 address: userData.address || "",
                 phone_number: userData.phone_number || "",
                 profile_link: userData.profile_link || "",
-                description: userData.description || ""
+                description: userData.description || "",
+                specialization: userData.specialization || ""
             });
         }
         // setprofileLoading(false);
@@ -317,6 +319,19 @@ const LecturerProfile = () => {
                                 </div>
 
                             </div>
+                            <div className='flex-1'>
+                                <div className='min-w-[17rem] max-w-[50rem] mb-6 h-auto'>
+                                    <label htmlFor="full_name" className='font-medium'>Chuyên môn</label>
+                                    <Input
+                                        type="text"
+                                        value={profilePayload.specialization}
+                                        setValue={setProfilePayload}
+                                        nameKey='specialization'
+                                        style="w-full rounded-sm !outline !outline-1 !shadow-lg border p-4 pe-12 text-sm shadow-sm focus:outline-teal-700"
+                                        placeholder="Chuyên môn"
+                                    />
+                                </div>
+                            </div>
                             <div className='mb-6 w-full'>
                                 <label htmlFor="full_name" className='font-medium'>Mô tả bản thân</label>
                                 {/* {htmlToJsx(
@@ -337,7 +352,7 @@ const LecturerProfile = () => {
                                     </div>
 
                                 ) : (
-                                    <MyCKEditor className={'w-full max-w-full mb-20'} handleData={handleCKEditorData} data={profilePayload.description}/>
+                                    <MyCKEditor className={'w-full max-w-full mb-20'} handleData={handleCKEditorData} data={profilePayload.description} />
                                 )}
 
                             </div>
