@@ -67,7 +67,7 @@ const CourseLearn = () => {
             if ((res_lecture?.data?.data?.length > 0 && userData?.id == res_lecture.data.data[0].created_by) || isPreview) {
                 console.log(res_lecture.data.data[0]);
                 setCourse(res_lecture.data.data[0]);
-                
+
                 setRate(res_lecture.data.data[0].course_ratings);
 
                 setCourseName(res_lecture.data.data[0].name);
@@ -161,7 +161,7 @@ const CourseLearn = () => {
             course_id: extractIdSlug(slug),
             current_course: clickedContent.id
         };
-        if(!isPreview){
+        if (!isPreview) {
             const res = await apiSaveEnrollment(data);
         }
         contentRefs.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -406,7 +406,7 @@ const CourseLearn = () => {
                                                 </span>
                                             </TabPanel>
                                             <TabPanel header="Thảo luận">
-                                                <div className='my-0 mx-auto pb-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6'>
+                                                <div className='my-0 pb-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6'>
                                                     <div className='max-w-[46rem] flex justify-between items-center'>
                                                         <h1 className='font-bold text-2xl'>
                                                             BÌNH LUẬN
@@ -419,7 +419,7 @@ const CourseLearn = () => {
                                                             <FontAwesomeIcon icon={faSync} />
                                                         </button>
                                                     </div>
-                                                    <div className='relative mt-4 max-w-[46rem]'>
+                                                    <div className='relative max-w-[46rem]'>
                                                         {/* <div className='' dangerouslySetInnerHTML={{
                                     __html: `${course.data[0].requirement || `Không có yêu cầu`}`
                                 }} /> */}

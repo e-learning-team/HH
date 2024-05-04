@@ -4,6 +4,8 @@ import CourseAccordion from '../../components/Accordion/AccordionCourseDetail';
 import { RatingBar } from '../../components/RatingBar/RatingBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Spinner, Typography } from "@material-tailwind/react";
+import defaultAvatar from '../../assets/user_img.png';
+
 import {
     faCirclePlay,
     faPenToSquare,
@@ -30,6 +32,7 @@ import { coursePay } from '../../store/User/userSlice';
 import noImg from '../../assets/no-image-icon.jpg';
 import { apiGetComment } from '../../apis/comment';
 import { Comments } from '../../components/Comments/Comments';
+import { apiUserDetail } from '../../apis/user';
 
 const CourseDeTail = () => {
     const { isLoggedIn, userData, token, isLoading, message } = useSelector((state) => state.user);
@@ -39,12 +42,15 @@ const CourseDeTail = () => {
     const [isError, setIsError] = useState(false);
     const [isEnrolled, setIsEnrolled] = useState(false);
     const [totalRatings, setTotalRatings] = useState({});
+
     const [comment, setComment] = useState([]); // [{}]
     const [commentPage, setCommentPage] = useState(1); // [{}]
     const [commentLoading, setCommentLoading] = useState(false); // [{}]
     const [commentTotalPage, setCommentTotalPage] = useState(0); // [{
     const [commentTotalResult, setCommentTotalResult] = useState(0); // [{}
     // const [commentReload, setCommentReload] = useState(false); // [{}
+
+    const [lecturer, setLecturer] = useState({});
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const getCurrentCourse = async () => {
@@ -155,9 +161,34 @@ const CourseDeTail = () => {
         }
     };
 
+    const getUserInfor = async () => {
+        if (loading) return;
+        setLoading(true);
+        try {
+            const res = await apiUserDetail(course.data[0].created_by);
+            if (res.status === 1) {
+                console.log(res.data);
+                setLecturer(res.data);
+                // let roles = res.data.roles;
+                // roles = roles.filter(role => role !== "ROLE_MANAGER").sort();
+                // setUserRole(roles);
+            } else {
+                // console.log(res);
+                // setIsError(true);
+            }
+        } catch (err) {
+            // setIsError(true);
+            // console.log(err);
+        }
+        setLoading(false);
+    }
     useEffect(() => {
         getCurrentCourse();
     }, [slug, isLoggedIn]);
+
+    useEffect(() => {
+        getUserInfor();
+    }, [course])
 
     const handleReloadComment = async () => {
         await setComment([]);
@@ -204,7 +235,9 @@ const CourseDeTail = () => {
                                                     <FontAwesomeIcon icon={faPersonChalkboard} className='mr-1 text-[#faaf00]' />
                                                     Được tạo bởi:
                                                 </span>
-                                                <NavLink to={`/profile/${course.data[0].created_by}`} className='text-[#64ceeb] underline'> {course.data[0].created_user_info[course.data[0].created_by]}</NavLink>
+                                                lecturer-detail
+                                                <a href={`#lecturer-detail`} className='text-[#64ceeb] underline'> {course.data[0].created_user_info[course.data[0].created_by]}</a>
+                                                {/* <NavLink to={`/profile/${course.data[0].created_by}`} className='text-[#64ceeb] underline'> {course.data[0].created_user_info[course.data[0].created_by]}</NavLink> */}
                                             </div>
                                             <div className='font-normal text-sm mb-2'>
                                                 <span>
@@ -308,11 +341,11 @@ const CourseDeTail = () => {
                                     NỘI DUNG KHÓA HỌC
                                 </h1>
                                 {/* <a className="flex items-center text-sm" href="/course/learn/">Xem trước <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 12L10 8L6 4" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M6 12L10 8L6 4" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                                 </svg>
                                 </a> */}
                                 <NavLink to={`/courses/learn/${slug}/preview`} className="flex items-center text-sm">Xem trước <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 12L10 8L6 4" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M6 12L10 8L6 4" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
                                 </svg>
                                 </NavLink>
                             </div>
@@ -339,7 +372,85 @@ const CourseDeTail = () => {
                                 }} />
                             </div>
                         </div>
-                        <div className='my-0 mx-auto pb-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6'>
+                        <div id='lecturer-detail' className='my-0 mx-auto pb-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6'>
+                            <div className='max-w-[46rem] flex justify-between items-center'>
+                                <h1 className='font-bold text-2xl'>
+                                    GIẢNG VIÊN
+                                </h1>
+                            </div>
+                            <div className='mt-4 max-w-[46rem]'>
+                                <div className=" md:order-none order-2 text-[16px]">
+                                    {/* <div className="mb-6 text-2xl font-medium">Giảng viên</div> */}
+                                    <NavLink to={`/profile/${course.data[0].created_by}`} className='text-[#4ba3bb] underline mb-4 block'>{course.data[0].created_user_info[course.data[0].created_by]}</NavLink>
+
+                                    {/* <a className="block md:text-[#006CCB] text-[#F77321] mb-4 text-[16px]" href="teacher/ha-ke-tu">Hà Kế Tú</a> */}
+                                    <div className="italic font-light mb-4 text-[16px]">{lecturer?.specialization}</div>
+                                    <div className="flex gap-6 mb-10">
+                                        <img className="w-[117px] h-[117px] rounded-full" src={lecturer?.avatar ? lecturer?.avatar : defaultAvatar} alt="Rounded avatar" loading="lazy" />
+                                        <div className="text-sm">
+                                            <div className="flex items-center gap-2 mb-4 ">
+                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.99967 1.33337L10.0597 5.50671L14.6663 6.18004L11.333 9.42671L12.1197 14.0134L7.99967 11.8467L3.87967 14.0134L4.66634 9.42671L1.33301 6.18004L5.93967 5.50671L7.99967 1.33337Z" stroke="black" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                </svg>
+                                                {lecturer?.average_rating?.toFixed(1)} xếp hạng
+                                            </div>
+                                            {/* <div className="flex items-center gap-2 mb-4">
+                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7.99967 1.33337L10.0597 5.50671L14.6663 6.18004L11.333 9.42671L12.1197 14.0134L7.99967 11.8467L3.87967 14.0134L4.66634 9.42671L1.33301 6.18004L5.93967 5.50671L7.99967 1.33337Z" stroke="black" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                </svg>
+                                                2,394.0 đánh giá
+                                            </div> */}
+                                            <div className="flex items-center gap-2 mb-4">
+                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <g clipPath="url(#clip0_335_9722)">
+                                                        <path d="M11.3337 14V12.6667C11.3337 11.9594 11.0527 11.2811 10.5526 10.781C10.0525 10.281 9.37424 10 8.66699 10H3.33366C2.62641 10 1.94814 10.281 1.44804 10.781C0.947944 11.2811 0.666992 11.9594 0.666992 12.6667V14" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                        <path d="M5.99967 7.33333C7.47243 7.33333 8.66634 6.13943 8.66634 4.66667C8.66634 3.19391 7.47243 2 5.99967 2C4.52692 2 3.33301 3.19391 3.33301 4.66667C3.33301 6.13943 4.52692 7.33333 5.99967 7.33333Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                        <path d="M15.333 14V12.6667C15.3326 12.0758 15.1359 11.5019 14.7739 11.0349C14.4119 10.5679 13.9051 10.2344 13.333 10.0867" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                        <path d="M10.667 2.08667C11.2406 2.23354 11.749 2.56714 12.1121 3.03488C12.4752 3.50262 12.6722 4.07789 12.6722 4.67C12.6722 5.26212 12.4752 5.83739 12.1121 6.30513C11.749 6.77287 11.2406 7.10647 10.667 7.25334" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                    </g>
+                                                    <defs>
+                                                        <clipPath id="clip0_335_9722">
+                                                            <rect width="16" height="16" fill="white"></rect>
+                                                        </clipPath>
+                                                    </defs>
+                                                </svg>
+                                                {lecturer?.total_subscriptions?.toLocaleString()} học viên
+                                            </div>
+                                            <div className="flex items-center gap-2 mb-4">
+                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <g clipPath="url(#clip0_335_9726)">
+                                                        <path d="M7.99967 14.6666C11.6816 14.6666 14.6663 11.6818 14.6663 7.99992C14.6663 4.31802 11.6816 1.33325 7.99967 1.33325C4.31778 1.33325 1.33301 4.31802 1.33301 7.99992C1.33301 11.6818 4.31778 14.6666 7.99967 14.6666Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                        <path d="M6.66699 5.33325L10.667 7.99992L6.66699 10.6666V5.33325Z" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                                                    </g>
+                                                    <defs>
+                                                        <clipPath id="clip0_335_9726">
+                                                            <rect width="16" height="16" fill="white"></rect>
+                                                        </clipPath>
+                                                    </defs>
+                                                </svg>
+                                                {lecturer?.total_course?.toLocaleString()} khóa học
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="leading-10 text-justify  text-[16px]">
+                                        <div className={`prose w-full min-h-[200px]`} dangerouslySetInnerHTML={{
+                                            __html: `${lecturer?.description || `Chưa thêm mô tả`}`
+                                        }} />
+                                        {/* <strong>Giảng viên Hà Kế Tú - Haketu</strong> với kinh nghiệm 12 năm để chơi đàn và nghiên cứu về âm nhạc, 5 năm kinh nghiệm tổ chức các khóa học Guitar offline tại Úc và Hà Nội, đào tạo hàng trăm học viên trong những khóa: Guitar cổ điển, Fingerstyle và Đệm hát.
+                                        <strong>Hà Kế Tú</strong>&nbsp;hay còn thường gọi là Haketu&nbsp;là một trong những Giảng viên, Youtuber có tên tuổi trong cộng đồng Guitar tại Việt Nam.&nbsp;
+                                        Kênh Youtube hiện đang là một trong những cộng đồng guitar lớn nhất Việt Nam với 600,000 người theo dõi.
+                                        Phương pháp giảng dạy của anh chú trọng tới căn bản, áp dụng thực tế trong việc học nhạc và luôn hướng tới học viên để có hiệu quả cao nhất.
+                                        Haketu là một trong những người đầu tiên có kênh Youtube dạy guitar phi lợi nhuận tại Việt Nam.
+                                        - Thời điểm hiện tại, kênh youtube của Haketu đã đạt mức 550,000 subscribers.
+                                        - Giảng viên xuất phát từ học âm nhạc cổ điển, và hiện đã có hơn 12 năm chơi đàn và nghiên cứu về guitar, cũng như viết ra hàng trăm bản guitar tab để làm học liệu.
+                                        - Haketu được biết tới với phương pháp truyền tải cách học đơn giản, dễ hiểu và hiệu quả, nên nhiều người tìm tới học cả online và offline rất đông.
+                                        - Hiện tại Facebook cũng có trên 180,000 người theo dõi.
+                                        - Thế mạnh của Haketu là khả năng chuyển soạn fingerstyle độc tấu trên guitar, và nổi tiếng nhất là Nhật ký của mẹ (nhạc sĩ Nguyễn Văn Chung). */}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='my-0 mt-4 mx-auto pb-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6'>
                             <div className='max-w-[46rem] flex justify-between items-center'>
                                 <h1 className='font-bold text-2xl'>
                                     BÌNH LUẬN
@@ -352,7 +463,7 @@ const CourseDeTail = () => {
                                     <FontAwesomeIcon icon={faSync} />
                                 </button>
                             </div>
-                            <div className='relative mt-4 max-w-[46rem]'>
+                            <div className='relative max-w-[46rem]'>
                                 {/* <div className='' dangerouslySetInnerHTML={{
                                     __html: `${course.data[0].requirement || `Không có yêu cầu`}`
                                 }} /> */}

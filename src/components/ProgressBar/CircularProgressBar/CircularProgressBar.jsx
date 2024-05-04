@@ -10,7 +10,7 @@ export const CircularProgressBar = ({ progress }) => {
         <div className='h-full relative flex justify-center items-center'>
             <div className='absolute'>
                 <Typography className='text-[11px] font-normal'>
-                    {progress}%
+                    {isNaN(progress) ? 0 : progress}%
                 </Typography>
             </div>
             <svg className="h-full w-[40px]" viewBox="0 0 100 100">

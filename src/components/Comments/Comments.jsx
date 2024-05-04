@@ -235,8 +235,8 @@ export const Comments = ({ comments, currentUser, courseId, reload }) => {
     //     }
     // }, [currentUser])
     return (
-        <section className="bg-white py-10 lg:py-10 antialiased">
-            <div className="max-w-2xl mx-auto px-4">
+        <section className="bg-white py-8 lg:py-8 antialiased">
+            <div className="">
                 <form className="mb-6">
                     <div className={`py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 focus-within:border-gray-600 dark:border-gray-400 ${error && 'border-red-600'}`}>
                         <textarea id="comment" rows="6"

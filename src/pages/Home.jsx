@@ -318,7 +318,7 @@ const Home = () => {
               <div className="w-full mx-auto max-w-8xl  px-4">
                 <div className=" w-full flex justify-between mb-6">
                   <h4 className="relative uppercase font-semibold text-2xl">
-                    Đăng ký nhiều nhất
+                    Đăng ký nhiều
                     <span className='absolute bottom-[-3px] left-0 w-full h-[3px] bg-[#1d68da]'></span>
                   </h4>
                   {/* <a className="flex items-center text-sm" href="#">Xem thêm <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -383,97 +383,105 @@ const Home = () => {
         </div>
 
         {/* most popular category */}
-        <div className='w-full mx-auto max-w-8xl px-4'>
-          <div className="w-full flex justify-between mb-6">
-            <h4 className="relative uppercase font-semibold text-2xl">
-              Danh mục hàng đầu
-              <span className='absolute bottom-[-3px] left-0 w-full h-[3px] bg-[#1d68da]'></span>
-            </h4>
-          </div>
+        <div className="mt-5 grid ">
+          <div className="container grid ">
+            <div className='w-full mx-auto max-w-8xl px-4'>
+              <div className="w-full flex justify-between mb-6">
+                <h4 className="relative uppercase font-semibold text-2xl">
+                  Danh mục hàng đầu
+                  <span className='absolute bottom-[-3px] left-0 w-full h-[3px] bg-[#1d68da]'></span>
+                </h4>
+              </div>
 
-          <div className="grid lg:grid-cols-4 md:grid-cols-2  grid-cols-1 pt-10 gap-4">
-            {loadingTopCategory ? (<></>) : (
-              <>
-                {topCategory?.map((category, index) => (
-                  <span key={index} className={` rounded-[8px] transition duration-100 hover:shadow-box6 border-b-4 hover:border-[#4cbdff] border-transparent bg-[${categoryColor[index]}]  hover:bg-[${categoryHoverColor[index]}] text-center px-6 py-[65px] hover:-translate-y-2`}
-                    style={{
-                      backgroundColor: categoryColor[index],
+              <div className="grid lg:grid-cols-4 md:grid-cols-2  grid-cols-1 pt-10 gap-4">
+                {loadingTopCategory ? (<></>) : (
+                  <>
+                    {topCategory?.map((category, index) => (
+                      <span key={index} className={` rounded-[8px] transition duration-100 hover:shadow-box6 border-b-4 hover:border-[#4cbdff] border-transparent bg-[${categoryColor[index]}]  hover:bg-[${categoryHoverColor[index]}] text-center px-6 py-[65px] hover:-translate-y-2`}
+                        style={{
+                          backgroundColor: categoryColor[index],
 
-                    }}
-                  // onMouseOver={() => {
-                  //   this.style.backgroundcolor = categoryHoverColor[index]
-                  // }}
-                  >
-                    <div className="w-[72px] h-[72px] rounded-full bg-white relative mx-auto flex flex-col justify-center items-center mb-8 group-hover:bg-[#E3F9F6]">
-                      <img src={category.image} alt="" className=" w-[64px] h-[64px] object-cover " />
-                    </div>
-                    <div className="">
-                      <h4 className=" text-2xl  mb-2 font-medium">{category.title}</h4>
-                      {category.total_course > 0 && (
-                        <p>{category.total_course} Khóa học</p>
-                      )}
-                    </div>
-                  </span>
-                ))}
-              </>
-            )}
+                        }}
+                      // onMouseOver={() => {
+                      //   this.style.backgroundcolor = categoryHoverColor[index]
+                      // }}
+                      >
+                        <div className="w-[72px] h-[72px] rounded-full bg-white relative mx-auto flex flex-col justify-center items-center mb-8 group-hover:bg-[#E3F9F6]">
+                          <img src={category.image} alt="" className=" w-[64px] h-[64px] object-contain " />
+                        </div>
+                        <div className="">
+                          <h4 className=" text-2xl  mb-2 font-medium">{category.title}</h4>
+                          {category.total_course > 0 && (
+                            <p>{category.total_course} Khóa học</p>
+                          )}
+                        </div>
+                      </span>
+                    ))}
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="pt-20 section-padding-bottom bg-white bg-[url('../assets/section-bg-14.png')] bg-center bg-no-repeat 
+        <div className="mt-5 grid ">
+          <div className="container grid ">
+            <div className="pt-20 section-padding-bottom bg-white bg-[url('../assets/section-bg-14.png')] bg-center bg-no-repeat 
             bg-cover">
-          <div className="px-4 w-full flex justify-between mb-6">
-            <h4 className="relative uppercase font-semibold text-2xl">
-              Sự nghiệp
-              <span className='absolute bottom-[-3px] left-0 w-full h-[3px] bg-[#1d68da]'></span>
-            </h4>
-          </div>
-          <div className="container pt-10">
-            <div className="grid lg:grid-cols-2 grid-cols-1 gap-7">
-              <div className="bg-[url('../assets/bg-ins-1.png')] bg-cover  bg-no-repeat p-10  rounded-md">
-                <div className="max-w-[337px]">
-                  {!userData?.roles?.includes("ROLE_LECTURE") ? (
-                    <>
-                      <div className="mini-title">Chia sẽ kiến thức</div>
+              <div className="px-4 w-full flex justify-between mb-6">
+                <h4 className="relative uppercase font-semibold text-2xl">
+                  Sự nghiệp
+                  <span className='absolute bottom-[-3px] left-0 w-full h-[3px] bg-[#1d68da]'></span>
+                </h4>
+              </div>
+              <div className="container pt-10">
+                <div className="grid lg:grid-cols-2 grid-cols-1 gap-7">
+                  <div className="bg-[url('../assets/bg-ins-1.png')] bg-cover  bg-no-repeat p-10  rounded-md">
+                    <div className="max-w-[337px]">
+                      {!userData?.roles?.includes("ROLE_LECTURE") ? (
+                        <>
+                          <div className="mini-title">Chia sẽ kiến thức</div>
+                          <div className=" text-[34px] text-black leading-[51px]">
+                            Trở thành {' '}
+                            <span className="shape-bg">Giảng viên</span>
+                          </div>
+                          <div className="text-gray-500  mt-6 mb-12">
+                            Trở thành giảng viên, chia sẽ kiến thức của bạn.
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="mini-title">Quản lý khóa học</div>
+                          <div className=" text-[34px] text-black leading-[51px]">
+                            Quản lý {' '}
+                            <span className="shape-bg">Khóa học</span>
+                          </div>
+                          <div className="text-gray-500  mt-6 mb-12">
+                            Quản lý khóa học của bạn, tạo khóa học mới.
+                          </div>
+                        </>
+                      )}
+                      {/* <NavLink to={Path.LECTURER_P} className="block">
+                    Giảng dạy trên Wisdom
+                  </NavLink> */}
+                      <NavLink to={Path.LECTURER_P} className={`btn-career px-[32px] py-[16px] rounded-md bg-[#ff7e84] text-white cursor-pointer `}>
+                        {userData?.roles?.includes("ROLE_LECTURE") ? 'Quản lý khóa học' : 'Trở thành giảng viên'}
+                      </NavLink>
+                    </div>
+                  </div>
+                  <div className="bg-[url('../assets/bg-ins-2.png')]  bg-no-repeat p-10 bg-cover rounded-md">
+                    <div className="max-w-[337px]">
+                      <div className="mini-title">Tham gia khóa học, trao đổi kiến thức</div>
                       <div className=" text-[34px] text-black leading-[51px]">
-                        Trở thành {' '}
-                        <span className="shape-bg">Giảng viên</span>
-                      </div>
-                      <div className="text-gray-500  mt-6 mb-12">
-                        Trở thành giảng viên, chia sẽ kiến thức của bạn.
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="mini-title">Quản lý khóa học</div>
-                      <div className=" text-[34px] text-black leading-[51px]">
-                        Quản lý {' '}
+                        Tham gia {' '}
                         <span className="shape-bg">Khóa học</span>
                       </div>
                       <div className="text-gray-500  mt-6 mb-12">
-                        Quản lý khóa học của bạn, tạo khóa học mới.
+                        Theo đuổi tri thức, phát triển tương lai của bạn.
                       </div>
-                    </>
-                  )}
-                  {/* <NavLink to={Path.LECTURER_P} className="block">
-                    Giảng dạy trên Wisdom
-                  </NavLink> */}
-                  <NavLink to={Path.LECTURER_P} className={`btn-career px-[32px] py-[16px] rounded-md bg-[#ff7e84] text-white cursor-pointer `}>
-                    {userData?.roles?.includes("ROLE_LECTURE") ? 'Quản lý khóa học' : 'Trở thành giảng viên'}
-                  </NavLink>
-                </div>
-              </div>
-              <div className="bg-[url('../assets/bg-ins-2.png')]  bg-no-repeat p-10 bg-cover rounded-md">
-                <div className="max-w-[337px]">
-                  <div className="mini-title">Tham gia khóa học, trao đổi kiến thức</div>
-                  <div className=" text-[34px] text-black leading-[51px]">
-                    Tham gia {' '}
-                    <span className="shape-bg">Khóa học</span>
+                      {/* <a href="#" className="btn btn-black">Contact Us</a> */}
+                    </div>
                   </div>
-                  <div className="text-gray-500  mt-6 mb-12">
-                    Theo đuổi tri thức, phát triển tương lai của bạn.
-                  </div>
-                  {/* <a href="#" className="btn btn-black">Contact Us</a> */}
                 </div>
               </div>
             </div>
