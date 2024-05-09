@@ -426,7 +426,7 @@ const CourseLearn = () => {
                                                         {commentLoading && (
                                                             <div className='absolute w-full h-full'>
                                                                 <div className='absolute bg-gray-400 w-full h-full opacity-50'></div>
-                                                                <div className='absolute flex items-center z-10 top-72 left-0 right-0 justify-center'>
+                                                                <div className='absolute flex items-center z-10 top-0 bottom-0 left-0 right-0 justify-center'>
                                                                     <Spinner color="teal" width={100} height={100} />
                                                                 </div>
                                                             </div>
