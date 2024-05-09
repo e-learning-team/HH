@@ -8,13 +8,13 @@ const instance = axios.create({
     baseURL: 'http://localhost:8080/e-learning/api',
     'Content-Type': 'application/json',
 });
-
+let isRefreshing = false;
 instance.interceptors.request.use(function (config) {
     const accessToken = store.getState().user.token;
-    if (accessToken)
+    if (accessToken && config.headers.hasOwnProperty('Authorization'))
         config.headers = {
-            authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
+            ...config.headers,
+            'Authorization': `Bearer ${accessToken}`
         };
     return config;
 }, function (error) {
@@ -22,8 +22,12 @@ instance.interceptors.request.use(function (config) {
     return Promise.reject(error);
 });
 
-instance.interceptors.response.use(function (response) {
-
+instance.interceptors.response.use(async function (response) {
+    if (response?.data?.status == 0 && response?.data?.message == "JWT_ERROR") {
+        console.log("---JWT_ERROR---");
+        await apiLogOut();
+        store.dispatch(logout());
+    }
     return response?.data;
 }, async function (error) {
 
@@ -32,12 +36,40 @@ instance.interceptors.response.use(function (response) {
     const prevRequest = error?.config;
     if (error.response && error?.response?.status === 401 && !prevRequest?.sent) {
         prevRequest.sent = true;
-        const resp =  await apiRefreshToken();
-        store.dispatch(updateToken(resp?.data?.token));
-        return instance(prevRequest);
+
+        if (!isRefreshing) {
+            isRefreshing = true;
+            try {
+                const resp = await apiRefreshToken();
+
+                if (resp?.data?.token) {
+                    store.dispatch(updateToken(resp?.data?.token));
+                    // Retry the failed request with the new token
+                    prevRequest.headers['Authorization'] = `Bearer ${resp.data.token}`;
+                    return instance(prevRequest);
+                } else {
+                    store.dispatch(logout());
+                }
+            } catch (refreshError) {
+                console.log("Refresh token request failed:", refreshError);
+                store.dispatch(logout());
+            } finally {
+                isRefreshing = false;
+            }
+        } else {
+            // If another request is already refreshing the token, wait for that request to complete
+            await new Promise(resolve => {
+                const interval = setInterval(() => {
+                    if (!isRefreshing) {
+                        clearInterval(interval);
+                        resolve();
+                    }
+                }, 100);
+            });
+            // Retry the failed request with the new token
+            return instance(prevRequest);
+        }
     }
-    // store.dispatch(logout())
-    // await apiLogOut()
     return Promise.reject(error);
 });
 

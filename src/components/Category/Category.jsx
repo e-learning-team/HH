@@ -8,7 +8,7 @@ function HoverableTree({data}) {
         const res = await apiCategory({ build_type: 'TREE' });
         if (res && res.data != null) {
             // setData(res.data);
-            console.log(res.data)
+            // console.log(res.data)
             return data;
         }
     };

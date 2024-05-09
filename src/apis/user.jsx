@@ -38,4 +38,48 @@ export const apiConfirmForgetPassword = (data) => axios({
     method:'patch',
     data
 })
+export const apiProfileUpdate = (data) => axios({
+    url: '/user/profile/update',
+    method: 'patch',
+    data,
+    headers: {
+        'Authorization': ``,
+    }
+})
+export const apiLecturerRegister = (data) => axios({
+    url: '/user/lecturer/register',
+    method: 'post',
+    data,
+    headers: {
+        'Authorization': ``,
+    }
+})
+export const apiUserDetail = (userId) => axios({
+    url: `/user/detail/${userId}`,
+    method: 'get',
+    // data,
+})
 
+export const apiUserList = (params) => axios({
+    url: '/user/',
+    method: 'get',
+    params,
+})
+
+export const apiUpdateStatus = (userId, params) => axios({
+    url: `/user/lock/${userId}`,
+    method: 'post',
+    params,
+    headers: {
+        'Authorization': ``,
+    }
+})
+
+export const apiUpdateRoles = (userId, params) => axios( {
+    url: `/user/update-roles/${userId}`,
+    method: 'put',
+    params,
+    headers: {
+        'Authorization': ``,
+    }
+})

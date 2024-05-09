@@ -1,81 +1,89 @@
-const Pagination = () => {
-    return(
-        <ol className="flex justify-center gap-1 text-xs font-medium">
-  <li>
-    <a
-      href="#"
-      className="inline-flex h-8 w-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180"
-    >
-      <span className="sr-only">Prev Page</span>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-3 w-3"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-      >
-        <path
-          fillRule="evenodd"
-          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-          clipRule="evenodd"
-        />
-      </svg>
-    </a>
-  </li>
+import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Paginator } from 'primereact/paginator';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
-  <li>
-    <a
-      href="#"
-      className="block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900"
-    >
-      1
-    </a>
-  </li>
+ const Pagination = ({ totalPages }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  useEffect(() => {
+    if (searchParams.get('page')) {
+      setCurrentPage(searchParams.get('page'));
+    } else {
+      setCurrentPage(1);
+    }
+    goToPage(searchParams.get('page'));
+  }, [searchParams]);
 
-  <li
-    className="block h-8 w-8 rounded border-blue-600 bg-blue-600 text-center leading-8 text-white"
-  >
-    2
-  </li>
+  const goToPage = (page) => {
+    const newSearchParams = new URLSearchParams(searchParams);
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      newSearchParams.set('page', page.toString());
+    } else if (page <= 0) {
+      setCurrentPage(1);
+      newSearchParams.set('page', '1');
+    } else if (page >= totalPages) {
+      setCurrentPage(totalPages);
+      newSearchParams.set('page', totalPages.toString());
+    }
+    // setSearchParams(newSearchParams);
+  };
 
-  <li>
-    <a
-      href="#"
-      className="block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900"
-    >
-      3
-    </a>
-  </li>
 
-  <li>
-    <a
-      href="#"
-      className="block h-8 w-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900"
-    >
-      4
-    </a>
-  </li>
+  const generatePagination = () => {
+    const paginationItems = [];
 
-  <li>
-    <a
-      href="#"
-      className="inline-flex h-8 w-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180"
-    >
-      <span className="sr-only">Next Page</span>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-3 w-3"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-      >
-        <path
-          fillRule="evenodd"
-          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-          clipRule="evenodd"
-        />
-      </svg>
-    </a>
-  </li>
-</ol>    
-    )
-}
+    // First and Previous buttons
+    paginationItems.push(
+      <li key="first" className={`pagination-item ${currentPage === 1 ? 'disabled cursor-default text-slate-500' : ''} w-[40px] font-semibold cursor-pointer justify-center flex items-center h-full`} onClick={() => goToPage(1)}>
+        Đầu
+      </li>
+    );
+
+    paginationItems.push(
+      <li key="previous" className={`pagination-item ${currentPage === 1 ? 'disabled cursor-not-allowed opacity-70' : 'hover:bg-slate-200'} w-[40px] font-semibold cursor-pointer  h-full border mx-1 border-slate-400 flex justify-center items-center rounded-full`} onClick={() => goToPage(currentPage - 1)}>
+        <FontAwesomeIcon icon={faAngleLeft} />
+      </li>
+    );
+
+    // Page numbers
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+        paginationItems.push(
+          <li key={i} className={`pagination-item ${i === currentPage ? 'active border-b-2 cursor-default border-emerald-800 ' : ''} w-[40px] font-semibold cursor-pointer justify-center flex items-center h-full`} onClick={() => goToPage(i)}>
+            {i}
+          </li>
+        );
+      }
+      else if (i === currentPage - 2 || i === currentPage + 2) {
+        paginationItems.push(<li key={`ellipsis-${i}`} className="pagination-item">...</li>);
+      }
+    }
+
+    // Next and Last buttons
+    paginationItems.push(
+      <li key="next" className={`pagination-item ${currentPage === totalPages ? 'disabled cursor-not-allowed opacity-70' : 'hover:bg-slate-200'} w-[40px] font-semibold cursor-pointer  h-full border mx-1 border-slate-400 flex justify-center items-center rounded-full`} onClick={() => goToPage(currentPage + 1)}>
+        <FontAwesomeIcon icon={faAngleRight} />
+      </li>
+    );
+
+    paginationItems.push(
+      <li key="last" className={`pagination-item ${currentPage === totalPages ? 'disabled cursor-default text-slate-500' : ''} w-[40px] font-semibold cursor-pointer justify-center flex items-center h-full`} onClick={() => goToPage(totalPages)}>
+        Cuối
+      </li>
+    );
+
+    return paginationItems;
+  };
+
+  return (
+    <ul className="pagination h-[40px] flex gap-1 w-full justify-center items-center">
+      {generatePagination()}
+    </ul>
+  );
+};
+
 export default Pagination

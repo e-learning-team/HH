@@ -17,7 +17,6 @@ import "primereact/resources/primereact.min.css";
 import "/node_modules/primeflex/primeflex.css";
 import userReducer from '../../store/User/userSlice';
 import { toast } from 'react-toastify';
-
 const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -28,10 +27,14 @@ const Login = () => {
     });
     useEffect(() => {
         document.title = 'Đăng nhập';
-        if (isLoggedIn && isLoggedIn == true) {
-            navigate(`/${Path.HOME}`);
+        if (isLoggedIn) {
+            if(userData.roles.includes("ROLE_LECTURE")) {
+                navigate(`${Path.ADMIN_P}`)
+            } else{
+                navigate(-1)
+            }
         }
-    }, []);
+    }, [isLoggedIn]);
     const [invalidFields, setInvalidFields] = useState([]);
 
     const resetPayload = () => {
@@ -43,18 +46,23 @@ const Login = () => {
     const handleSubmit = useCallback(async () => {
         const rs = await apiLogin(payload);
         if (rs.status === 1) {
+            // console.log(rs.data?.user?.avatar)
             dispatch(login({
                 isLoggedIn: true,
                 userData: rs.data.user,
                 token: rs.data.token,
+                roles: rs.data.roles,
+                avatarURL: rs.data?.user?.avatar,
             }));
-            navigate(`/${Path.HOME}`);
+            // navigate(`/${Path.HOME}`);
             toast.success(`Đăng nhập thành công`, {
                 position: toast.POSITION.TOP_RIGHT,
             });
-        } else toast.error(rs.message, {
-            position: toast.POSITION.TOP_RIGHT,
-        });
+        } else {
+            toast.error(rs.message, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        }
 
     }, [payload]);
     return (

@@ -1,0 +1,41 @@
+.swiper {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide {
+    display: flex;
+}
+
+.swiper-slide {
+    width: 60%;
+}
+
+.home-banner {
+    background-image: url(https://hoctapgiare.top/uploads/system/home-banner.jpg);
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: 50%;
+    padding: 120px 0px;
+    display: block;
+    unicode-bidi: isolate;
+    font-weight: 400;
+}
+@media (min-width: 1280px) {
+    .section-padding-bottom {
+        padding-bottom: 130px;
+    }
+}
+@media (min-width: 1024px) {
+    .section-padding-bottom {
+        padding-bottom: 7rem;
+    }
+}
+@media (min-width: 768px) {
+    .section-padding-bottom {
+        padding-bottom: 5rem;
+    }
+}
+.section-padding-bottom {
+    padding-bottom: 65px;
+}

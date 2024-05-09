@@ -1,5 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { apiCategory } from '../../apis/category';
+import { useSearchParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 function Icon() {
     return (
@@ -29,66 +31,100 @@ function IconRadio() {
 }
 
 
-const AccordionCourseFilter = () => {
+const AccordionCourseFilter = ({ parentCategoryId, deleteFilter }) => {
+    const { isLoggedIn, userData, token, isLoading, message } = useSelector((state) => state.user);
+    const [childCategory, setChildCategory] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [searchParams, setSearchParams] = useSearchParams();
 
+    const searchChildCategory = async (addParams) => {
+        try {
+            setLoading(true);
+            const params = {
+                build_type: "TREE",
+                ...addParams,
+            };
+
+            const response = await apiCategory(params);
+
+            if (response?.data?.length > 0) {
+                setChildCategory(response.data);
+            } else {
+                setChildCategory([]);
+            }
+        } catch (error) {
+            console.error("Error fetching course data", error);
+            setChildCategory([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+    const handleCheckChildCategory = (e, category) => {
+        setLoading(true);
+
+        const check = e?.target?.checked;
+
+        setSearchParams((currentSearchParams) => {
+            const newSearchParams = new URLSearchParams(currentSearchParams.toString());
+
+            if (check) {
+                newSearchParams.append('subcategory', category?.id);
+            } else {
+                newSearchParams.delete('subcategory', category?.id);
+            }
+
+            return newSearchParams;
+        });
+
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        if (!searchParams.getAll('subcategory')) {
+            searchChildCategory({ level: 1 });
+        }
+    }, [searchParams, isLoggedIn]);
+
+    useEffect(() => {
+        searchChildCategory({ parent_ids: searchParams.get('category') });
+    }, [parentCategoryId, searchParams]);
+
+    useEffect(() => {
+        searchChildCategory({ level: 1 });
+    }, [deleteFilter]);
     return (
         <div>
             <div className="">
-                <details className="group [&_summary::-webkit-details-marker]:hidden border-y">
-                    <summary className="flex cursor-pointer items-center justify-between gap-1.5 py-4 text-gray-900">
-                        <h2 className="font-medium">
-                            Danh mục
-                        </h2>
-                        <Icon />
-                    </summary>
+                {childCategory?.length > 0 && (
+                    <details open className="group [&_summary::-webkit-details-marker]:hidden border-y">
+                        <summary className="flex cursor-pointer items-center justify-between gap-1.5 py-4 text-gray-900">
+                            <h2 className="font-medium">
+                                Danh mục con
+                            </h2>
+                            <Icon />
+                        </summary>
 
-                    <div className="mb-4 px-4 leading-relaxed text-gray-700">
-                        <div>
-                            <div className="col-span-6 py-1">
-                                <label className="flex gap-4">
-                                    <input type="checkbox"
-                                        id="MarketingAccept"
-                                        name="marketing_accept"
-                                        className="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm" />
-
-                                    <span className="text-sm text-gray-700">
-                                        Danh mục
-                                    </span>
-                                </label>
-                            </div>
+                        <div className="mb-4 leading-relaxed text-gray-700">
+                            {!loading && (
+                                <div>
+                                    {childCategory.map((child, index) => (
+                                        <div key={index} className="col-span-6 p-2 cursor-pointer hover:bg-slate-200">
+                                            <label className="flex gap-4 cursor-pointer">
+                                                <input defaultChecked={searchParams.getAll('subcategory').includes(child.id)} onClick={(e) => handleCheckChildCategory(e, child)} type="checkbox"
+                                                    className="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm" />
+                                                <span className="text-sm text-gray-700">
+                                                    {child?.title}
+                                                </span>
+                                            </label>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
-                        <div>
-                            <div className="col-span-6 py-1">
-                                <label className="flex gap-4">
-                                    <input type="checkbox"
-                                        id="MarketingAccept"
-                                        name="marketing_accept"
-                                        className="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm" />
+                    </details>
+                )}
 
-                                    <span className="text-sm text-gray-700">
-                                        Danh mục
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="col-span-6 py-1">
-                                <label className="flex gap-4">
-                                    <input type="checkbox"
-                                        id="MarketingAccept"
-                                        name="marketing_accept"
-                                        className="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm" />
-
-                                    <span className="text-sm text-gray-700">
-                                        Danh mục
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </details>
-
-                <details className="group [&_summary::-webkit-details-marker]:hidden rounded-t-1 border-b">
+                <details open className="group [&_summary::-webkit-details-marker]:hidden rounded-t-1 border-b">
                     <summary className="flex cursor-pointer items-center justify-between gap-1.5 py-4 text-gray-900">
                         <h2 className="font-medium">
                             Giá tiền
@@ -96,7 +132,7 @@ const AccordionCourseFilter = () => {
                         <Icon />
                     </summary>
 
-                    <div className="mb-4 px-4 leading-relaxed text-gray-700">
+                    <div className="mb-4 leading-relaxed text-gray-700">
                         <div className="grid">
                             <div className="inline-flex items-center">
                                 <label
@@ -133,8 +169,8 @@ const AccordionCourseFilter = () => {
             </div>
 
         </div>
-    )
+    );
 
-}
+};
 
-export default AccordionCourseFilter
+export default AccordionCourseFilter;

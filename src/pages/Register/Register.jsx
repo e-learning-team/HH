@@ -19,10 +19,10 @@ const Register = () => {
         code: "",
         full_name: "",
     });
-    const [nullEmail, setNullEmail] = useState(true)
-    const [isRegister, setIsRegister] = useState(true)
-    const [isLoadingSendMail, setIsLoadingSendMail] = useState(false)
-    const [isLoadingRegister, setIsLoadingRegister] = useState(false)
+    const [nullEmail, setNullEmail] = useState(true);
+    const [isRegister, setIsRegister] = useState(true);
+    const [isLoadingSendMail, setIsLoadingSendMail] = useState(false);
+    const [isLoadingRegister, setIsLoadingRegister] = useState(false);
 
     useEffect(() => {
         document.title = 'Đăng ký';
@@ -35,22 +35,23 @@ const Register = () => {
 
     const isValidEmail = (email) => {
         return /\S+@\S+\.\S+/.test(email);
-    }
+    };
 
     const handleSubmit = useCallback(async () => {
-        setIsLoadingRegister(true)
+        setIsLoadingRegister(true);
         const rs = await apiResgister(payload);
-        setIsLoadingRegister(false)
-        console.log(rs)
+        setIsLoadingRegister(false);
+        console.log(rs);
         if (rs.status === 1) {
-            console.log(rs.data)
-            console.log(rs.data.token)
+            console.log(rs.data);
+            console.log(rs.data.token);
             toast.success(`Đăng ký thành công`, {
                 position: toast.POSITION.TOP_RIGHT,
             });
             dispatch(login({
                 isLoggedIn: true,
                 userData: rs.data.user,
+                roles: rs.data.roles,
                 token: rs.data.token,
             }));
             navigate(`/${Path.HOME}`);
@@ -60,9 +61,9 @@ const Register = () => {
     }, [payload]);
 
     const handleSendEmail = useCallback(async () => {
-        setIsLoadingSendMail(true)
-        const rs = await apiSendEmailVerification(payload)
-        setIsLoadingSendMail(false)
+        setIsLoadingSendMail(true);
+        const rs = await apiSendEmailVerification(payload);
+        setIsLoadingSendMail(false);
         if (rs.status === 1) {
             toast.success(`Đã gửi email xác nhận - vui lòng kiểm tra email của bạn!`, {
                 position: toast.POSITION.TOP_RIGHT,
@@ -72,7 +73,7 @@ const Register = () => {
                 position: toast.POSITION.TOP_RIGHT,
             });
         }
-    }, [payload])
+    }, [payload]);
     return (
         <section>
             <div className="w-full">
@@ -154,7 +155,7 @@ const Register = () => {
                             <div className="w-[50px] invisible"></div>
                             <div className="col-span-12 text-center flex justify-center">
                                 Bạn đã có tài khoản!
-                                <NavLink className="font-medium no-underline ml-2 text-blue-500 text-left cursor-pointer" to={'/'+Path.LOGIN}>Đăng nhập</NavLink>
+                                <NavLink className="font-medium no-underline ml-2 text-blue-500 text-left cursor-pointer" to={'/' + Path.LOGIN}>Đăng nhập</NavLink>
                             </div>
                         </form>
                     </div>
@@ -162,7 +163,7 @@ const Register = () => {
             </div>
         </section>
     );
-}
+};
 
 export default Register
 

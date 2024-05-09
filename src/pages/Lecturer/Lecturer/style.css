@@ -1,0 +1,49 @@
+.multiselect-container {
+    width: 100%;
+    /* max-width: 735px; */
+}
+.p-multiselect{
+    background-color: #f5f8ff;
+    border-radius: 0;
+}
+.p-multiselect:focus{
+    background-color: #fff;
+}
+.multiselect-chips {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    /* Adjust the gap between chips as needed */
+}
+
+/* Optional: Style for each chip */
+.p-chips-token {
+    width: 100%;
+    margin-right: 4px;
+    /* Adjust the right margin for each chip as needed */
+}
+.p-multiselect-token{
+    width: 100%;
+    margin-right: 4px; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.p-multiselect-label{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    /* height: auto; */
+    gap: 4px;
+    overflow: unset;
+}
+.p-multiselect-label-container{
+    overflow: visible;
+    /* height: auto; */
+}
+.p-multiselect-panel{
+    /* top: unset;
+    bottom: 0; */
+    overflow: hidden;
+}
