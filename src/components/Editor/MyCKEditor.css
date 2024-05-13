@@ -6,7 +6,7 @@
     height: 350px !important;
 
 }
-.ck.ck-editor__main>.ck-editor__editable:not(.ck-focused){
+.ck.ck-editor__main>.ck-editor__editable{
     padding: 0 36px !important;
 }
 .ck-editor__editable_inline:not(.ck-comment__input *) {

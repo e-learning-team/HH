@@ -15,7 +15,9 @@ body {
   line-break: strict;
   text-size-adjust: none;
 }
-
+* {
+  list-style: unset!important;
+}
 progress {
   -webkit-appearance: none;
   -moz-appearance: none;

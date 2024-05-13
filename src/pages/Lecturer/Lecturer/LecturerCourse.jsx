@@ -22,13 +22,26 @@ const LectureCourse = () => {
             setLoading(true);
             try {
                 // const paramsAPI = getParams(pageIndex);
-                const paramsAPI = {
-                    created_by: window.location.pathname.normalize().includes('admin') ? '' : userData?.id,
-                    build_child: false,
-                    max_result: 20,
-                    current_page: pageIndex || 1,
-                    multi_value: refresh ? '' : keyword,
-                };
+                // const search_type = new URLSearchParams();
+                
+
+                const paramsAPI = new URLSearchParams();
+                paramsAPI.append('created_by', window.location.pathname.normalize().includes('admin') ? '' : userData?.id);
+                paramsAPI.append('build_child', false);
+                paramsAPI.append('max_result', 20);
+                paramsAPI.append('current_page', pageIndex || 1);
+                paramsAPI.append('multi_value', refresh ? '' : keyword);
+
+                paramsAPI.append('search_type', 'OFFICIAL');
+                paramsAPI.append('search_type', 'DRAFT');
+                paramsAPI.append('search_type', 'WAITING');
+                paramsAPI.append('search_type', 'CHANGE_PRICE');
+                // created_by: window.location.pathname.normalize().includes('admin') ? '' : userData?.id,
+                //     build_child: false,
+                //     max_result: 20,
+                //     current_page: pageIndex || 1,
+                //     multi_value: refresh ? '' : keyword,
+                //     search_type: search_type,
                 const response = await apiGetCourse(paramsAPI);
                 if (response?.data?.data?.length > 0) {
                     console.log('---my course---', response.data.total_page);
@@ -130,9 +143,8 @@ const LectureCourse = () => {
                     <CourseCard content={{ courseType: "CHANGE_PRICE" }} /> */}
 
                     {myCourseList?.total_page > 0 && (
-                        <div className='flex justify-center items-center gap-x-3  mb-[40px] pb-[40px]'>
+                        <div className='flex list-none justify-center items-center gap-x-3  mb-[40px] pb-[40px]'>
                             <Pagination size='large' className='text-xl' page={currentPage} onChange={handleChangePage} count={myCourseList?.total_page} showFirstButton showLastButton />
-
                         </div>
                     )}
                 </>

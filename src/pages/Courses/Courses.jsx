@@ -332,7 +332,9 @@ const Courses = () => {
                                             {courseList?.data.map((course, index) => (
                                                 // <HorizontalCard key={index} content={course} />
                                                 <>
-                                                    <NavLink className="bg-white rounded-[8px] transition shadow-box7 duration-150 border-b-4 hover:border-[#4cbdff] border-transparent
+                                                    <NavLink
+                                                        to={`/courses/${course.slug}`}
+                                                        className="bg-white rounded-[8px] transition shadow-box7 duration-150 border-b-4 hover:border-[#4cbdff] border-transparent
                                                                     hover:shadow-box6 flex p-8 space-x-6" href="single-course.html">
                                                         <div class="flex-none">
                                                             <div class="h-[159px] w-[260px] rounded relative">
@@ -369,7 +371,8 @@ const Courses = () => {
                                                             </div>
                                                             <div className=" text-[#676e7b]">
                                                                 <span className="line-clamp-2" dangerouslySetInnerHTML={{
-                                                                    __html: `${course.description || ``}`}}></span>
+                                                                    __html: `${course.description || ``}`
+                                                                }}></span>
                                                             </div>
                                                         </div>
                                                     </NavLink>
@@ -379,7 +382,7 @@ const Courses = () => {
                                     </div>
 
                                     {courseList?.total_page > 1 && (
-                                        <div className='flex justify-center mt-12 mb-[40px] pb-[40px]'>
+                                        <div className='flex list-none justify-center mt-12 mb-[40px] pb-[40px]'>
                                             <Pagination size='large' className='text-xl' page={currentPage} onChange={handleChangePage} count={courseList?.total_page} showFirstButton showLastButton />
                                         </div>
                                     )}

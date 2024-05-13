@@ -80,7 +80,7 @@ import { useSearchParams } from 'react-router-dom';
   };
 
   return (
-    <ul className="pagination h-[40px] flex gap-1 w-full justify-center items-center">
+    <ul className="pagination h-[40px] flex gap-1 w-full justify-center items-center !list-none">
       {generatePagination()}
     </ul>
   );

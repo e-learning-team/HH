@@ -165,7 +165,7 @@ const UserPrfileView = () => {
                             </div>
                         </div>
                         {courseTotalPage > 1 && (
-                            <div className='flex justify-center mb-[40px] pb-[40px]'>
+                            <div className='flex list-none justify-center mb-[40px] pb-[40px]'>
                                 <Pagination size='large' className='text-xl' page={coursePage} onChange={handleChangePage} count={courseTotalPage} showFirstButton showLastButton />
                             </div>
                         )}

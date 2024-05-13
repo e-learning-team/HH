@@ -6,7 +6,7 @@ import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { apiCategory } from '../../../apis/category';
 import { MultiSelect } from 'primereact/multiselect';
-import { apiDeleteCourse, apiGetCourse, apiLecturePublishCourse, apiSaveCourse, apiUpdateIsPreview } from '../../../apis/course';
+import { apiChangeCourseType, apiDeleteCourse, apiGetCourse, apiLecturePublishCourse, apiSaveCourse, apiUpdateIsPreview } from '../../../apis/course';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp, faFloppyDisk, faPen, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { apiDeleteFileByPathFile, apiUploadFile } from '../../../apis/fileRelationship';
@@ -159,59 +159,59 @@ const IntroductionContent = ({ content, handleChange }) => {
                                     options={categoryList} optionLabel="title"
                                     display="chip"
                                     placeholder="Chọn danh mục"
-                                    disabled={content?.courseType !== "DRAFT"}
+                                    // disabled={content?.courseType !== "DRAFT"}
                                     // maxSelectedLabels={3}
                                     className="max-w-full min-w-full md:w-20rem" />
                             </div>
                             <Typography className='text-red-500'>{errors.category_ids}</Typography>
                         </div>
                     </div>
-                    <div className='flex flex-wrap w-full justify-between items-center'>
-                        <div className='mb-5'>
+                    <div className='flex flex-wrap w-full justify-between items-center gap-x-4'>
+                        <div className='mb-5 flex-1'>
                             <Typography className='font-normal text-base mb-2'>Mô tả về khóa học</Typography>
-                            {content?.courseType === "DRAFT" ? (
-                                <MyCKEditor
-                                    className={'min-w-full'}
-                                    type={'COURSE_DESCRIPTION'}
-                                    parent_id={content?.id}
-                                    data={content?.description}
-                                    handleData={handleEditorDescription}
-                                />
-                            ) : (
+                            {/* {content?.courseType === "DRAFT" ? ( */}
+                            <MyCKEditor
+                                className={'min-w-full'}
+                                type={'COURSE_DESCRIPTION'}
+                                parent_id={content?.id}
+                                data={content?.description}
+                                handleData={handleEditorDescription}
+                            />
+                            {/* ) : (
                                 <div className='min-h-[350px] max-h-[350px] min-w-[650px] max-w-[650px] overflow-y-auto p-4 bg-white shadow-md' dangerouslySetInnerHTML={{
                                     __html: `${content.description || `Không có mô tả`}`
                                 }} />
-                            )}
+                            )} */}
                         </div>
-                        <div className='mb-5'>
+                        <div className='mb-5 flex-1'>
                             <Typography className='font-normal text-base mb-2'>Yêu cầu khóa học</Typography>
-                            {content?.courseType === "DRAFT" ? (
-                                <MyCKEditor
-                                    className={'min-w-full'}
-                                    data={content?.requirement}
-                                    handleData={handleEditorRequireMent} />
-                            ) : (
+                            {/* {content?.courseType === "DRAFT" ? ( */}
+                            <MyCKEditor
+                                className={'min-w-full'}
+                                data={content?.requirement}
+                                handleData={handleEditorRequireMent} />
+                            {/* ) : (
                                 <div className='min-h-[350px] max-h-[350px] min-w-[650px] max-w-[650px] overflow-y-auto p-4 bg-white shadow-md' dangerouslySetInnerHTML={{
                                     __html: `${content.requirement || `Không có yêu cầu`}`
                                 }} />
-                            )}
+                            )} */}
                         </div>
                     </div>
                     <span className='w-full bg-slate-300 h-[1px] my-4'></span>
-                    {(content?.courseType === "DRAFT" || content?.contentType === "OFFICIAL") && (
-                        <div
-                            onClick={() => handleSaveCourse()}
-                            className='h-[50px] relative border group/sort duration-200 hover:opacity-75 bg-[#3366cc] text-white cursor-pointer border-[#829093] flex justify-center items-center'>
-                            <Typography className='font-semibold text-base text-white duration-200 '>
-                                Lưu
-                            </Typography>
-                            {processing && (
-                                <span className='bg-slate-400 absolute z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
-                                    <Spinner className='h-auto text-[#fff]' color="cyan" />
-                                </span>
-                            )}
-                        </div>
-                    )}
+                    {/* {(content?.courseType === "DRAFT" || content?.contentType === "OFFICIAL") && ( */}
+                    <div
+                        onClick={() => handleSaveCourse()}
+                        className='h-[50px] relative border group/sort duration-200 hover:opacity-75 bg-[#3366cc] text-white cursor-pointer border-[#829093] flex justify-center items-center'>
+                        <Typography className='font-semibold text-base text-white duration-200 '>
+                            Lưu
+                        </Typography>
+                        {processing && (
+                            <span className='bg-slate-400 absolute z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
+                                <Spinner className='h-auto text-[#fff]' color="cyan" />
+                            </span>
+                        )}
+                    </div>
+                    {/* )} */}
                     {processing && (
                         <span className='bg-[#eaeef6] opacity-70 absolute z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
                             {/* <Spinner className='h-auto text-[#fff] w-20' color="cyan" /> */}
@@ -326,93 +326,90 @@ const VideoContent = ({ content, handleChange }) => {
         // console.log(content);
     }, []);
     return (
-        <>
-            <div className='min-w-[300px] w-[715px]'>
-                <div className='w-full flex justify-between items-center mb-6 relative h-[35px] border rounded-sm border-[#003a47]'>
-                    <div className='mx-3 w-full h-full flex items-center line-clamp-1  '>
-                        <Typography className='w-full !line-clamp-1 truncate cursor-default'>
-                            {`${(content?.video_path && !video) ? content?.video_path : (video ? video?.name : "Chưa có file được chọn")}`}
+        <div className='flex-1'>
+            <div className='w-full flex justify-between items-center mb-6 relative h-[35px] border rounded-sm border-[#003a47]'>
+                <div className='mx-3 w-full h-full flex items-center line-clamp-1  '>
+                    <Typography className='w-full !line-clamp-1 truncate cursor-default'>
+                        {`${(content?.video_path && !video) ? content?.video_path : (video ? video?.name : "Chưa có file được chọn")}`}
+                    </Typography>
+                    {video && (
+                        <Typography onClick={handleRemoveVideo} className='cursor-pointer h-full flex items-center justify-between px-3' title='Hủy' >
+                            <FontAwesomeIcon className='' icon={faXmark} />
                         </Typography>
-                        {video && (
-                            <Typography onClick={handleRemoveVideo} className='cursor-pointer h-full flex items-center justify-between px-3' title='Hủy' >
-                                <FontAwesomeIcon className='' icon={faXmark} />
-                            </Typography>
-                        )}
-                    </div>
-                    {content?.courseType === "DRAFT" && (
+                    )}
+                </div>
+                {/* {content?.courseType === "DRAFT" && ( */}
+                <>
+                    <input
+                        type="file"
+                        accept="video/*"
+                        style={{ display: 'none' }}
+                        onChange={handleVideoChange}
+                        ref={(fileInput) => (setFileInputRef(fileInput))}
+                    />
+                    <button onClick={() => fileInputRef && fileInputRef.click()} className="bg-[#3366cc] !rounded-none w-[100px] h-full ring-gray-300 hover:opacity-80 text-white" >Chọn</button>
+                </>
+                {/* )} */}
+            </div>
+            <div className='w-full min-h-[230px] h-[350px] relative flex border rounded-sm border-[#003a47]'>
+                <div className='relative h-full flex justify-center items-center  w-full bg-[#f0f2f4]'>
+                    {videoLoading ? (
+                        <Spinner className='w-[60px] object-cover object-center h-auto' color="teal" />
+                    ) : (
                         <>
-                            <input
-                                type="file"
-                                accept="video/*"
-                                style={{ display: 'none' }}
-                                onChange={handleVideoChange}
-                                ref={(fileInput) => (setFileInputRef(fileInput))}
-                            />
-                            <button onClick={() => fileInputRef && fileInputRef.click()} className="bg-[#3366cc] !rounded-none w-[100px] h-full ring-gray-300 hover:opacity-80 text-white" >Chọn</button>
+                            {(content?.video_path && !video) ? (
+                                <>
+                                    {loadingVideo ? (
+                                        <div className='absolute flex justify-center items-center top-0 left-0 w-full h-full'>
+                                            <Spinner className='w-20 h-auto' color="teal" />
+                                        </div>
+                                    ) : <></>}
+                                    <iframe
+                                        className='w-full h-full'
+                                        src={content?.video_path}
+                                        allowFullScreen
+                                        onLoad={() => setLoadingVideo(false)}
+                                        allow="autoplay"
+                                        autoPlay
+                                    >
+                                        <p>Trình duyệt của bạn không có phép iframe.</p>
+                                    </iframe>
+                                </>
+                            ) : (
+                                <>
+                                    {video ? (
+                                        <>
+                                            <video width="" className='w-full h-full' controls>
+                                                <source src={video ? URL.createObjectURL(video) : ''} type="video/mp4" />
+                                                Không hỗ trợ video.
+                                            </video>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Typography>Chưa có video được chọn</Typography>
+                                        </>
+                                    )}
+                                </>
+                            )}
                         </>
                     )}
                 </div>
-                <div className='w-full min-h-[230px] h-[350px] relative flex border rounded-sm border-[#003a47]'>
-                    <div className='relative h-full flex justify-center items-center  w-full bg-[#f0f2f4]'>
-                        {videoLoading ? (
-                            <Spinner className='w-[60px] object-cover object-center h-auto' color="teal" />
-                        ) : (
-                            <>
-                                {(content?.video_path && !video) ? (
-                                    <>
-                                        {loadingVideo ? (
-                                            <div className='absolute flex justify-center items-center top-0 left-0 w-full h-full'>
-                                                <Spinner className='w-20 h-auto' color="teal" />
-                                            </div>
-                                        ) : <></>}
-                                        <iframe
-                                            className='w-full h-full'
-                                            src={content?.video_path}
-                                            allowFullScreen
-                                            onLoad={() => setLoadingVideo(false)}
-                                            allow="autoplay"
-                                            autoPlay
-                                        >
-                                            <p>Trình duyệt của bạn không có phép iframe.</p>
-                                        </iframe>
-                                    </>
-                                ) : (
-                                    <>
-                                        {video ? (
-                                            <>
-                                                <video width="" className='w-full h-full' controls>
-                                                    <source src={video ? URL.createObjectURL(video) : ''} type="video/mp4" />
-                                                    Không hỗ trợ video.
-                                                </video>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Typography>Chưa có video được chọn</Typography>
-                                            </>
-                                        )}
-                                    </>
-                                )}
-                            </>
-                        )}
-                    </div>
-                </div>
-                {video && (
-                    <div
-                        onClick={() => handleUploadVideo()}
-                        className={`${processing ? 'pointer-events-none' : ''} h-[50px] mt-2 relative border group/sort duration-200 hover:opacity-75 bg-[#3366cc] text-white cursor-pointer border-[#829093] flex justify-center items-center`}>
-                        <Typography className='font-semibold text-base text-white duration-200 '>
-                            Lưu
-                        </Typography>
-                        {processing && (
-                            <span className='bg-slate-400 absolute z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
-                                <Spinner className='h-auto text-[#fff]' color="cyan" />
-                            </span>
-                        )}
-                    </div>
-                )}
             </div>
-
-        </>
+            {video && (
+                <div
+                    onClick={() => handleUploadVideo()}
+                    className={`${processing ? 'pointer-events-none' : ''} h-[50px] mt-2 relative border group/sort duration-200 hover:opacity-75 bg-[#3366cc] text-white cursor-pointer border-[#829093] flex justify-center items-center`}>
+                    <Typography className='font-semibold text-base text-white duration-200 '>
+                        Lưu
+                    </Typography>
+                    {processing && (
+                        <span className='bg-slate-400 absolute z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
+                            <Spinner className='h-auto text-[#fff]' color="cyan" />
+                        </span>
+                    )}
+                </div>
+            )}
+        </div>
     );
 };
 
@@ -519,46 +516,45 @@ const ImageContent = ({ content, handleChange }) => {
         // console.log(content);
     }, []);
     return (
-        <>
-            <div className='min-w-[300px] w-[715px]'>
-                <div className='w-full flex justify-between items-center mb-6 relative h-[35px] border rounded-sm border-[#003a47]'>
-                    <div className='mx-3 w-full h-full flex items-center line-clamp-1  '>
-                        <Typography className='w-full !line-clamp-1 truncate cursor-default'>
-                            {`${(content?.image_path && !image) ? content?.image_path : (image ? image?.name : "Chưa có file được chọn")}`}
+        <div className='flex-1'>
+            <div className='w-full flex justify-between items-center mb-6 relative h-[35px] border rounded-sm border-[#003a47]'>
+                <div className='mx-3 w-full h-full flex items-center line-clamp-1  '>
+                    <Typography className='w-full !line-clamp-1 truncate cursor-default'>
+                        {`${(content?.image_path && !image) ? content?.image_path : (image ? image?.name : "Chưa có file được chọn")}`}
+                    </Typography>
+                    {image && (
+                        <Typography onClick={handleRemoveImage} className='cursor-pointer h-full flex items-center justify-between px-3' title='Hủy' >
+                            <FontAwesomeIcon className='' icon={faXmark} />
                         </Typography>
-                        {image && (
-                            <Typography onClick={handleRemoveImage} className='cursor-pointer h-full flex items-center justify-between px-3' title='Hủy' >
-                                <FontAwesomeIcon className='' icon={faXmark} />
-                            </Typography>
-                        )}
-                    </div>
-                    {/* {content?.courseType === "DRAFT" && ( */}
-                        <>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                style={{ display: 'none' }}
-                                onChange={handleImageChange}
-                                ref={(fileInput) => (setFileInputRef(fileInput))}
-                            />
-                            <button onClick={() => fileInputRef && fileInputRef.click()} className="bg-[#3366cc] !rounded-none w-[100px] h-full ring-gray-300 hover:opacity-80 text-white" >Chọn</button>
-                        </>
-                    {/* )} */}
+                    )}
                 </div>
-                <div className='w-full min-h-[230px] h-[350px] relative flex border rounded-sm border-[#003a47]'>
-                    <div className='relative h-full flex justify-center items-center  w-full bg-[#f0f2f4]'>
-                        {imageLoading ? (
-                            <Spinner className='w-[60px] object-cover object-center h-auto' color="teal" />
-                        ) : (
-                            <>
-                                {(content?.image_path && !image) ? (
-                                    <>
-                                        {loadingImage ? (
-                                            <div className='absolute flex justify-center items-center top-0 left-0 w-full h-full'>
-                                                <Spinner className='w-20 h-auto' color="teal" />
-                                            </div>
-                                        ) : <></>}
-                                        {/* <iframe
+                {/* {content?.courseType === "DRAFT" && ( */}
+                <>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        onChange={handleImageChange}
+                        ref={(fileInput) => (setFileInputRef(fileInput))}
+                    />
+                    <button onClick={() => fileInputRef && fileInputRef.click()} className="bg-[#3366cc] !rounded-none w-[100px] h-full ring-gray-300 hover:opacity-80 text-white" >Chọn</button>
+                </>
+                {/* )} */}
+            </div>
+            <div className='w-full min-h-[230px] h-[350px] relative flex border rounded-sm border-[#003a47]'>
+                <div className='relative h-full flex justify-center items-center  w-full bg-[#f0f2f4]'>
+                    {imageLoading ? (
+                        <Spinner className='w-[60px] object-cover object-center h-auto' color="teal" />
+                    ) : (
+                        <>
+                            {(content?.image_path && !image) ? (
+                                <>
+                                    {loadingImage ? (
+                                        <div className='absolute flex justify-center items-center top-0 left-0 w-full h-full'>
+                                            <Spinner className='w-20 h-auto' color="teal" />
+                                        </div>
+                                    ) : <></>}
+                                    {/* <iframe
                                             className='w-full h-full'
                                             src={content?.video_path}
                                             allowFullScreen
@@ -567,58 +563,56 @@ const ImageContent = ({ content, handleChange }) => {
                                             autoPlay>
                                             <p>Trình duyệt của bạn không có phép iframe.</p>
                                         </iframe> */}
-                                        <img
-                                            src={content?.image_path}
-                                            alt={content?.name}
-                                            onLoad={() => setLoadingImage(false)}
-                                            className="h-full w-full object-cover"
-                                        />
+                                    <img
+                                        src={content?.image_path}
+                                        alt={content?.name}
+                                        onLoad={() => setLoadingImage(false)}
+                                        className="h-full w-full object-cover"
+                                    />
 
-                                    </>
-                                ) : (
-                                    <>
-                                        {image ? (
-                                            <>
-                                                {/* <video width="" className='w-full h-full' controls>
+                                </>
+                            ) : (
+                                <>
+                                    {image ? (
+                                        <>
+                                            {/* <video width="" className='w-full h-full' controls>
                                                     <source src={image ? URL.createObjectURL(image) : ''} type="video/mp4" />
                                                     Không hỗ trợ video.
                                                 </video> */}
-                                                <img
-                                                    src={image ? URL.createObjectURL(image) : ''}
-                                                    type="image/*"
-                                                    alt={content?.name}
-                                                    controls
-                                                    className="h-full w-full object-cover"
-                                                />
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Typography>Chưa có hình ảnh được chọn</Typography>
-                                            </>
-                                        )}
-                                    </>
-                                )}
-                            </>
-                        )}
-                    </div>
+                                            <img
+                                                src={image ? URL.createObjectURL(image) : ''}
+                                                type="image/*"
+                                                alt={content?.name}
+                                                controls
+                                                className="h-full w-full object-cover"
+                                            />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Typography>Chưa có hình ảnh được chọn</Typography>
+                                        </>
+                                    )}
+                                </>
+                            )}
+                        </>
+                    )}
                 </div>
-                {image && (
-                    <div
-                        onClick={() => handleUploadImage()}
-                        className={`${processing ? 'pointer-events-none' : ''} h-[50px] mt-2 relative border group/sort duration-200 hover:opacity-75 bg-[#3366cc] text-white cursor-pointer border-[#829093] flex justify-center items-center`}>
-                        <Typography className='font-semibold text-base text-white duration-200 '>
-                            Lưu
-                        </Typography>
-                        {processing && (
-                            <span className='bg-slate-400 absolute z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
-                                <Spinner className='h-auto text-[#fff]' color="cyan" />
-                            </span>
-                        )}
-                    </div>
-                )}
             </div>
-
-        </>
+            {image && (
+                <div
+                    onClick={() => handleUploadImage()}
+                    className={`${processing ? 'pointer-events-none' : ''} h-[50px] mt-2 relative border group/sort duration-200 hover:opacity-75 bg-[#3366cc] text-white cursor-pointer border-[#829093] flex justify-center items-center`}>
+                    <Typography className='font-semibold text-base text-white duration-200 '>
+                        Lưu
+                    </Typography>
+                    {processing && (
+                        <span className='bg-slate-400 absolute z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
+                            <Spinner className='h-auto text-[#fff]' color="cyan" />
+                        </span>
+                    )}
+                </div>
+            )}
+        </div>
     );
 };
 
@@ -754,6 +748,8 @@ const CourseContent = ({ content }) => {
             newCourses[index].children[level3Index].name = res?.data?.name;
             newCourses[index].children[level3Index].readOnly = true;
             newCourses[index].children[level3Index].showVideoContent = true;
+            newCourses[index].children[level3Index].is_preview = false;
+
             setCourses(newCourses);
         }
         setProcessing(false);
@@ -817,15 +813,16 @@ const CourseContent = ({ content }) => {
         const newCourses = [...courses];
         setProcessing(true);
         const data = {
-            id: newCourses[index].children[level3Index].id || '',
+            id: newCourses[index].children[level3Index].id ?? '',
             parent_id: newCourses[index].id,
             name: newCourses[index].children[level3Index].name,
             description: newCourses[index].children[level3Index].description,
         };
         const res = await apiSaveCourse(data);
         if (res?.data) {
-            // newCourses[index].children[level3Index].id = res?.data?.id;
+            newCourses[index].children[level3Index].id = res?.data?.id;
             newCourses[index].children[level3Index].description = res?.data?.description;
+
             setCourses(newCourses);
         }
         setProcessing(false);
@@ -874,43 +871,43 @@ const CourseContent = ({ content }) => {
                                                 placeholder='Tên chương'
                                                 className={`max-w-[450px] min-w-[250px] px-4 outline-none h-full border  ${course.readOnly ? 'border-b-[#003a47]' : 'border-[#003a47]'}`}
                                                 readOnly={course.readOnly}
-                                                autoFocus
+                                            // autoFocus
                                             />
                                         </div>
                                     </label>
                                 </Tooltip>
-                                {content?.courseType === "DRAFT" && (
-                                    <>
-                                        {course.readOnly ? (
-                                            <div title='Thay đổi' onClick={() => handleEditCourse(index, false)} className='hidden group-hover/level2:flex h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none  justify-center items-center'>
-                                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                                    <FontAwesomeIcon className='text-xs' icon={faPen} />
+                                {/* {content?.courseType === "DRAFT" && ( */}
+                                <>
+                                    {course.readOnly ? (
+                                        <div title='Thay đổi' onClick={() => handleEditCourse(index, false)} className='hidden group-hover/level2:flex h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none  justify-center items-center'>
+                                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                                <FontAwesomeIcon className='text-xs' icon={faPen} />
+                                            </Typography>
+                                        </div>
+                                    ) : (
+                                        <div className='flex gap-3'>
+                                            <div title='Lưu' onClick={() => handleSaveCourse(index)} className={`h-[40px] min-w-[40px] border group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:border-none  flex justify-center items-center`}>
+                                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
+                                                    Lưu
                                                 </Typography>
                                             </div>
-                                        ) : (
-                                            <div className='flex gap-3'>
-                                                <div title='Lưu' onClick={() => handleSaveCourse(index)} className={`h-[40px] min-w-[40px] border group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:border-none  flex justify-center items-center`}>
-                                                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
-                                                        Lưu
-                                                    </Typography>
-                                                </div>
-                                                <div title='Hủy' onClick={() => handleEditCourse(index, true)} className='h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer hover:border-none  flex justify-center items-center'>
-                                                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                                        Hủy
-                                                    </Typography>
-                                                </div>
+                                            <div title='Hủy' onClick={() => handleEditCourse(index, true)} className='h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer hover:border-none  flex justify-center items-center'>
+                                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                                    Hủy
+                                                </Typography>
                                             </div>
-                                        )}
-                                    </>
-                                )}
+                                        </div>
+                                    )}
+                                </>
+                                {/* )} */}
                             </div>
-                            {content?.courseType === "DRAFT" && (
-                                <div title='Xóa ' onClick={() => handleDeleteLevel2Course(index)} className='hidden group-hover/level2:flex h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] justify-center items-center'>
-                                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                        <FontAwesomeIcon icon={faTrash} className='text-xs' />
-                                    </Typography>
-                                </div>
-                            )}
+                            {/* {content?.courseType === "DRAFT" && ( */}
+                            <div title='Xóa ' onClick={() => handleDeleteLevel2Course(index)} className='hidden group-hover/level2:flex h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] justify-center items-center'>
+                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                    <FontAwesomeIcon icon={faTrash} className='text-xs' />
+                                </Typography>
+                            </div>
+                            {/* )} */}
                         </div>
                         {course.children.map((level3Course, level3Index) => (
                             <div key={level3Index} className={`p-3 ${(level3Index % 2 === 0) ? 'bg-[#fff]' : 'bg-[#fff]'} my-4 border hover:bg-[#defafc22] border-black`}>
@@ -936,33 +933,33 @@ const CourseContent = ({ content }) => {
                                                             </div>
                                                         </label>
                                                     </Tooltip>
-                                                    {content?.courseType === "DRAFT" && (
-                                                        <>
-                                                            {level3Course.readOnly ? (
-                                                                <div title='Thay đổi' onClick={() => handleEditLevel3Course(index, level3Index, false)} className='hidden group-hover/level3:flex min-w-[40px] px-1 h-[40px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none justify-center items-center'>
-                                                                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                                                        <FontAwesomeIcon className='text-xs' icon={faPen} />
+                                                    {/* {content?.courseType === "DRAFT" && ( */}
+                                                    <>
+                                                        {level3Course.readOnly ? (
+                                                            <div title='Thay đổi' onClick={() => handleEditLevel3Course(index, level3Index, false)} className='hidden group-hover/level3:flex min-w-[40px] px-1 h-[40px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-none justify-center items-center'>
+                                                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                                                    <FontAwesomeIcon className='text-xs' icon={faPen} />
+                                                                </Typography>
+                                                            </div>
+                                                        ) : (
+                                                            <div className='flex gap-3'>
+                                                                <div title='Lưu' onClick={() => handleSaveLevel3Course(index, level3Index)} className='h-[40px] min-w-[40px] border group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:border-none flex justify-center items-center'>
+                                                                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
+                                                                        Lưu
                                                                     </Typography>
                                                                 </div>
-                                                            ) : (
-                                                                <div className='flex gap-3'>
-                                                                    <div title='Lưu' onClick={() => handleSaveLevel3Course(index, level3Index)} className='h-[40px] min-w-[40px] border group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:border-none flex justify-center items-center'>
-                                                                        <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
-                                                                            Lưu
-                                                                        </Typography>
-                                                                    </div>
-                                                                    <div title='Hủy' onClick={() => handleEditLevel3Course(index, level3Index, true)} className='h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer hover:border-none flex justify-center items-center'>
-                                                                        <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                                                            Hủy
-                                                                        </Typography>
-                                                                    </div>
+                                                                <div title='Hủy' onClick={() => handleEditLevel3Course(index, level3Index, true)} className='h-[40px] min-w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer hover:border-none flex justify-center items-center'>
+                                                                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                                                        Hủy
+                                                                    </Typography>
                                                                 </div>
-                                                            )}
-                                                            <div title='Xóa' onClick={() => handleDeleteLevel3Course(index, level3Index)} className='hidden group-hover/level3:flex h-[40px] w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] justify-center items-center'>
-                                                                <FontAwesomeIcon icon={faTrash} className='text-xs' />
                                                             </div>
-                                                        </>
-                                                    )}
+                                                        )}
+                                                        <div title='Xóa' onClick={() => handleDeleteLevel3Course(index, level3Index)} className='hidden group-hover/level3:flex h-[40px] w-[40px] px-1 border group/sort duration-200  hover:bg-[#c85858] hover:text-white cursor-pointer border-[#003a47] justify-center items-center'>
+                                                            <FontAwesomeIcon icon={faTrash} className='text-xs' />
+                                                        </div>
+                                                    </>
+                                                    {/* )} */}
                                                 </div>
                                                 <div className="flex">
                                                     {level3Course?.id !== undefined && content.price_sell !== undefined && content.price_sell > 0 && (
@@ -1007,28 +1004,28 @@ const CourseContent = ({ content }) => {
                                                                     </select>
                                                                 </div>
                                                             </label>
-                                                            <div className='mt-3 flex flex-wrap justify-between'>
-                                                                <div className=''>
+                                                            <div className='mt-3 flex flex-wrap justify-between gap-x-4'>
+                                                                <div className='flex-1'>
                                                                     <Typography className='font-medium'>Video</Typography>
                                                                     <VideoContent content={level3Course} />
                                                                 </div>
-                                                                <div className=''>
+                                                                <div className='flex-1'>
                                                                     <Typography className='font-medium'>Mô tả</Typography>
                                                                     <div className=''>
-                                                                        {content?.courseType === "DRAFT" ? (
-                                                                            <>
-                                                                                <div title='Lưu' disabled={course?.courseType !== 'DRAFT'} onClick={() => handleSaveLevel3Description(index, level3Index)} className='mb-6 h-[33px]  min-w-[40px] border border-[#003a47] group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:opacity-70 flex justify-center items-center'>
-                                                                                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
-                                                                                        Lưu
-                                                                                    </Typography>
-                                                                                </div>
-                                                                                <MyCKEditor className={`max-w-[600px] max-h-[350px]`} data={level3Course.description} handleData={(value) => handleChangeLevel3Description(value, index, level3Index)} />
-                                                                            </>
-                                                                        ) : (
+                                                                        {/* {content?.courseType === "DRAFT" ? ( */}
+                                                                        <>
+                                                                            <div title='Lưu' disabled={course?.courseType !== 'DRAFT'} onClick={() => handleSaveLevel3Description(index, level3Index)} className='mb-6 h-[33px]  min-w-[40px] border border-[#003a47] group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:opacity-70 flex justify-center items-center'>
+                                                                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-white'>
+                                                                                    Lưu
+                                                                                </Typography>
+                                                                            </div>
+                                                                            <MyCKEditor className={`max-w-[600px] max-h-[350px]`} data={level3Course.description} handleData={(value) => handleChangeLevel3Description(value, index, level3Index)} />
+                                                                        </>
+                                                                        {/* ) : (
                                                                             <div className='min-h-[407px] max-h-[407px] min-w-[650px] max-w-[650px] overflow-y-auto p-4 bg-white shadow-md' dangerouslySetInnerHTML={{
                                                                                 __html: `${level3Course.description || `Không có mô tả`}`
                                                                             }} />
-                                                                        )}
+                                                                        )} */}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1045,24 +1042,24 @@ const CourseContent = ({ content }) => {
                                 )}
                             </div>
                         ))}
-                        {content?.courseType === "DRAFT" && (
-                            <>
-                                {(course && course.readOnly) && (
-                                    <button type="button" onClick={() => handleAddLevel3Course(index)} className=' h-[40px] border group/sort duration-200  hover:bg-[#e5e6e9] px-1  cursor-pointer border-[#003a47] flex justify-center items-center'>
-                                        Thêm mục trong chương
-                                    </button>
-                                )}
-                            </>
-                        )}
+                        {/* {content?.courseType === "DRAFT" && ( */}
+                        <>
+                            {(course && course.readOnly) && (
+                                <button type="button" onClick={() => handleAddLevel3Course(index)} className=' h-[40px] border group/sort duration-200  hover:bg-[#e5e6e9] px-1  cursor-pointer border-[#003a47] flex justify-center items-center'>
+                                    Thêm mục trong chương
+                                </button>
+                            )}
+                        </>
+                        {/* )} */}
                     </div>
                 ))}
-                {content?.courseType === "DRAFT" && (
-                    <div onClick={handleAddLevel2Course} className='justify-self-center h-[40px] w-[200px] border group/sort duration-200  hover:bg-[#2d2f31] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
-                        <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                            Thêm chương mới
-                        </Typography>
-                    </div>
-                )}
+                {/* {content?.courseType === "DRAFT" && ( */}
+                <div onClick={handleAddLevel2Course} className='justify-self-center h-[40px] w-[200px] border group/sort duration-200  hover:bg-[#2d2f31] hover:text-white cursor-pointer border-[#003a47] flex justify-center items-center'>
+                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                        Thêm chương mới
+                    </Typography>
+                </div>
+                {/* )} */}
             </form>
             {processing && (
                 <div className='absolute top-0 bottom-0 right-0 left-0 bg-slate-200 opacity-70 flex justify-center items-center'>
@@ -1216,14 +1213,27 @@ const LecturerCourseSave = () => {
     const [myCourse, setMyCourse] = useState({});
     const [courseName, setCourseName] = useState('');
     const [openPublishDialog, setOpenPublishDialog] = useState(false);
+    const [openApprovePublishDialog, setOpenApprovePublishDialog] = useState(false);
     const getMyCourse = async () => {
         setProcessing(true);
         try {
-            const paramsAPI = {
-                created_by: window.location.pathname.normalize().includes('admin') ? "" : userData?.id,
-                build_child: true,
-                ids: courseId
-            };
+
+            // const paramsAPI = {
+            //     created_by: window.location.pathname.normalize().includes('admin') ? "" : userData?.id,
+            //     build_child: true,
+            //     ids: courseId,
+            //     search_type: search_type
+            // };
+            const paramsAPI = new URLSearchParams();
+            paramsAPI.append('ids', courseId);
+            paramsAPI.append('build_child', true);
+            paramsAPI.append('created_by', window.location.pathname.normalize().includes('admin') ? "" : userData?.id);
+
+            paramsAPI.append('search_type', 'OFFICIAL');
+            paramsAPI.append('search_type', 'DRAFT');
+            paramsAPI.append('search_type', 'WAITING');
+            paramsAPI.append('search_type', 'CHANGE_PRICE');
+
             const response = await apiGetCourse(paramsAPI);
             if (response?.data?.data?.length > 0) {
                 document.title = response.data?.data[0].name;
@@ -1260,8 +1270,8 @@ const LecturerCourseSave = () => {
     const tabContentMap = [
         'Thông tin giới thiệu',
         'Hình ảnh & Video giới thiệu',
-        'Nội dung khóa học',
         'Giá tiền',
+        'Nội dung khóa học',
         // 'Cài đặt',
     ];
 
@@ -1288,6 +1298,35 @@ const LecturerCourseSave = () => {
         setOpenPublishDialog(false);
         setProcessing(false);
     };
+    const rejectCourse = async (is_rejected) => {
+        let type = myCourse?.courseType;
+        if (type == "CHANGE_PRICE" && is_rejected == false) {
+            type = "OFFICIAL";
+        } else if (type == "CHANGE_PRICE" && is_rejected == true) {
+            type = "OFFICIAL";
+        } else if (type == "WAITING" && is_rejected == false) {
+            type = "OFFICIAL";
+        } else if (type == "WAITING" && is_rejected == true) {
+            type = "DRAFT";
+        }
+        const paramsAPI = {
+            course_id: myCourse?.id,
+            course_type: type,
+            is_rejected: is_rejected
+        };
+        // const paramsAPI = {
+        //     course_id: content?.id,
+        //     course_type: "OFFICIAL",
+        //     is_rejected: is_rejected
+        // };
+        const response = await apiChangeCourseType(paramsAPI);
+        if (response?.status == 1) {
+            toast.success("Duyệt khóa học thành công");
+        }
+        setChange(true);
+        setOpenApprovePublishDialog(false);
+        // console.log(paramsAPI);
+    };
     useEffect(() => {
         document.title = 'Khóa học của tôi';
     }, []);
@@ -1307,7 +1346,7 @@ const LecturerCourseSave = () => {
                                     onBlur={handleSaveCourse}
                                     value={courseName} type='text'
                                     onChange={(e) => setCourseName(e.target.value)}
-                                    className='font-bold text-lg border-b-2 px-2 outline-none bg-[#f5f8ff]  focus:border-slate-500 rounded-sm'
+                                    className='font-bold w-[700px] text-lg border-b-2 px-2 outline-none bg-[#f5f8ff]  focus:border-slate-500 rounded-sm'
                                     disabled={myCourse?.courseType !== 'DRAFT'}
                                 />
                                 <FontAwesomeIcon icon={faPenToSquare} />
@@ -1350,12 +1389,74 @@ const LecturerCourseSave = () => {
                             </div>
                         ))}
                     </div>
-                    {myCourse?.courseType === 'DRAFT' && (
-                        <div onClick={() => setOpenPublishDialog(true)} className='min-w-[12rem] px-2 h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-[#3366cc] border-[#003a47] flex justify-center items-center'>
-                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                Xuất bản
-                            </Typography>
-                        </div>
+                    {window.location.pathname.normalize().includes('admin') ? (
+                        <>
+                            {(myCourse?.courseType === 'WAITING' || myCourse?.courseType === "CHANGE_PRICE") && (
+                                <>
+                                    <div div onClick={() => setOpenApprovePublishDialog(true)} className='min-w-[12rem] px-2 h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-[#3366cc] border-[#003a47] flex justify-center items-center'>
+                                        <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                            Duyệt
+                                        </Typography>
+                                    </div>
+                                    <Dialog
+                                        open={openApprovePublishDialog}
+                                        onClose={() => setOpenApprovePublishDialog(false)}
+                                        aria-labelledby="alert-dialog-title"
+                                        width='lg'
+                                        aria-describedby="alert-dialog-description" >
+                                        <DialogTitle id="alert-dialog-title">
+                                            {
+                                                <>
+                                                    <Typography className='font-bold text-lg text-[#9b9b9b]'>Duyệt khóa học: <span className='underline text-black'>{myCourse?.name}</span></Typography>
+                                                </>
+                                            }
+                                        </DialogTitle>
+                                        <DialogContent>
+                                            <DialogContentText id="alert-dialog-description">
+                                                <span className='block font-semibold text-lg'>
+                                                    Với giá:
+                                                    {(myCourse?.price_sell > 0) ? (
+                                                        <>
+                                                            &nbsp;<span className='font-bold text-lg text-black underline mx-1'>{(myCourse?.price_sell.toLocaleString())}</span>&nbsp;Vnđ
+                                                        </>
+                                                    ) : (
+                                                        <span className='font-bold text-lg text-black'> Miễn phí</span>
+                                                    )}
+                                                    {(myCourse?.attributes?.length > 0 && myCourse?.attributes[0]?.attributeValue) ? (
+                                                        <div>
+                                                            Với giá bán mới:
+                                                            &nbsp;<span className='font-bold text-lg text-black underline mx-1'>{myCourse?.attributes[0]?.attributeValue ? (parseInt(myCourse?.attributes[0]?.attributeValue).toLocaleString()) : (myCourse?.price_sell.toLocaleString())}</span>&nbsp;Vnđ
+                                                        </div>
+                                                    ) : (
+                                                        <></>
+                                                    )}
+                                                </span>
+                                                {/* <span className='block font-normal text-lg mt-4'>
+                                                Xuất bản khóa học sẽ không thể chỉnh sửa lại được.
+                                                <br />
+                                                Bạn có chắc chắn muốn xuất bản khóa học này?
+                                            </span> */}
+                                            </DialogContentText>
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={() => rejectCourse(false)} className='hover:opacity-70 text-white bg-[#3366cc] pt-2'>Xác nhận</Button>
+                                            <Button onClick={() => rejectCourse(true)} className='hover:opacity-70 text-white bg-orange-500 mr-4 pt-2'>Từ chối</Button>
+                                            <Button onClick={() => setOpenApprovePublishDialog(false)} className='hover:opacity-70 text-white bg-red-500 mr-4 pt-2'>Hủy</Button>
+                                        </DialogActions>
+                                    </Dialog>
+                                </>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            {myCourse?.courseType === 'DRAFT' && (
+                                <div onClick={() => setOpenPublishDialog(true)} className='min-w-[12rem] px-2 h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-[#3366cc] border-[#003a47] flex justify-center items-center'>
+                                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                        Xuất bản
+                                    </Typography>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
                 <div className='p-3 shadow-md my-8 border  mb-4'>
@@ -1369,13 +1470,13 @@ const LecturerCourseSave = () => {
                                     <IntroductionContent content={myCourse} handleChange={handleChangeIntroductionContent} />
                                 )}
                                 {activeTab === 'Hình ảnh & Video giới thiệu' && (
-                                    <div className="flex justify-between">
-                                        <div>
-                                        <label htmlFor="imageContent" className="font-bold block mb-2">Hình ảnh:</label>
+                                    <div className="flex flex-wrap justify-between gap-x-4">
+                                        <div className='flex-1'>
+                                            <label htmlFor="imageContent" className="flex-1 font-bold block mb-2">Hình ảnh:</label>
                                             <ImageContent id="imageContent" content={myCourse} handleChange={handleChangeIntroductionContent} />
                                         </div>
-                                        <div>
-                                        <label htmlFor="imageContent" className="font-bold block mb-2">Video:</label>
+                                        <div className='flex-1'>
+                                            <label htmlFor="imageContent" className="flex-1 font-bold block mb-2">Video:</label>
                                             <VideoContent content={myCourse} handleChange={handleChangeIntroductionContent} />
                                         </div>
 
@@ -1394,7 +1495,7 @@ const LecturerCourseSave = () => {
                         )}
                     </div>
                 </div>
-            </div>
+            </div >
             <Dialog
                 open={openPublishDialog}
                 onClose={() => setOpenPublishDialog(false)}
@@ -1421,9 +1522,9 @@ const LecturerCourseSave = () => {
                             )}
                         </Typography>
                         <Typography className='font-normal text-lg mt-4'>
-                            Xuất bản khóa học sẽ không thể chỉnh sửa lại được.
-                            <br />
+                            {/* Xuất bản khóa học sẽ không thể chỉnh sửa lại được. */}
                             Bạn có chắc chắn muốn xuất bản khóa học này?
+                            <br />
                         </Typography>
                     </DialogContentText>
                 </DialogContent>
@@ -1432,11 +1533,13 @@ const LecturerCourseSave = () => {
                     <Button onClick={() => handlePublishCourse()} className='hover:opacity-70 text-white bg-[#3366cc] pt-2'>Xác nhận</Button>
                 </DialogActions>
             </Dialog>
-            {processing && (
-                <span className='bg-[#eaeef6] opacity-70 fixed z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
-                    <Spinner className='h-auto text-[#fff] w-20' color="cyan" />
-                </span>
-            )}
+            {
+                processing && (
+                    <span className='bg-[#eaeef6] opacity-70 fixed z-10 top-0 pointer-events-none right-0 bottom-0 left-0 flex justify-center items-center'>
+                        <Spinner className='h-auto text-[#fff] w-20' color="cyan" />
+                    </span>
+                )
+            }
         </>
     );
 };
