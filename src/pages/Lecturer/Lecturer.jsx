@@ -72,7 +72,7 @@ const Lecturer = () => {
     return (
         <>
             {isLoggedIn && userData.roles.includes("ROLE_LECTURE") && (
-                <div className="flex  w-full">
+                <div className="flex  w-full bg-[url('../assets/insbg.png')]">
                     <LectureSidebar className='' handleHover={handleHover} />
                     {/* <div className={`h-[999px] w-full duration-500  ml-20 ${isHover && 'ml-[13rem]'}`}> */}
                     <div className={` w-full duration-500  ml-20 `}>

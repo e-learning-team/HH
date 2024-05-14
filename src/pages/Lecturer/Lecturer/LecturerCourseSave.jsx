@@ -28,6 +28,7 @@ const IntroductionContent = ({ content, handleChange }) => {
         id: '',
         name: '',
         description: "",
+        short_description: "",
         requirement: "",
         category_ids: [
         ],
@@ -125,7 +126,9 @@ const IntroductionContent = ({ content, handleChange }) => {
         setPayload((prevPayload) => ({
             ...prevPayload,
             id: content?.id,
-            name: content?.name
+            name: content?.name,
+            courseType: content?.courseType,
+            short_description: content?.short_description ?? '',
         }));
         // console.log('---content', content);
         if (content && content.category_ids && content.category_ids.length > 0) {
@@ -166,7 +169,22 @@ const IntroductionContent = ({ content, handleChange }) => {
                             <Typography className='text-red-500'>{errors.category_ids}</Typography>
                         </div>
                     </div>
+                    <div className='w-full'>
+                        <Typography className='font-normal text-base mb-2'>Mô tả ngắn gọn</Typography>
+                        <textarea
+                            className='w-full border-[#ccced1] resize-none rounded-md'
+                            rows={5}
+                            placeholder='Mô tả ngắn về khóa học'
+                            onChange={(e) => setPayload((prevPayload) => ({
+                                ...prevPayload,
+                                short_description: e.target.value,
+                            }))}
+                            value={payload.short_description}
+                        >
+                        </textarea>
+                    </div>
                     <div className='flex flex-wrap w-full justify-between items-center gap-x-4'>
+
                         <div className='mb-5 flex-1'>
                             <Typography className='font-normal text-base mb-2'>Mô tả về khóa học</Typography>
                             {/* {content?.courseType === "DRAFT" ? ( */}
@@ -323,6 +341,7 @@ const VideoContent = ({ content, handleChange }) => {
         }
     };
     useEffect(() => {
+        document.title = "Chỉnh sửa khóa học";
         // console.log(content);
     }, []);
     return (
@@ -617,7 +636,7 @@ const ImageContent = ({ content, handleChange }) => {
 };
 
 
-const CourseContent = ({ content }) => {
+const CourseContent = ({ content, reload }) => {
     const [courses, setCourses] = useState([]);
     const [processing, setProcessing] = useState(false);
     const [level3Add, setLevel3Add] = useState(false);
@@ -771,24 +790,32 @@ const CourseContent = ({ content }) => {
     const getCourseChild = async () => {
         setProcessing(true);
         try {
-            const paramsAPI = {
-                level: 2,
-                parent_ids: content?.id,
-                build_child: true,
-                is_deleted: false,
-            };
-            // const response = await apiGetCourse(paramsAPI);
-            // if (response?.data?.data?.length > 0) {
-            if (content?.children?.length > 0) {
-                const updatedCourses = content?.children?.map(course => ({
+            // const paramsAPI = {
+            //     parent_ids: content?.id,
+            //     build_child: true,
+            // };
+            const paramsAPI = new URLSearchParams();
+            paramsAPI.append('ids', content?.id);
+            paramsAPI.append('build_child', true);
+            paramsAPI.append('created_by', window.location.pathname.normalize().includes('admin') ? "" : content?.created_by);
+
+            paramsAPI.append('search_type', 'OFFICIAL');
+            paramsAPI.append('search_type', 'DRAFT');
+            paramsAPI.append('search_type', 'WAITING');
+            paramsAPI.append('search_type', 'CHANGE_PRICE');
+            const response = await apiGetCourse(paramsAPI);
+            console.log('----response', response.data?.data);
+            if (response?.data?.data?.length > 0) {
+                // if (content?.children?.length > 0) {
+                let updatedCourses = response.data?.data[0]?.children?.map(course => ({
                     ...course,
                     readOnly: true,
-                    children: course.children.map(child => ({
+                    children: course?.children.map(child => ({
                         ...child,
                         readOnly: true
                     }))
                 }));
-                console.log(updatedCourses);
+                console.log('----updatedCourses', updatedCourses);
                 setCourses(updatedCourses);
             } else {
                 setCourses([]);
@@ -846,11 +873,11 @@ const CourseContent = ({ content }) => {
     };
     useEffect(() => {
         getCourseChild();
-
+        console.log('---reload', reload);
         return () => {
             setCourses([]);
         };
-    }, []);
+    }, [reload]);
 
     return (
         <div className='relative flex items-center min-h-[250px]'>
@@ -1011,7 +1038,7 @@ const CourseContent = ({ content }) => {
                                                                 </div>
                                                                 <div className='flex-1'>
                                                                     <Typography className='font-medium'>Mô tả</Typography>
-                                                                    <div className=''>
+                                                                    <div className='flex-1 w-full'>
                                                                         {/* {content?.courseType === "DRAFT" ? ( */}
                                                                         <>
                                                                             <div title='Lưu' disabled={course?.courseType !== 'DRAFT'} onClick={() => handleSaveLevel3Description(index, level3Index)} className='mb-6 h-[33px]  min-w-[40px] border border-[#003a47] group/sort duration-200  bg-[#3366cc] text-white cursor-pointer hover:opacity-70 flex justify-center items-center'>
@@ -1019,7 +1046,7 @@ const CourseContent = ({ content }) => {
                                                                                     Lưu
                                                                                 </Typography>
                                                                             </div>
-                                                                            <MyCKEditor className={`max-w-[600px] max-h-[350px]`} data={level3Course.description} handleData={(value) => handleChangeLevel3Description(value, index, level3Index)} />
+                                                                            <MyCKEditor className={`min-w-full max-h-[350px]`} data={level3Course.description} handleData={(value) => handleChangeLevel3Description(value, index, level3Index)} />
                                                                         </>
                                                                         {/* ) : (
                                                                             <div className='min-h-[407px] max-h-[407px] min-w-[650px] max-w-[650px] overflow-y-auto p-4 bg-white shadow-md' dangerouslySetInnerHTML={{
@@ -1175,7 +1202,7 @@ const PriceContent = ({ content, handleChange }) => {
                                             placeholder='Tên chương'
                                             className={` px-4 outline-none h-full border  border-b-[#003a47] `}
                                             disabled={content?.courseType !== 'DRAFT' && content?.courseType != 'OFFICIAL'}
-                                            autoFocus
+                                        // autoFocus
                                         />
                                     </div>
                                     <div className='flex items-center h-[40px] gap-3 border border-[#003a47] px-2 '>
@@ -1483,7 +1510,7 @@ const LecturerCourseSave = () => {
                                     </div>
                                 )}
                                 {activeTab === 'Nội dung khóa học' && (
-                                    <CourseContent content={myCourse} />
+                                    <CourseContent content={myCourse} reload={activeTab === 'Nội dung khóa học'} />
                                 )}
                                 {activeTab === 'Giá tiền' && (
                                     <PriceContent content={myCourse} handleChange={handleChangeIntroductionContent} />

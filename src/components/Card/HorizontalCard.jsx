@@ -1,6 +1,5 @@
 import { NavLink } from "react-router-dom";
 import { getVideoThumbnailGoogleGDriveUrl } from "../../utils/Constants";
-import { calcRating, extractVideoGoogleGDriveUrlId } from "../../utils/helper";
 import { RatingBar } from "../RatingBar/RatingBar";
 import noImg from "../../assets/no-image-icon.jpg";
 import { Typography } from "@mui/material";

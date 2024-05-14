@@ -407,7 +407,7 @@ const CourseLearn = () => {
                                             </TabPanel>
                                             <TabPanel header="Thảo luận">
                                                 <div className='my-0 pb-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6'>
-                                                    <div className='max-w-[46rem] flex justify-between items-center'>
+                                                    <div className='max-w-[46rem] flex justify-between items-center mb-[10px]'>
                                                         <h1 className='font-bold text-2xl'>
                                                             BÌNH LUẬN
                                                         </h1>
@@ -419,7 +419,7 @@ const CourseLearn = () => {
                                                             <FontAwesomeIcon icon={faSync} />
                                                         </button>
                                                     </div>
-                                                    <div className='relative max-w-[46rem]'>
+                                                    <div className='relative max-w-[46rem] bg-white p-6 pt-2 border-1 border-[#dfe7ef]'>
                                                         {/* <div className='' dangerouslySetInnerHTML={{
                                     __html: `${course.data[0].requirement || `Không có yêu cầu`}`
                                 }} /> */}

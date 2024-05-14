@@ -10,7 +10,8 @@ import Path from '../../../utils/path';
 import { Spinner, Typography } from '@material-tailwind/react';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { apiUploadFile, apiDeleteFileByPathFile } from '../../../apis/fileRelationship';
-import { updateAvatarURL, initialState } from '../../../store/User/userSlice';
+import { updateAvatarURL, initialState, updateUser } from '../../../store/User/userSlice';
+import { apiProfileUpdate, apiProfileUpdatePassword } from '../../../apis/user';
 
 const UserProfile = () => {
     const navigate = useNavigate();
@@ -53,21 +54,21 @@ const UserProfile = () => {
                 setImgLoading(true);
                 const res = await apiDeleteFileByPathFile(params);
                 if (res.status == 1) {
-                    toast.success(`Xóa ảnh cũ thành công!`, {
-                        position: toast.POSITION.TOP_RIGHT,
-                    });
+                    // toast.success(`Xóa ảnh cũ thành công!`, {
+                    //     position: toast.POSITION.TOP_RIGHT,
+                    // });
                 } else {
-                    toast.error(`Xóa ảnh cũ không thành công thành công! ${res.message}`, {
-                        position: toast.POSITION.TOP_RIGHT,
-                    });
+                    // toast.error(`Xóa ảnh cũ không thành công thành công! ${res.message}`, {
+                    //     position: toast.POSITION.TOP_RIGHT,
+                    // });
                 }
                 setImgLoading(false);
             } catch (e) {
                 console.error('Upload failed:', e);
                 setImgLoading(false);
-                toast.error(`Xóa ảnh cũ không thành công!`, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                // toast.error(`Xóa ảnh cũ không thành công!`, {
+                //     position: toast.POSITION.TOP_RIGHT,
+                // });
 
             }
         }
@@ -123,6 +124,120 @@ const UserProfile = () => {
         address: "",
         phone_number: ""
     });
+    const [error, setError] = useState({
+        email: "",
+        full_name: "",
+        address: "",
+        phone_number: ""
+    });
+
+    const [resetPasswordForm, setResetPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    const [errorMessage, setErrorMessage] = useState({ currentPasswordError: '', newPasswordError: '', confirmPasswordError: '' });
+    const [apiError, setApiError] = useState();
+    const validatePassword = () => {
+        let isValid = true;
+        if (resetPasswordForm.currentPassword.length < 8) {
+            isValid = false;
+            setErrorMessage(prevState => ({
+                ...prevState,
+                currentPasswordError: 'Mật khẩu phải có ít nhất 8 ký tự'
+            }));
+        } else {
+            setErrorMessage(prevState => ({
+                ...prevState,
+                currentPasswordError: ''
+            }));
+        }
+        if (resetPasswordForm.newPassword.length < 8) {
+            isValid = false;
+            setErrorMessage(prevState => ({
+                ...prevState,
+                newPasswordError: 'Mật khẩu phải có ít nhất 8 ký tự'
+            }));
+        } else {
+            setErrorMessage(prevState => ({
+                ...prevState,
+                newPasswordError: ''
+            }));
+        }
+        if (resetPasswordForm.newPassword !== resetPasswordForm.confirmPassword) {
+            console.log('password not match');
+            isValid = false;
+            setErrorMessage(prevState => ({
+                ...prevState,
+                confirmPasswordError: 'Xác nhận mật khẩu không khớp với mật khẩu mới'
+            }));
+        } else if (resetPasswordForm.confirmPassword === '') {
+            isValid = false;
+            setErrorMessage(prevState => ({
+                ...prevState,
+                confirmPasswordError: 'Vui lòng xác nhận mật khẩu'
+            }));
+        } else {
+            setErrorMessage(prevState => ({
+                ...prevState,
+                confirmPasswordError: ''
+            }));
+        }
+
+        if (isValid) {
+            setErrorMessage({
+                currentPasswordError: '',
+                newPasswordError: '',
+                confirmPasswordError: ''
+            });
+        }
+        return isValid;
+    }
+    const handlePasswordChange = async () => {
+        if (validatePassword()) {
+            // console.log('resetPasswordForm', resetPasswordForm);
+            try {
+                const res = await apiProfileUpdatePassword(userData?.id, resetPasswordForm);
+                if (res?.status === 1) {
+                    toast.success('Cập nhật mật khẩu thành công');
+                    setApiError('');
+                    setResetPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                } else {
+                    // toast.error(res?.message);
+                    setApiError(res?.message)
+                }
+            } catch (e) {
+                if (e?.response?.status === 401) {
+                }
+            }
+        } else {
+            // console.log('validatePassword', userData?.id, resetPasswordForm);
+        }
+    }
+    const validate = () => {
+        let valid = true;
+        if (profilePayload.full_name.trim().length === 0) {
+            setError({ ...error, full_name: "Họ tên không được để trống" })
+            valid = false
+        }
+        return valid;
+    }
+    const saveProfile = async () => {
+        if (!validate()) return;
+        else {
+            setprofileLoading(true)
+            try {
+                const res = await apiProfileUpdate(profilePayload)
+                if (res?.data) {
+                    dispatch(updateUser({
+                        userData: res.data
+                    }))
+                    setError({ ...error, full_name: "" })
+                }
+                toast.success("Cập nhật thành công")
+            } catch {
+                toast.error("Đã xãy ra lỗi")
+            }
+            // setOnChangeCKEditor(false)
+            setprofileLoading(false)
+        }
+    }
     useEffect(() => {
         document.title = "Thông tin cá nhân";
         // if (!isLoggedIn) {
@@ -206,53 +321,53 @@ const UserProfile = () => {
                                             type="text"
                                             disable={true}
                                             value={profilePayload.email}
-                                            // setValue={setPayload}
+                                            // setValue={profilePayload}
                                             nameKey='email'
                                             style="w-full rounded-sm !outline !bg-gray-200 !outline-1 !shadow-lg border p-4 pe-12 text-sm shadow-sm focus:outline-teal-700"
                                             placeholder="Email"
                                         />
-
                                     </div>
                                     <div className='min-w-[17rem] max-w-[50rem] mb-6 h-auto'>
                                         <label htmlFor="full_name" className='font-medium'>Tên đầy đủ</label>
                                         <Input
                                             type="text"
                                             value={profilePayload.full_name}
-                                            // setValue={setPayload}
+                                            setValue={setProfilePayload}
                                             nameKey='full_name'
                                             style="w-full rounded-sm !outline !outline-1 !shadow-lg border p-4 pe-12 text-sm shadow-sm focus:outline-teal-700"
                                             placeholder="Họ Và Tên"
                                         />
+                                        {error.full_name && <Typography className='text-red-500'>{error.full_name}</Typography>}
                                     </div>
                                 </div>
 
 
                                 <div className='flex-1'>
                                     <div className='min-w-[17rem] max-w-[50rem] mb-6 h-auto'>
-                                        <label htmlFor="full_name" className='font-medium'>Địa chỉ</label>
+                                        <label htmlFor="address" className='font-medium'>Địa chỉ</label>
                                         <Input
                                             type="text"
                                             value={profilePayload.address}
-                                            // setValue={setPayload}
+                                            setValue={setProfilePayload}
                                             nameKey='address'
                                             style="w-full rounded-sm !outline !outline-1 !shadow-lg border p-4 pe-12 text-sm shadow-sm focus:outline-teal-700"
                                             placeholder="Địa chỉ"
                                         />
                                     </div>
                                     <div className='min-w-[17rem] max-w-[50rem] mb-6 h-auto'>
-                                        <label htmlFor="email" className='font-medium'>Số điện thoại</label>
+                                        <label htmlFor="phoneNumber" className='font-medium'>Số điện thoại</label>
                                         <Input
                                             type="text"
                                             value={profilePayload.phone_number}
-                                            // setValue={setPayload}
-                                            nameKey='email'
+                                            setValue={setProfilePayload}
+                                            nameKey='phone_number'
                                             style="w-full rounded-sm !outline !outline-1 !shadow-lg border p-4 pe-12 text-sm shadow-sm focus:outline-teal-700"
                                             placeholder="Số điện thoại"
                                         />
                                     </div>
                                 </div>
                             </div>
-                            <Button style="bg-[#003a47] w-[100px] h-[40px] ring-gray-300 hover:opacity-80 text-white" label="Lưu" rounded />
+                            <Button handleOnClick={saveProfile} style="bg-[#003a47] w-[100px] h-[40px] ring-gray-300 hover:opacity-80 text-white" label="Lưu" rounded />
                         </form>
                     </div>
 
@@ -268,38 +383,42 @@ const UserProfile = () => {
                                         <label htmlFor="" className='font-medium'>Mật khẩu hiện tại</label>
                                         <Input
                                             type="password"
-                                            // value={payload.full_name}
-                                            // setValue={setPayload}
-                                            nameKey='full_name'
+                                            value={resetPasswordForm.currentPassword}
+                                            setValue={setResetPasswordForm}
+                                            nameKey='currentPassword'
                                             style="w-full rounded-sm !outline !outline-1 !shadow-lg border p-4 pe-12 text-sm shadow-sm focus:outline-teal-700"
                                             placeholder="Mật khẩu hiện tại"
                                         />
+                                        {errorMessage.currentPasswordError && <Typography className='text-red-500'>{errorMessage.currentPasswordError}</Typography>}
                                     </div>
                                     <div className='min-w-[17rem] max-w-[30rem] mb-6 h-auto'>
                                         <label htmlFor="" className='font-medium'>Mật khẩu Mới</label>
                                         <Input
                                             type="password"
-                                            // value={payload.full_name}
-                                            // setValue={setPayload}
-                                            nameKey='full_name'
+                                            value={resetPasswordForm.newPassword}
+                                            setValue={setResetPasswordForm}
+                                            nameKey='newPassword'
                                             style="w-full rounded-sm !outline !outline-1 !shadow-lg border p-4 pe-12 text-sm shadow-sm focus:outline-teal-700"
                                             placeholder="Mật khẩu Mới"
                                         />
+                                        {errorMessage.newPasswordError && <Typography className='text-red-500'>{errorMessage.newPasswordError}</Typography>}
                                     </div>
                                     <div className='min-w-[17rem] max-w-[30rem] mb-6 h-auto'>
                                         <label htmlFor="" className='font-medium'>Xác nhận mật khẩu mới</label>
                                         <Input
                                             type="password"
-                                            // value={payload.full_name}
-                                            // setValue={setPayload}
-                                            nameKey='full_name'
+                                            value={resetPasswordForm.confirmPassword}
+                                            setValue={setResetPasswordForm}
+                                            nameKey='confirmPassword'
                                             style="w-full rounded-sm !outline !outline-1 !shadow-lg border p-4 pe-12 text-sm shadow-sm focus:outline-teal-700"
                                             placeholder="Xác nhận mật khẩu mới"
                                         />
+                                        {errorMessage.confirmPasswordError && <Typography className='text-red-500'>{errorMessage.confirmPasswordError}</Typography>}
                                     </div>
                                 </div>
                             </div>
-                            <Button style="bg-[#003a47] w-[100px] h-[40px] ring-gray-300 hover:opacity-80 text-white" label="Lưu" rounded />
+                            <Typography className='text-red-500 mb-[24px]'>{apiError}</Typography>
+                            <Button handleOnClick={handlePasswordChange} style="bg-[#003a47] w-[100px] h-[40px] ring-gray-300 hover:opacity-80 text-white" label="Lưu" rounded />
                         </form>
                     </div>
                 </div>

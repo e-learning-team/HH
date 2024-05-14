@@ -1,6 +1,4 @@
 import { NavLink } from "react-router-dom";
-import { getVideoThumbnailGoogleGDriveUrl } from "../../utils/Constants";
-import { extractVideoGoogleGDriveUrlId } from "../../utils/helper";
 import noImg from '../../assets/no-image-icon.jpg';
 import { Rating, Tooltip, Typography } from "@mui/material";
 import Path from "../../utils/path";
@@ -15,8 +13,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { apiChangeCourseType, apiDeleteCourse, apiLecturePublishCourse } from "../../apis/course";
-import { useDispatch, useSelector } from 'react-redux';
+import { apiChangeCourseType, apiDeleteCourse } from "../../apis/course";
+import { useSelector } from 'react-redux';
 
 const CourseCard = ({ content, changed }) => {
     const { isLoggedIn, avatarURL, userData, token, isLoading, message } = useSelector((state) => state.user);
@@ -181,7 +179,7 @@ const CourseCard = ({ content, changed }) => {
                         {/* )} */}
                     </div>
                 </div>
-                {(userData.roles.includes("ROLE_ADMIN") && window.location.pathname.normalize().includes('admin')) && (
+                {((userData.roles.includes("ROLE_ADMIN") || userData.roles.includes("ROLE_ADMIN")) && window.location.pathname.normalize().includes('admin')) && (
                     <div className="min-w-[120px] flex gap-x-2 items-center justify-center">
                         {(content?.courseType == "WAITING" || content?.courseType == "CHANGE_PRICE") && (
                             <>
@@ -216,7 +214,7 @@ const CourseCard = ({ content, changed }) => {
                                                 )}
                                                 {(content?.attributes?.length > 0 && content?.attributes[0]?.attributeValue) ? (
                                                     <div>
-                                                    Với giá bán mới:
+                                                        Với giá bán mới:
                                                         &nbsp;<span className='font-bold text-lg text-black underline mx-1'>{content?.attributes[0]?.attributeValue ? (parseInt(content?.attributes[0]?.attributeValue).toLocaleString()) : (content?.price_sell.toLocaleString())}</span>&nbsp;Vnđ
                                                     </div>
                                                 ) : (

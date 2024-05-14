@@ -37,115 +37,6 @@ const AdminCategory = () => {
     const [categoryDialog, setCategoryDialog] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState('');
-    const getCategories = async (params) => {
-        try {
-            const paramsAPI = new URLSearchParams();
-            paramsAPI.set('build_type', 'TREE');
-            paramsAPI.set('is_deleted', params.status != null ? params.status : '');
-            // paramsAPI.set('key_word', keyWord || '');
-            const response = await apiCategory(paramsAPI);
-            if (response?.data?.length > 0) {
-                setCategoryList(response.data);
-                buildData(response.data);
-            }
-            else {
-                setCategoryList([]);
-            }
-            setLoading(false);
-        } catch (error) {
-            console.log(error)
-            toast.error("Xảy ra lỗi khi lấy thông tin danh mục")
-            setCategoryList([]);
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    const addDashesToTitles = (categories) => {
-
-        return categories.filter((category) => category.level < 3)
-            .map((category) => {
-                const modifiedTitle = `${category.level != 1 ? '---' : ''} ${category.title}`;
-                return {
-                    ...category, title: modifiedTitle,
-                };
-
-            });
-    };
-
-    const buildCategories = async () => {
-        try {
-            const paramsAPI = new URLSearchParams();
-            paramsAPI.set('build_type', 'LIST');
-            paramsAPI.set('is_deleted', false);
-            const response = await apiCategory(paramsAPI);
-            if (response?.data?.length > 0) {
-                const data = addDashesToTitles(response.data);
-                setCategories(data);
-            }
-            else {
-                setCategories([]);
-            }
-        } catch (error) {
-            toast.error("Xảy ra lỗi khi lấy thông tin danh mục")
-            setCategories([]);
-        }
-    }
-
-    const deleteCategory = async (id) => {
-        try {
-            const response = await apiDeleteCategory(id);
-            if (response?.status === 1) {
-                loadData();
-                buildCategories();
-                toast.success("Xóa danh mục thành công");
-            } else {
-                toast.error(response.message);
-            }
-        } catch (error) {
-            toast.error("Xóa danh mục không thành công");
-        }
-    }
-
-    const createCategory = async (category) => {
-        try {
-            const response = await apiCreateCategory(category);
-            if (response?.data) {
-                loadData();
-                buildCategories();
-                toast.success("Thêm danh mục thành công");
-            } else {
-                toast.error("Thêm danh mục không thành công")
-                setCategory(null);
-            }
-
-        } catch (error) {
-            toast.error("Thêm danh mục không thành công")
-            setCategory(null);
-        }
-    }
-
-    useEffect(() => {
-        loadData();
-        buildCategories();
-    }, [params])
-
-    let loadTimeout = null;
-    const loadData = async () => {
-        setLoading(true);
-        if (loadTimeout) {
-            clearTimeout(loadTimeout);
-        }
-
-        //imitate delay of a backend call
-        loadTimeout = setTimeout(() => {
-            getCategories(params);
-            buildData();
-            setLoading(false);
-        }, Math.random() * 1000 + 250);
-
-    }
-
     const buildData = (data) => {
         const nodes = [];
 
@@ -170,6 +61,117 @@ const AdminCategory = () => {
             });
         }
         setNodes(nodes);
+    }
+
+    const getCategories = async (params) => {
+
+        setLoading(true);
+        try {
+            const paramsAPI = new URLSearchParams();
+            paramsAPI.set('build_type', 'TREE');
+            paramsAPI.set('is_deleted', params.status != null ? params.status : '');
+            // paramsAPI.set('key_word', keyWord || '');
+            const response = await apiCategory(paramsAPI);
+            if (response?.data?.length > 0) {
+                setCategoryList(response.data);
+                buildData(response.data);
+            }
+            else {
+                setCategoryList([]);
+            }
+        } catch (error) {
+            console.log("------------------------")
+            console.log(error)
+            toast.error("Xảy ra lỗi khi lấy thông tin danh mục")
+            setCategoryList([]);
+        } finally {
+            setLoading(false);
+        }
+        // setLoading(false);
+    }
+
+    const addDashesToTitles = (categories) => {
+
+        return categories.filter((category) => category.level < 3)
+            .map((category) => {
+                const modifiedTitle = `${category.level != 1 ? '---' : ''} ${category.title}`;
+                return {
+                    ...category, title: modifiedTitle,
+                };
+
+            });
+    };
+
+    const buildCategories = async () => {
+        try {
+            const paramsAPI = new URLSearchParams();
+            paramsAPI.set('build_type', 'LIST');
+            paramsAPI.set('is_deleted', false);
+            const response = await apiCategory(paramsAPI);
+            console.log("response", response)
+            if (response?.data?.length > 0) {
+                const data = addDashesToTitles(response.data);
+                setCategories(data);
+            }
+            else {
+                setCategories([]);
+            }
+        } catch (error) {
+            toast.error("Xảy ra lỗi khi lấy thông tin danh mục")
+            setCategories([]);
+        }
+    }
+
+    const deleteCategory = async (id) => {
+        try {
+            const response = await apiDeleteCategory(id);
+            if (response?.status === 1) {
+                // loadData();
+                getCategories(params);
+                buildCategories();
+                toast.success("Xóa danh mục thành công");
+            } else {
+                toast.error(response.message);
+            }
+        } catch (error) {
+            toast.error("Xóa danh mục không thành công");
+        }
+    }
+
+    const createCategory = async (category) => {
+        try {
+            const response = await apiCreateCategory(category);
+            if (response?.data) {
+                // loadData();
+                getCategories(params);
+                buildCategories();
+                toast.success("Thêm danh mục thành công");
+            } else {
+                toast.error("Thêm danh mục không thành công")
+                setCategory(null);
+            }
+
+        } catch (error) {
+            toast.error("Thêm danh mục không thành công")
+            setCategory(null);
+        }
+    }
+
+
+    let loadTimeout = null;
+    const loadData = async () => {
+        setLoading(true);
+        // if (loadTimeout) {
+        //     clearTimeout(loadTimeout);
+        // }
+
+        //imitate delay of a backend call
+        setTimeout(() => {
+            getCategories(params);
+            // data && buildData(data);
+            setLoading(false);
+        }, Math.random() * 1000 + 250);
+
     }
 
     let emptyCategory = {
@@ -200,6 +202,54 @@ const AdminCategory = () => {
         }
     }
 
+    const onEditorValueChange = (options, value) => {
+        let newNodes = JSON.parse(JSON.stringify(nodes));
+        let editedNode = findNodeByKey(newNodes, options.node.key);
+        editedNode.data[options.field] = value;
+        setNodes(newNodes);
+    };
+
+    const onEditorUpdate = async (options, value) => {
+        console.log(options, "---", value)
+        //call api apiUpdateCategoryName
+        const respone = await apiUpdateCategoryName(options.node.key, value);
+        if (respone?.status === 1) {
+            toast.success("Cập nhật tên danh mục thành công");
+            buildCategories();
+            getCategories(params);
+            // loadData();
+        } else {
+            toast.error("Cập nhật tên danh mục không thành công");
+        }
+
+    };
+
+    const findNodeByKey = (nodes, key) => {
+        for (let node of nodes) {
+            if (node.key === key) {
+                return node;
+            }
+            else {
+                let foundNode = findNodeByKey(node.children, key);
+                if (foundNode) {
+                    return foundNode;
+                }
+            }
+        }
+    };
+
+    const onCellEditComplete = (e) => {
+        let { rowData, newValue, field, originalEvent: event } = e;
+
+        console.log(rowData)
+    };
+
+    useEffect(() => {
+        // loadData();
+        getCategories(params);
+        buildCategories();
+    }, [params]);
+
     const actionBody = (rowData) => {
         return (<Button icon="pi pi-trash" className="h-12 w-12" rounded outlined severity="danger" onClick={() => deleteCategory(rowData.data.id)} />);
     }
@@ -216,11 +266,12 @@ const AdminCategory = () => {
                             placeholder="Tìm kiếm danh mục"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
-                                    loadData();
+                                    // loadData();
+                                    getCategories(params);
                                 }
                             }}
                         />
-                        <Button icon="pi pi-search" className="p-button-info" onClick={loadData} />
+                        <Button icon="pi pi-search" className="p-button-info" onClick={getCategories} />
                     </div>
                 </div>
                 <div className="lg:col-span-4 p-4">
@@ -229,6 +280,18 @@ const AdminCategory = () => {
             </div>
         </div>
     );
+
+
+    const productDialogFooter = (
+        <React.Fragment>
+            <Button label="Huỷ" icon="pi pi-times" className="p-button-text" severity="danger" onClick={hideDialog} />
+            <Button label="Lưu" icon="pi pi-check" className="p-button-text" severity="info" onClick={saveCategory} />
+        </React.Fragment>
+    );
+
+    const textEditor = (options) => {
+        return <InputText type="text" className="w-full" value={options.rowData[options.field]} onChange={(e) => onEditorValueChange(options, e.target.value)} onBlur={(e) => onEditorUpdate(options, e.target.value)} />;
+    };
     const CategoryIcon = (rowData) => {
         const [img, setImg] = useState(rowData.data.image ? rowData.data.image : null);
         const [newImg, setNewImg] = useState(null);
@@ -253,7 +316,6 @@ const AdminCategory = () => {
                     handleRemoveImg();
                 }
             }
-            setImgLoading(false);
         };
         const handleRemoveImg = () => {
             setImg(null);
@@ -299,11 +361,11 @@ const AdminCategory = () => {
         };
         const uploadAvatar = async (file) => {
             const params = {
-                parent_id: rowData.data.id,
+                parent_id: rowData?.data?.id,
                 parent_type: "CATEGORY_IMAGE"
             };
+            // setImgLoading(true);
             try {
-                setImgLoading(true);
                 const formData = new FormData();
                 formData.append('file', file);
                 const newAvatarUrl = await apiUploadFile(formData, params);
@@ -318,18 +380,21 @@ const AdminCategory = () => {
                     toast.success("Tải lên thành công!", {
                         position: toast.POSITION.TOP_RIGHT,
                     });
-                    handleRemoveImg();
+                    // handleRemoveImg();
                 }
-                setImgLoading(false);
+                // setImgLoading(false);
             } catch (e) {
                 console.error('Upload failed:', e);
-                setImgLoading(false);
+                // setImgLoading(false);
                 // toast.current.show({ severity: 'warn', summary: 'Thất bại', detail: 'Tải lên thất bại, vui lòng thử lại', life: 3000 });
 
                 toast.error(`Tải lên không thành công!`, {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+            } finally {
+                setImgLoading(false);
             }
+
         };
         const accept = (category) => {
             setImg(null);
@@ -353,7 +418,17 @@ const AdminCategory = () => {
         return (
             <>
                 <div className="card relative group/icon inline-block bg-white cursor-pointer">
-                    <Avatar image={img ?? newImg} size="xlarge" shape="square" />
+                    <div className='relative'>
+                        <Avatar image={img ?? newImg} size="xlarge" shape="square" />
+                    </div>
+                    {imgLoading && (
+                        <div className='absolute w-[64px] h-[64px] z-10 bg-gray-300 opacity-70 rounded-full top-0 bottom-0 flex items-center justify-center'>
+                            <svg aria-hidden="true" role="status" className="inline w-8 h-8  text-teal-500 animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB" />
+                                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor" />
+                            </svg>
+                        </div>
+                    )}
                     {/* <img src={img ?? newImg} className='w-[64px]  h-[64px]' /> */}
 
                     {(img || newImg) ? (
@@ -392,6 +467,7 @@ const AdminCategory = () => {
                                 ref={(fileInput) => (setFileInputRef(fileInput))}
                             />
                             <img onClick={() => fileInputRef && fileInputRef.click()} className='w-full h-full hover:opacity-40' src={chooseImage} />
+
                             {/* <FontAwesomeIcon onClick={() => fileInputRef && fileInputRef.click()} className=" text-2xl m-auto absolute top-0 bottom-0 left-0 right-0" icon={faUpload} /> */}
                         </div>
                     )}
@@ -405,59 +481,6 @@ const AdminCategory = () => {
             </>
         );
     }
-
-    const productDialogFooter = (
-        <React.Fragment>
-            <Button label="Huỷ" icon="pi pi-times" className="p-button-text" severity="danger" onClick={hideDialog} />
-            <Button label="Lưu" icon="pi pi-check" className="p-button-text" severity="info" onClick={saveCategory} />
-        </React.Fragment>
-    );
-
-    const textEditor = (options) => {
-        return <InputText type="text" className="w-full" value={options.rowData[options.field]} onChange={(e) => onEditorValueChange(options, e.target.value)} onBlur={(e) => onEditorUpdate(options, e.target.value)} />;
-    };
-
-    const onEditorValueChange = (options, value) => {
-        let newNodes = JSON.parse(JSON.stringify(nodes));
-        let editedNode = findNodeByKey(newNodes, options.node.key);
-        editedNode.data[options.field] = value;
-        setNodes(newNodes);
-    };
-
-    const onEditorUpdate = async (options, value) => {
-        console.log(options, "---", value)
-        //call api apiUpdateCategoryName
-        const respone = await apiUpdateCategoryName(options.node.key, value);
-        if (respone?.status === 1) {
-            toast.success("Cập nhật tên danh mục thành công");
-            loadData();
-            buildCategories();
-        } else {
-            toast.error("Cập nhật tên danh mục không thành công");
-        }
-
-    };
-
-    const findNodeByKey = (nodes, key) => {
-        for (let node of nodes) {
-            if (node.key === key) {
-                return node;
-            }
-            else {
-                let foundNode = findNodeByKey(node.children, key);
-                if (foundNode) {
-                    return foundNode;
-                }
-            }
-        }
-    };
-
-    const onCellEditComplete = (e) => {
-        let { rowData, newValue, field, originalEvent: event } = e;
-
-        console.log(rowData)
-    };
-
     return (
         <div className="rounded-lg bg-white p-6 pt-2 border-1 border-[#dfe7ef]">
             {header}
@@ -467,20 +490,22 @@ const AdminCategory = () => {
                 paginator rows={10} rowsPerPageOptions={[10, 20, 60]}
                 tableStyle={{ minWidth: '50rem' }}
                 globalFilter={keyWord}
+                loading={loading}
 
                 editMode="cell"
             >
                 <Column
                     field="id"
                     header="Mã"
-                    body={loading ? <Skeleton /> : null}
+                    // body={loading ? <Skeleton /> : null}
                     expander={!loading && <i className="pi pi-fw pi-chevron-right" />}
                     headerStyle={{ width: '10%' }}
                 ></Column>
                 <Column
                     field="image"
                     header="Icon"
-                    body={loading ? <Skeleton /> : CategoryIcon}
+                    body={CategoryIcon}
+                    // body={loading ? <Skeleton /> : CategoryIcon}
                     headerStyle={{ width: '10%' }}
                 // editor={}
                 // editor={textEditor}
@@ -489,7 +514,7 @@ const AdminCategory = () => {
                 <Column
                     field="title"
                     header="Tên"
-                    body={loading ? <Skeleton /> : null}
+                    // body={loading ? <Skeleton /> : null}
                     // headerStyle={{ width: '25%' }}
                     editor={textEditor}
                     onCellEditComplete={onCellEditComplete}
@@ -497,7 +522,8 @@ const AdminCategory = () => {
                 <Column
                     field="#"
                     header="Thao tác"
-                    body={loading ? <Skeleton /> : actionBody}
+                    body={actionBody}
+                    // body={loading ? <Skeleton /> : actionBody}
                     style={{ width: '5%' }}
                 ></Column>
             </TreeTable>

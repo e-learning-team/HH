@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from '../../store/User/userSlice';
 import logo_side from '../../assets/logo-side.svg';
 import logo from '../../assets/logo.svg';
-import { validate } from '../../utils/helper';
+import { validate, validateEmail } from '../../utils/helper';
 import { apiLogin } from "../../apis/user";
 import Swal from 'sweetalert2';
 import Path from '../../utils/path';
@@ -25,17 +25,39 @@ const Login = () => {
         email: '',
         password: '',
     });
+    const [invalidFields, setInvalidFields] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState({
+        email: '',
+        password: '',
+    });
+    const validateFields = () => {
+        let valid = true;
+        if (!payload.email) {
+            setError((prev) => ({ ...prev, email: 'Email không được để trống' }));
+            valid = false;
+        } else if (!validateEmail(payload.email)) {
+            setError((prev) => ({ ...prev, email: 'Email không hợp lệ' }));
+            valid = false;
+        }
+        if (!payload.password) {
+            setError((prev) => ({ ...prev, password: 'Mật khẩu không được để trống' }));
+            valid = false;
+        }
+
+
+        return valid;
+    }
     useEffect(() => {
         document.title = 'Đăng nhập';
         if (isLoggedIn) {
-            if(userData.roles.includes("ROLE_LECTURE")) {
+            if (userData.roles.includes("ROLE_LECTURE")) {
                 navigate(`${Path.ADMIN_P}`)
-            } else{
+            } else {
                 navigate(-1)
             }
         }
     }, [isLoggedIn]);
-    const [invalidFields, setInvalidFields] = useState([]);
 
     const resetPayload = () => {
         setPayload({
@@ -44,6 +66,11 @@ const Login = () => {
         });
     };
     const handleSubmit = useCallback(async () => {
+        if (loading) return;
+
+        if (!validateFields()) return;
+
+        setLoading(true);
         const rs = await apiLogin(payload);
         if (rs.status === 1) {
             // console.log(rs.data?.user?.avatar)
@@ -63,6 +90,7 @@ const Login = () => {
                 position: toast.POSITION.TOP_RIGHT,
             });
         }
+        setLoading(false);
 
     }, [payload]);
     return (
@@ -90,6 +118,8 @@ const Login = () => {
                                     style="w-full rounded-lg border p-4 pe-12 text-sm shadow-sm focus:outline-gray-200"
                                     placeholder="Địa chỉ email"
                                 />
+                                {error.email !== '' && <div className='text-red-600 mt-2 ml-2'>{error.email}</div>}
+
                             </div>
 
                             <div className="col-span-12">
@@ -104,6 +134,7 @@ const Login = () => {
                                     style="w-full rounded-lg border p-4 pe-12 text-sm shadow-sm focus:outline-gray-200"
                                     placeholder="Mật khẩu"
                                 />
+                                {error.password !== '' && <div className='text-red-600 mt-2 ml-2'>{error.password}</div>}
                             </div>
                             <div className="col-span-12 flex align-items-center justify-content-between">
                                 <NavLink className="font-medium no-underline ml-2 text-blue-500 text-left cursor-pointer" to={'/' + Path.FORGET_PASSWORD}>Quên mật khẩu</NavLink>
@@ -114,6 +145,7 @@ const Login = () => {
                                     handleOnClick={handleSubmit}
                                     label="Đăng nhập" icon="pi pi-user primary-color"
                                     style="inline-block rounded-lg bg-[#29abe2] hover:bg-[#088ab7] px-5 py-3 text-sm font-medium text-white w-full"
+                                    isLoading={loading}
                                     onClick={login} />
                             </div>
 

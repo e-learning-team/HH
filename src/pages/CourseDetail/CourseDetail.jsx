@@ -21,8 +21,7 @@ import {
 import 'react-loading-skeleton/dist/skeleton.css';
 import Button from '../../components/Button/Button';
 import { VideoReviewDialog } from '../../components/Dialog/VideoReviewDialog';
-import { getVideoThumbnailGoogleGDriveUrl } from '../../utils/Constants';
-import { extractVideoGoogleGDriveUrlId, formatTimeStampTo_DDMMYYY, calcRating, extractIdSlug } from '../../utils/helper';
+import { formatTimeStampTo_DDMMYYY, extractIdSlug } from '../../utils/helper';
 import { apiGetCourse } from '../../apis/course';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
@@ -205,7 +204,7 @@ const CourseDeTail = () => {
     const [openVideoReviewDialog, setOpenVideoReviewDialog] = React.useState(false);
     const handleOpenVideoReviewDialog = () => setOpenVideoReviewDialog(!openVideoReviewDialog);
     return (
-        <>
+        <div className="bg-[url('../assets/insbg.png')]">
             {loading ? (
                 <div className=' flex justify-center h-screen items-center'>
                     <Spinner className='w-20 h-auto' color="teal" />
@@ -225,7 +224,7 @@ const CourseDeTail = () => {
                                     <div className=' text-white '>
                                         <div className=''>
                                             <h1 className='text-3xl font-bold  mb-4'>{course.data[0].name}</h1>
-                                            <div className='text-1xl mb-4'>{course.data[0].name_mode}</div>
+                                            <div className='text-1xl mb-4'>{course.data[0].short_description}</div>
                                             <div className='mb-2 flex gap-2 text-sm'>
                                                 <RatingBar value={totalRatings.averageRate.toFixed(1)} totalReview={totalRatings.totalRatings} />
                                                 <span>{course.data[0].subscriptions || 0} đã đăng kí.</span>
@@ -276,11 +275,11 @@ const CourseDeTail = () => {
                                             <span className='font-mono font-semibold'>{course.data[0].price_sell ? course.data[0].price_sell.toLocaleString() + "₫" : (<>Miễn phí</>)}</span>
                                         </div>
                                         <div className='mb-6 flex gap-2'>
-                                            {(isEnrolled) ? (
+                                            {(isEnrolled && !(userData.roles.includes("ROLE_ADMIN"))) ? (
                                                 <NavLink to={`/courses/learn/${slug}`} className="flex-1 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm ring-1 ring-inset bg-[#29abe2] shadow-lg w-full h-[60px] hover:bg-[#088ab7] font-bold text-white">Học ngay</NavLink>
                                             ) : (
                                                 <>
-                                                    {course.data[0].created_by == userData?.id ? (
+                                                    {(course.data[0].created_by === userData?.id || (userData.roles.includes("ROLE_ADMIN"))) ? (
                                                         <>
                                                             <NavLink to={`/lecturer/courses/learn/${slug}/preview`} className="flex-1 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm ring-1 ring-inset bg-[#29abe2] shadow-lg w-full h-[60px] hover:bg-[#088ab7] font-bold text-white">Xem ngay</NavLink>
                                                         </>
@@ -450,8 +449,8 @@ const CourseDeTail = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className='my-0 mt-4 mx-auto pb-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6'>
-                            <div className='max-w-[46rem] flex justify-between items-center'>
+                        <div className='my-0 mt-4 mx-auto pb-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6 '>
+                            <div className='max-w-[46rem] flex justify-between items-center mb-[10px]'>
                                 <h1 className='font-bold text-2xl'>
                                     BÌNH LUẬN
                                 </h1>
@@ -463,7 +462,7 @@ const CourseDeTail = () => {
                                     <FontAwesomeIcon icon={faSync} />
                                 </button>
                             </div>
-                            <div className='relative max-w-[46rem]'>
+                            <div className='relative max-w-[46rem] rounded-lg bg-white p-6 pt-2 border-1 border-[#dfe7ef]'>
                                 {/* <div className='' dangerouslySetInnerHTML={{
                                     __html: `${course.data[0].requirement || `Không có yêu cầu`}`
                                 }} /> */}
@@ -488,7 +487,7 @@ const CourseDeTail = () => {
                         <VideoReviewDialog videoPath={course.data[0].video_path} course={course.data[0]} open={openVideoReviewDialog} setOpen={handleOpenVideoReviewDialog} />
                     )}
                 </div>))}
-        </>
+        </div>
     );
 };
 

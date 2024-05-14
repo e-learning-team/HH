@@ -1,17 +1,9 @@
-import Path from '../../utils/path';
-import { NavLink } from 'react-router-dom';
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SkeletonCard from '../Skeleton/SkeletonCard';
 import noImg from '../../assets/no-image-icon.jpg';
-import { getVideoThumbnailGoogleGDriveUrl } from '../../utils/Constants';
-import { extractVideoGoogleGDriveUrlId } from '../../utils/helper';
 
-import { Rating, Tooltip, Typography } from '@mui/material';
-import StarIcon from '@mui/icons-material/Star';
 import { useState } from 'react';
-import { CourseRatingDialog } from '../Dialog/CourseRatingDialog';
 import { useEffect } from 'react';
-import { RatingBar } from '../RatingBar/RatingBar';
 import StarRatingComponent from 'react-star-rating-component';
 const HomeCard = ({ content, isEnrolled, enrollmentContent }) => {
     const totalRatings = content?.course_ratings;

@@ -83,3 +83,11 @@ export const apiUpdateRoles = (userId, params) => axios( {
         'Authorization': ``,
     }
 })
+export const apiProfileUpdatePassword = (id, data) => axios({
+    url: `/user/update-password/${id}`,
+    method: 'put',
+    data,
+    headers: {
+        'Authorization': ``,
+    }
+})

@@ -371,7 +371,7 @@ const Courses = () => {
                                                             </div>
                                                             <div className=" text-[#676e7b]">
                                                                 <span className="line-clamp-2" dangerouslySetInnerHTML={{
-                                                                    __html: `${course.description || ``}`
+                                                                    __html: `${course.short_description || ``}`
                                                                 }}></span>
                                                             </div>
                                                         </div>

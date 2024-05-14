@@ -1,17 +1,13 @@
-import Path from '../../utils/path';
-import { NavLink } from 'react-router-dom';
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SkeletonCard from '../Skeleton/SkeletonCard';
 import noImg from '../../assets/no-image-icon.jpg';
-import { getVideoThumbnailGoogleGDriveUrl } from '../../utils/Constants';
-import { extractVideoGoogleGDriveUrlId } from '../../utils/helper';
 
 import { Rating, Tooltip, Typography } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import { useState } from 'react';
 import { CourseRatingDialog } from '../Dialog/CourseRatingDialog';
 import { useEffect } from 'react';
-import { RatingBar } from '../RatingBar/RatingBar';
+import { formatNumberWithDotSeparator } from "../../utils/helper";
 const Card = ({ content, isEnrolled, enrollmentContent }) => {
     const totalRatings = content?.course_ratings;
 
@@ -98,12 +94,12 @@ const Card = ({ content, isEnrolled, enrollmentContent }) => {
                                                 <div className="mb-2 flex flex-col items-center justify-between line-clamp-1">
                                                     <span className='w-full  flex justify-between items-center'>
                                                         {/* <> */}
-                                                            <Typography className='text-[13px] min-w-[108px] text-black font-bold' color="blue-gray">
-                                                                Giá mua khóa học
-                                                            </Typography>
-                                                            <Typography className='text-[13px] flex justify-end min-w-[70px]' color="blue-gray">
-                                                                {enrollmentContent.price_purchase ? `đ${enrollmentContent.price_purchase}` : "Miễn phí"}
-                                                            </Typography>
+                                                        <Typography className='text-[13px] min-w-[108px] text-black font-bold' color="blue-gray">
+                                                            Giá mua khóa học
+                                                        </Typography>
+                                                        <Typography className='text-[13px] flex justify-end min-w-[70px]' color="blue-gray">
+                                                            {(enrollmentContent.price_purchase > 0) ? formatNumberWithDotSeparator(enrollmentContent.price_purchase) + "₫" : (<>Miễn phí</>)}
+                                                        </Typography>
                                                         {/* </> */}
                                                     </span>
                                                 </div>

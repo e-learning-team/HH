@@ -45,7 +45,7 @@ const CommentItem = ({ comment, currentUser, reload, isReply }) => {
             reference_id: comment.reference_id,
             type: "COURSE",
             userId: currentUser,
-            parent_id: isReply || comment.id 
+            parent_id: isReply || comment.id
         }
         try {
             const res = await apiPostComment(data);
@@ -60,7 +60,7 @@ const CommentItem = ({ comment, currentUser, reload, isReply }) => {
     const handleDeleteComment = async () => {
         try {
             const res = await apiDeleteComment(comment.id);
-            if(res.status === 1){
+            if (res.status === 1) {
                 toast.success(`Xóa bình luận thành công`, {
                     position: toast.POSITION.TOP_RIGHT,
                 });
@@ -115,14 +115,14 @@ const CommentItem = ({ comment, currentUser, reload, isReply }) => {
             )}
             <div className="flex justify-between items-center mt-4 space-x-4">
                 {/* {!isReply ? ( */}
-                    <button type="button"
-                        onClick={() => setReply(!reply)}
-                        className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-700 font-medium">
-                        <svg className="mr-1.5 w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
-                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 5h5M5 8h2m6-3h2m-5 3h6m2-7H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3v5l5-5h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z" />
-                        </svg>
-                        Phản hồi
-                    </button>
+                <button type="button"
+                    onClick={() => setReply(!reply)}
+                    className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-700 font-medium">
+                    <svg className="mr-1.5 w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 5h5M5 8h2m6-3h2m-5 3h6m2-7H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3v5l5-5h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z" />
+                    </svg>
+                    Phản hồi
+                </button>
                 {/* ) : (
                     <div></div>
                 )} */}
@@ -174,7 +174,7 @@ const CommentItem = ({ comment, currentUser, reload, isReply }) => {
                                 setReplyComment(e.target.value)
                                 setError(null);
                             }}
-                            autoFocus
+                            // autoFocus
                             onFocus={(e) => e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length)}
                             value={replyComment}
                             className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none  dark:placeholder-gray-400 "
@@ -210,7 +210,7 @@ export const Comments = ({ comments, currentUser, courseId, reload }) => {
     const [newComment, setNewComment] = useState("");
     const [error, setError] = useState(null);
     const handleSubmit = async () => {
-        if(!currentUser) return setError("Vui lòng đăng nhập để bình luận");
+        if (!currentUser) return setError("Vui lòng đăng nhập để bình luận");
         if (newComment === "") return setError("Vui lòng nhập nội dung bình luận");
         if (newComment.length < 10) return setError("Nội dung bình luận quá ngắn");
         if (newComment.length > 500) return setError("Nội dung bình luận không được quá 500 ký tự");
@@ -235,7 +235,7 @@ export const Comments = ({ comments, currentUser, courseId, reload }) => {
     //     }
     // }, [currentUser])
     return (
-        <section className="bg-white py-8 lg:py-8 antialiased">
+        <section className=" py-8 lg:py-8 antialiased">
             <div className="">
                 <form className="mb-6">
                     <div className={`py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 focus-within:border-gray-600 dark:border-gray-400 ${error && 'border-red-600'}`}>
