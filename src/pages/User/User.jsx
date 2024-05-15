@@ -13,9 +13,8 @@ import { Sidebar } from "../../components/Navbar/Sidebar";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-
 export function User() {
-    const { isLoggedIn, userData, token, isLoading, message } = useSelector((state) => state.user);
+    const { isLoggedIn, userData, avatarURL, token, isLoading, message } = useSelector((state) => state.user);
     const navigate = useNavigate();
     useEffect(() => {
         if (!isLoggedIn) {
@@ -39,8 +38,8 @@ export function User() {
             <div className="fixed w-60 z-10 ">
                 <Sidebar />
             </div>
-            <div className="relative m-6 pl-60 w-full">
-                <Outlet />
+            <div className="relative m-6 pl-60 w-full bg-[url('../assets/insbg.png')]">
+                <Outlet context={{ isLoggedIn, avatarURL, userData, token, isLoading, message }}/>
             </div>
         </div>
     );

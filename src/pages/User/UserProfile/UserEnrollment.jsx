@@ -61,7 +61,9 @@ const UserEnrollment = () => {
                                     </div>
                                 </>
                             ) : (
-                                <div></div>
+                                <div>
+                                    Danh sách đăng ký rỗng
+                                </div>
                             ))}
                         </div>
                     </div>

@@ -13,7 +13,7 @@ import { apiUploadFile, apiDeleteFileByPathFile } from '../../../apis/fileRelati
 import { updateAvatarURL, initialState, updateUser } from '../../../store/User/userSlice';
 import { htmlToJsx } from '../../../utils/helper';
 import { MyCKEditor } from '../../../components/Editor/MyCKEditor';
-import { apiLecturerRegister, apiProfileUpdate, apiUserDetail } from '../../../apis/user';
+import { apiLecturerRegister, apiProfileUpdate, apiProfileUpdatePassword, apiUserDetail } from '../../../apis/user';
 
 const LecturerProfile = () => {
     const navigate = useNavigate();
@@ -68,21 +68,21 @@ const LecturerProfile = () => {
                 setImgLoading(true);
                 const res = await apiDeleteFileByPathFile(params);
                 if (res.status == 1) {
-                    toast.success(`Xóa ảnh cũ thành công!`, {
-                        position: toast.POSITION.TOP_RIGHT,
-                    });
+                    // toast.success(`Xóa ảnh cũ thành công!`, {
+                    //     position: toast.POSITION.TOP_RIGHT,
+                    // });
                 } else {
-                    toast.error(`Xóa ảnh cũ không thành công thành công! ${res.message}`, {
-                        position: toast.POSITION.TOP_RIGHT,
-                    });
+                    // toast.error(`Xóa ảnh cũ không thành công thành công! ${res.message}`, {
+                    //     position: toast.POSITION.TOP_RIGHT,
+                    // });
                 }
                 setImgLoading(false);
             } catch (e) {
                 console.error('Upload failed:', e);
                 setImgLoading(false);
-                toast.error(`Xóa ảnh cũ không thành công!`, {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
+                // toast.error(`Xóa ảnh cũ không thành công!`, {
+                //     position: toast.POSITION.TOP_RIGHT,
+                // });
 
             }
         }
@@ -158,6 +158,85 @@ const LecturerProfile = () => {
         }
         setOnChangeCKEditor(false)
         setprofileLoading(false)
+    }
+    const [resetPasswordForm, setResetPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    const [errorMessage, setErrorMessage] = useState({ currentPasswordError: '', newPasswordError: '', confirmPasswordError: '' });
+    const [apiError, setApiError] = useState();
+    const validatePassword = () => {
+        let isValid = true;
+        if (resetPasswordForm.currentPassword.length < 8) {
+            isValid = false;
+            setErrorMessage(prevState => ({
+                ...prevState,
+                currentPasswordError: 'Mật khẩu phải có ít nhất 8 ký tự'
+            }));
+        } else {
+            setErrorMessage(prevState => ({
+                ...prevState,
+                currentPasswordError: ''
+            }));
+        }
+        if (resetPasswordForm.newPassword.length < 8) {
+            isValid = false;
+            setErrorMessage(prevState => ({
+                ...prevState,
+                newPasswordError: 'Mật khẩu phải có ít nhất 8 ký tự'
+            }));
+        } else {
+            setErrorMessage(prevState => ({
+                ...prevState,
+                newPasswordError: ''
+            }));
+        }
+        if (resetPasswordForm.newPassword !== resetPasswordForm.confirmPassword) {
+            console.log('password not match');
+            isValid = false;
+            setErrorMessage(prevState => ({
+                ...prevState,
+                confirmPasswordError: 'Xác nhận mật khẩu không khớp với mật khẩu mới'
+            }));
+        } else if (resetPasswordForm.confirmPassword === '') {
+            isValid = false;
+            setErrorMessage(prevState => ({
+                ...prevState,
+                confirmPasswordError: 'Vui lòng xác nhận mật khẩu'
+            }));
+        } else {
+            setErrorMessage(prevState => ({
+                ...prevState,
+                confirmPasswordError: ''
+            }));
+        }
+
+        if (isValid) {
+            setErrorMessage({
+                currentPasswordError: '',
+                newPasswordError: '',
+                confirmPasswordError: ''
+            });
+        }
+        return isValid;
+    }
+    const handlePasswordChange = async () => {
+        if (validatePassword()) {
+            // console.log('resetPasswordForm', resetPasswordForm);
+            try {
+                const res = await apiProfileUpdatePassword(userData?.id, resetPasswordForm);
+                if (res?.status === 1) {
+                    toast.success('Cập nhật mật khẩu thành công');
+                    setApiError('');
+                    setResetPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                } else {
+                    // toast.error(res?.message);
+                    setApiError(res?.message)
+                }
+            } catch (e) {
+                if (e?.response?.status === 401) {
+                }
+            }
+        } else {
+            // console.log('validatePassword', userData?.id, resetPasswordForm);
+        }
     }
     useEffect(() => {
         document.title = "Thông tin cá nhân";
@@ -367,6 +446,7 @@ const LecturerProfile = () => {
                     </div>
 
                     <hr className=" left-0 right-0 my-8 border border-gray-300 !outline-none " />
+
                     <div className=''>
                         <form action="#">
                             <h1 className="font-bold text-2xl uppercase">Mật khẩu</h1>
@@ -376,38 +456,42 @@ const LecturerProfile = () => {
                                         <label htmlFor="" className='font-medium'>Mật khẩu hiện tại</label>
                                         <Input
                                             type="password"
-                                            // value={payload.full_name}
-                                            // setValue={setPayload}
-                                            nameKey='full_name'
+                                            value={resetPasswordForm.currentPassword}
+                                            setValue={setResetPasswordForm}
+                                            nameKey='currentPassword'
                                             style="w-full rounded-sm !outline !outline-1 !shadow-lg border p-4 pe-12 text-sm shadow-sm focus:outline-teal-700"
                                             placeholder="Mật khẩu hiện tại"
                                         />
+                                        {errorMessage.currentPasswordError && <Typography className='text-red-500'>{errorMessage.currentPasswordError}</Typography>}
                                     </div>
                                     <div className='min-w-[17rem] max-w-[30rem] mb-6 h-auto'>
                                         <label htmlFor="" className='font-medium'>Mật khẩu Mới</label>
                                         <Input
                                             type="password"
-                                            // value={payload.full_name}
-                                            // setValue={setPayload}
-                                            nameKey='full_name'
+                                            value={resetPasswordForm.newPassword}
+                                            setValue={setResetPasswordForm}
+                                            nameKey='newPassword'
                                             style="w-full rounded-sm !outline !outline-1 !shadow-lg border p-4 pe-12 text-sm shadow-sm focus:outline-teal-700"
                                             placeholder="Mật khẩu Mới"
                                         />
+                                        {errorMessage.newPasswordError && <Typography className='text-red-500'>{errorMessage.newPasswordError}</Typography>}
                                     </div>
                                     <div className='min-w-[17rem] max-w-[30rem] mb-6 h-auto'>
                                         <label htmlFor="" className='font-medium'>Xác nhận mật khẩu mới</label>
                                         <Input
                                             type="password"
-                                            // value={payload.full_name}
-                                            // setValue={setPayload}
-                                            nameKey='full_name'
+                                            value={resetPasswordForm.confirmPassword}
+                                            setValue={setResetPasswordForm}
+                                            nameKey='confirmPassword'
                                             style="w-full rounded-sm !outline !outline-1 !shadow-lg border p-4 pe-12 text-sm shadow-sm focus:outline-teal-700"
                                             placeholder="Xác nhận mật khẩu mới"
                                         />
+                                        {errorMessage.confirmPasswordError && <Typography className='text-red-500'>{errorMessage.confirmPasswordError}</Typography>}
                                     </div>
                                 </div>
                             </div>
-                            <Button style="bg-[#003a47] w-[100px] h-[40px] ring-gray-300 hover:opacity-80 text-white" label="Lưu" rounded />
+                            <Typography className='text-red-500 mb-[24px]'>{apiError}</Typography>
+                            <Button handleOnClick={handlePasswordChange} style="bg-[#003a47] w-[100px] h-[40px] ring-gray-300 hover:opacity-80 text-white" label="Lưu" rounded />
                         </form>
                     </div>
                 </div>
