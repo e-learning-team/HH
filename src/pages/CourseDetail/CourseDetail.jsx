@@ -245,7 +245,6 @@ const CourseDeTail = () => {
                                                     <FontAwesomeIcon icon={faPersonChalkboard} className='mr-1 text-[#faaf00]' />
                                                     Được tạo bởi:
                                                 </span>
-                                                lecturer-detail
                                                 <a href={`#lecturer-detail`} className='text-[#64ceeb] underline'> {course.data[0].created_user_info[course.data[0].created_by]}</a>
                                                 {/* <NavLink to={`/profile/${course.data[0].created_by}`} className='text-[#64ceeb] underline'> {course.data[0].created_user_info[course.data[0].created_by]}</NavLink> */}
                                             </div>

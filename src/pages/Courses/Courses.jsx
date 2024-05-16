@@ -34,6 +34,7 @@ const Courses = () => {
     const { isLoggedIn, userData, token, isLoading, message } = useSelector((state) => state.user);
     const [courseList, setCourseList] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [categoryId, setCategoryId] = useState("")
     const [searchParams, setSearchParams] = useSearchParams();
     const [keySearch, setKeySearch] = useState(searchParams.get('keyword') || null);
     const [loading, setLoading] = useState(true);
@@ -154,12 +155,15 @@ const Courses = () => {
 
         if (searchParams.get('category')) {
             setParentCategory(searchParams.get('category'));
+            setCategoryId(searchParams.get('category'));
+            console.log(searchParams.get('category'))
         }
         countFilters();
         setKeySearch(searchParams.get('keyword') || null)
         document.title = searchParams.get('keyword') || "Tìm kiếm";
         searchCategory();
         searchCourse();
+        
     }, [searchParams, isLoggedIn]);
 
 
@@ -291,12 +295,12 @@ const Courses = () => {
                             </div> */}
                             <div class="wdiget widget_catagory">
                                 <h4 class="text-[22px] leading-8 font-bold text-[#555] mb-8">Danh mục</h4>
-                                <ul class=" list-item space-y-4">
+                                <ul class=" list-none space-y-4">
                                     {categories?.length > 0 ?
                                         <>
                                             {categories?.map((category, index) => (
                                                 <li class="block">
-                                                    <span onClick={() => handleClickCategory(category)} className="cursor-pointer flex justify-between items-center bg-[#F8F8F8] py-[17px] px-5 rounded hover:bg-[#4cbdff] hover:text-white transition-all duration-150 text-[#676e7b]">
+                                                    <span onClick={() => handleClickCategory(category)} className={`cursor-pointer flex justify-between items-center py-[17px] px-5 rounded hover:bg-[#4cbdff] hover:text-white transition-all duration-150 text-[#676e7b] ${(categoryId===category?.id)? "bg-[#4cbdff] text-white" : "bg-[#F8F8F8]"}`}>
                                                         <span className="text-inherit">{category.title}</span>
                                                         <span class=" text-2xl">
                                                             <FontAwesomeIcon icon={faAngleRight} className="text-inherit" />
