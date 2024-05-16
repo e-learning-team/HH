@@ -38,7 +38,7 @@ export function User() {
             <div className="fixed w-60 z-10 ">
                 <Sidebar />
             </div>
-            <div className="relative m-6 pl-60 w-full bg-[url('../assets/insbg.png')]">
+            <div className="relative m-6 pl-60 w-full ">
                 <Outlet context={{ isLoggedIn, avatarURL, userData, token, isLoading, message }}/>
             </div>
         </div>

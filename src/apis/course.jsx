@@ -49,3 +49,11 @@ export const apiChangeCourseType = (params) => axios({
     }
 });
 
+export const apiChangePriceSell = (params) => axios({
+    url: `/course/change-price-sell`,
+    method: 'put',
+    params,
+    headers: {
+        'Authorization': ``,
+    }
+});

@@ -2,11 +2,11 @@ import { Spinner, Typography } from '@material-tailwind/react';
 import React, { useEffect, useState } from 'react';
 import { MyCKEditor } from '../../../components/Editor/MyCKEditor';
 import { useDispatch } from 'react-redux';
-import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { apiCategory } from '../../../apis/category';
 import { MultiSelect } from 'primereact/multiselect';
-import { apiChangeCourseType, apiDeleteCourse, apiGetCourse, apiLecturePublishCourse, apiSaveCourse, apiUpdateIsPreview } from '../../../apis/course';
+import { apiChangeCourseType, apiChangePriceSell, apiDeleteCourse, apiGetCourse, apiLecturePublishCourse, apiSaveCourse, apiUpdateIsPreview } from '../../../apis/course';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp, faFloppyDisk, faPen, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { apiDeleteFileByPathFile, apiUploadFile } from '../../../apis/fileRelationship';
@@ -29,6 +29,7 @@ const IntroductionContent = ({ content, handleChange }) => {
         name: '',
         description: "",
         short_description: "",
+        price_sell: null,
         requirement: "",
         category_ids: [
         ],
@@ -1119,6 +1120,9 @@ const PriceContent = ({ content, handleChange }) => {
         }
     };
     const validateForm = () => {
+        console.log('validate', 'validate');
+        console.log('priceValue', priceValue);
+        console.log('content?.price_sell', content?.price_sell);
         let valid = true;
         if (priceType === 'PAID' && priceValue < 10000) {
             valid = false;
@@ -1126,6 +1130,14 @@ const PriceContent = ({ content, handleChange }) => {
                 ...errors,
                 price: "Giá bán không bé hơn 10.000 Vnđ",
             }));
+        }
+
+        else if (priceValue == content?.price_sell) {
+            valid = false;
+            // setErrors((errors) => ({
+            //     ...errors,
+            //     price: "Giá bán không thay đổi",
+            // }));
         }
         return valid;
     };
@@ -1141,15 +1153,27 @@ const PriceContent = ({ content, handleChange }) => {
     const handlePriceSave = async () => {
         setProcessing(true);
         if (validateForm()) {
-            const data = {
-                id: content?.id,
-                name: content?.name,
-                price_sell: priceValue,
-            };
-            console.log(data);
-            const res = await apiSaveCourse(data);
-            if (res?.data) {
-                handleChange && handleChange(res?.data);
+            // const data = {
+            //     id: content?.id,
+            //     name: content?.name,
+            //     price_sell: priceValue,
+            // };
+            // console.log(data);
+            // const res = await apiSaveCourse(data);
+            // if (res?.data) {
+            //     handleChange && handleChange({
+            //         price_sell: priceValue,
+            //     });
+            // }
+            const params = new URLSearchParams();
+            params.append('course_id', content?.id);
+            params.append('price_sell', priceValue);
+            const res = await apiChangePriceSell(params);
+            if (res?.status === 1) {
+                handleChange && handleChange(priceValue);
+                toast.success(`Thay đổi giá bán thành công!`);
+            } else {
+                toast.error(`Thay đổi giá bán không thành công!`);
             }
         } else {
         }
@@ -1158,9 +1182,14 @@ const PriceContent = ({ content, handleChange }) => {
     useEffect(() => {
         if (content?.price_sell > 0) {
             setPriceType('PAID');
-            setPriceValue(content?.price_sell);
+            if (content?.courseType === "CHANGE_PRICE" && content?.attributes?.length > 0 && content?.attributes[0]?.attributeName === "COURSE_SELL_PRICE" && content?.attributes[0]?.attributeValue != content?.price_sell) {
+                setPriceValue(content?.attributes[0]?.attributeValue);
+            } else {
+                console.log('---price_sell', content?.price_sell);
+                setPriceValue(content?.price_sell);
+            }
         }
-    }, []);
+    }, [content]);
 
     return (
         <div>
@@ -1195,11 +1224,11 @@ const PriceContent = ({ content, handleChange }) => {
                                     <Typography className='font-bold min-w-[50px]'>Giá:<span className='text-red-500'>*</span> </Typography>
                                     <div className='relative h-[40px] flex'>
                                         <input
-                                            type="text"
+                                            type="number"
                                             name="name"
                                             value={priceValue}
                                             onChange={(event) => handlePriceValueChange(event)}
-                                            placeholder='Tên chương'
+                                            placeholder='Giá bán'
                                             className={` px-4 outline-none h-full border  border-b-[#003a47] `}
                                             disabled={content?.courseType !== 'DRAFT' && content?.courseType != 'OFFICIAL'}
                                         // autoFocus
@@ -1347,7 +1376,7 @@ const LecturerCourseSave = () => {
         //     is_rejected: is_rejected
         // };
         const response = await apiChangeCourseType(paramsAPI);
-        if (response?.status == 1) {
+        if (response?.status === 1) {
             toast.success("Duyệt khóa học thành công");
         }
         setChange(true);
@@ -1360,6 +1389,9 @@ const LecturerCourseSave = () => {
     useEffect(() => {
         getMyCourse();
     }, [change]);
+    useEffect(() => {
+        console.log('---my course', myCourse);
+    }, [myCourse]);
 
     return (
         <>
@@ -1416,75 +1448,91 @@ const LecturerCourseSave = () => {
                             </div>
                         ))}
                     </div>
-                    {window.location.pathname.normalize().includes('admin') ? (
-                        <>
-                            {(myCourse?.courseType === 'WAITING' || myCourse?.courseType === "CHANGE_PRICE") && (
-                                <>
-                                    <div div onClick={() => setOpenApprovePublishDialog(true)} className='min-w-[12rem] px-2 h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-[#3366cc] border-[#003a47] flex justify-center items-center'>
-                                        <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                            Duyệt
-                                        </Typography>
-                                    </div>
-                                    <Dialog
-                                        open={openApprovePublishDialog}
-                                        onClose={() => setOpenApprovePublishDialog(false)}
-                                        aria-labelledby="alert-dialog-title"
-                                        width='lg'
-                                        aria-describedby="alert-dialog-description" >
-                                        <DialogTitle id="alert-dialog-title">
-                                            {
-                                                <>
-                                                    <Typography className='font-bold text-lg text-[#9b9b9b]'>Duyệt khóa học: <span className='underline text-black'>{myCourse?.name}</span></Typography>
-                                                </>
-                                            }
-                                        </DialogTitle>
-                                        <DialogContent>
-                                            <DialogContentText id="alert-dialog-description">
-                                                <span className='block font-semibold text-lg'>
-                                                    Với giá:
-                                                    {(myCourse?.price_sell > 0) ? (
-                                                        <>
-                                                            &nbsp;<span className='font-bold text-lg text-black underline mx-1'>{(myCourse?.price_sell.toLocaleString())}</span>&nbsp;Vnđ
-                                                        </>
-                                                    ) : (
-                                                        <span className='font-bold text-lg text-black'> Miễn phí</span>
-                                                    )}
-                                                    {(myCourse?.attributes?.length > 0 && myCourse?.attributes[0]?.attributeValue) ? (
-                                                        <div>
-                                                            Với giá bán mới:
-                                                            &nbsp;<span className='font-bold text-lg text-black underline mx-1'>{myCourse?.attributes[0]?.attributeValue ? (parseInt(myCourse?.attributes[0]?.attributeValue).toLocaleString()) : (myCourse?.price_sell.toLocaleString())}</span>&nbsp;Vnđ
-                                                        </div>
-                                                    ) : (
-                                                        <></>
-                                                    )}
-                                                </span>
-                                                {/* <span className='block font-normal text-lg mt-4'>
+                    <div className='flex gap-4'>
+                        <NavLink
+                            className='min-w-[12rem] px-2 h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-[#3366cc] border-[#003a47] flex justify-center items-center'
+                            to={`${window.location.pathname.normalize().includes('admin') ? '/admin' : '/lecturer'}/courses/${myCourse?.slug}/preview`}>
+                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                Preview
+                            </Typography>
+                        </NavLink>
+                        {window.location.pathname.normalize().includes('admin') ? (
+                            <>
+                                {(myCourse?.courseType === 'WAITING' || myCourse?.courseType === "CHANGE_PRICE") && (
+                                    <>
+                                        {myCourse?.courseType === 'DRAFT' && (
+                                            <div onClick={() => setOpenPublishDialog(true)} className='min-w-[12rem] px-2 h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-[#3366cc] border-[#003a47] flex justify-center items-center'>
+                                                <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                                    Xuất bản
+                                                </Typography>
+                                            </div>
+                                        )}
+                                        <div div onClick={() => setOpenApprovePublishDialog(true)} className='min-w-[12rem] px-2 h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-[#3366cc] border-[#003a47] flex justify-center items-center'>
+                                            <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                                Duyệt
+                                            </Typography>
+                                        </div>
+                                        <Dialog
+                                            open={openApprovePublishDialog}
+                                            onClose={() => setOpenApprovePublishDialog(false)}
+                                            aria-labelledby="alert-dialog-title"
+                                            width='lg'
+                                            aria-describedby="alert-dialog-description" >
+                                            <DialogTitle id="alert-dialog-title">
+                                                {
+                                                    <>
+                                                        <Typography className='font-bold text-lg text-[#9b9b9b]'>Duyệt khóa học: <span className='underline text-black'>{myCourse?.name}</span></Typography>
+                                                    </>
+                                                }
+                                            </DialogTitle>
+                                            <DialogContent>
+                                                <DialogContentText id="alert-dialog-description">
+                                                    <span className='block font-semibold text-lg'>
+                                                        Với giá:
+                                                        {(myCourse?.price_sell > 0) ? (
+                                                            <>
+                                                                &nbsp;<span className='font-bold text-lg text-black underline mx-1'>{(myCourse?.price_sell.toLocaleString())}</span>&nbsp;Vnđ
+                                                            </>
+                                                        ) : (
+                                                            <span className='font-bold text-lg text-black'> Miễn phí</span>
+                                                        )}
+                                                        {(myCourse?.attributes?.length > 0 && myCourse?.attributes[0]?.attributeValue) ? (
+                                                            <div>
+                                                                Với giá bán mới:
+                                                                &nbsp;<span className='font-bold text-lg text-black underline mx-1'>{myCourse?.attributes[0]?.attributeValue ? (parseInt(myCourse?.attributes[0]?.attributeValue).toLocaleString()) : (myCourse?.price_sell.toLocaleString())}</span>&nbsp;Vnđ
+                                                            </div>
+                                                        ) : (
+                                                            <></>
+                                                        )}
+                                                    </span>
+                                                    {/* <span className='block font-normal text-lg mt-4'>
                                                 Xuất bản khóa học sẽ không thể chỉnh sửa lại được.
                                                 <br />
                                                 Bạn có chắc chắn muốn xuất bản khóa học này?
                                             </span> */}
-                                            </DialogContentText>
-                                        </DialogContent>
-                                        <DialogActions>
-                                            <Button onClick={() => rejectCourse(false)} className='hover:opacity-70 text-white bg-[#3366cc] pt-2'>Xác nhận</Button>
-                                            <Button onClick={() => rejectCourse(true)} className='hover:opacity-70 text-white bg-orange-500 mr-4 pt-2'>Từ chối</Button>
-                                            <Button onClick={() => setOpenApprovePublishDialog(false)} className='hover:opacity-70 text-white bg-red-500 mr-4 pt-2'>Hủy</Button>
-                                        </DialogActions>
-                                    </Dialog>
-                                </>
-                            )}
-                        </>
-                    ) : (
-                        <>
-                            {myCourse?.courseType === 'DRAFT' && (
-                                <div onClick={() => setOpenPublishDialog(true)} className='min-w-[12rem] px-2 h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-[#3366cc] border-[#003a47] flex justify-center items-center'>
-                                    <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
-                                        Xuất bản
-                                    </Typography>
-                                </div>
-                            )}
-                        </>
-                    )}
+                                                </DialogContentText>
+                                            </DialogContent>
+                                            <DialogActions>
+                                                <Button onClick={() => rejectCourse(false)} className='hover:opacity-70 text-white bg-[#3366cc] pt-2'>Xác nhận</Button>
+                                                <Button onClick={() => rejectCourse(true)} className='hover:opacity-70 text-white bg-orange-500 mr-4 pt-2'>Từ chối</Button>
+                                                <Button onClick={() => setOpenApprovePublishDialog(false)} className='hover:opacity-70 text-white bg-red-500 mr-4 pt-2'>Hủy</Button>
+                                            </DialogActions>
+                                        </Dialog>
+                                    </>
+                                )}
+                            </>
+                        ) : (
+                            <>
+                                {myCourse?.courseType === 'DRAFT' && (
+                                    <div onClick={() => setOpenPublishDialog(true)} className='min-w-[12rem] px-2 h-[50px] border group/sort duration-200  hover:bg-[#3366cc] hover:text-white cursor-pointer hover:border-[#3366cc] border-[#003a47] flex justify-center items-center'>
+                                        <Typography className='font-semibold text-base group-hover/sort:text-white duration-200 text-black'>
+                                            Xuất bản
+                                        </Typography>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
                 </div>
                 <div className='p-3 shadow-md my-8 border  mb-4'>
                     <div className=''>

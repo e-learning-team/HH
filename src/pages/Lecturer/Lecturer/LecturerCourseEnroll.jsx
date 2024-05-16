@@ -292,7 +292,7 @@ const LecturerCourseEnroll = () => {
                     totalRecords={invoiceList.total}
                     onPage={onPage}
                     paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-                    currentPageReportTemplate="Hiển thị {first} đến {last} của {totalRecords}"
+                    currentPageReportTemplate={invoiceList?.data ? 'Hiển thị {first} đến {last} của {totalRecords}' : 'Không có dữ liệu'}
                     rowsPerPageOptions={[10, 20, 50]}
                     onSort={onSort}
                     emptyMessage="Danh sách doanh thu rỗng"

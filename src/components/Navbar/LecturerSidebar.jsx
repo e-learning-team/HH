@@ -11,7 +11,7 @@ export const LectureSidebar = ({ handleHover }) => {
     const navigate = useNavigate();
     const Menus = [
         { title: "Khóa học", src: faTv, path: Path.LECTURER_P + Path.LECTURER_COURSE },
-        { title: "Số liệu", src: faArrowTrendUp, path: Path.LECTURER_P + "1" },
+        // { title: "Số liệu", src: faArrowTrendUp, path: Path.LECTURER_P + "1" },
         { title: "Doanh thu", src: faDollarSign, path: Path.LECTURER_P + Path.LECTURER_SALE },
         { title: "Cá nhân", src: faIdBadge, path: Path.LECTURER_P + Path.LECTURER_PROFILE  },
         // { title: "Schedule ", src: "Calendar" },
