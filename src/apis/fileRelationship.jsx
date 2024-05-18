@@ -20,3 +20,11 @@ export const apiDeleteFileByPathFile = (params) => axios({
         'Authorization': ``,
     }
 });
+
+export const apiDeleteFileById = (id) => axios({
+    url: `file-relationship/delete/${id}`,
+    method: 'delete',
+    headers: {
+        'Authorization': ``,
+    }
+});

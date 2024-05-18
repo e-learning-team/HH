@@ -9,7 +9,7 @@ import { MultiSelect } from 'primereact/multiselect';
 import { apiChangeCourseType, apiDeleteCourse, apiGetCourse, apiLecturePublishCourse, apiSaveCourse, apiUpdateIsPreview } from '../../../apis/course';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp, faFloppyDisk, faPen, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { apiDeleteFileByPathFile, apiUploadFile } from '../../../apis/fileRelationship';
+import { apiDeleteFileByPathFile, apiUploadFile, apiDeleteFileById } from '../../../apis/fileRelationship';
 import { Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -18,6 +18,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Checkbox } from "primereact/checkbox";
+import SpinnerCustom from '../../../components/Spinner/SpinnerCustom';
+import { Fieldset } from 'primereact/fieldset';
+import { Button as PrimeButton } from 'primereact/button';
+import { Chip } from 'primereact/chip';
 const IntroductionContent = ({ content, handleChange }) => {
     const [loading, setLoading] = useState(false);
     const [processing, setProcessing] = useState(true);
@@ -240,6 +244,118 @@ const IntroductionContent = ({ content, handleChange }) => {
         </>
     );
 };
+
+const Attachment = ({ content, handleChange }) => {
+    const [processing, setProcessing] = useState(false);
+    const [fileInputRef, setFileInputRef] = useState(null);
+    const [attachments, setAttachments] = useState(content?.attachments);
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            handleUploadFile(file);
+        }
+    };
+
+    const uploadFile = async (file) => {
+        const params = {
+            parent_id: content?.id,
+            parent_type: "COURSE_ATTACHMENT"
+        };
+
+        if (file) {
+            setProcessing(true);
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                const videoUrl = await apiUploadFile(formData, params);
+                if (videoUrl && videoUrl.data?.id) {
+                    if(attachments?.length > 0) {
+                        setAttachments((a) => [...a, videoUrl.data])
+                    } else {
+                        setAttachments([videoUrl.data])
+                    }
+                    toast.success("Tải lên thành công!", {
+                        position: toast.POSITION.TOP_RIGHT,
+                    });
+                }
+            } catch (e) {
+                toast.error(`Tải lên không thành công!`, {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            } finally {
+                setProcessing(false);
+            }
+        }
+    };
+    const handleUploadFile = async (file) => {
+
+        if (file) {
+            await uploadFile(file);
+        } else {
+            console.warn('No file selected for upload.');
+        }
+    };
+    const deleteFile = async (file) => {
+        if (file) {
+            console.log("delete file")
+            await apiDeleteFileById(file.id);
+            setAttachments((a) => a.filter((f) => f.id !== file.id));
+            toast.success("Xóa file thành công!", {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+        } else {
+            console.warn('No file to delete.');
+        }
+    };
+    useEffect(() => {
+        console.log(content)
+        document.title = "Chỉnh sửa khóa học";
+    }, []);
+    const ChipTemplate = (file, actionDelete) => (
+        <>
+            <div className=" flex flex-wrap gap-1 items-center">
+                {/* <span className="leading-normal my-1.5 font-medium">{file.name}</span> */}
+                <a href={file?.download_link} target="_blank" rel="noopener noreferrer" className="leading-normal my-1.5 font-medium hover:text-[#3366cc] peer ">
+                    {file.name}
+                </a>
+                <span title="Xoá" className="pi pi-times-circle cursor-pointer hover:text-red-600 peer-hover:hidden" onClick={() => { deleteFile(file) }}></span>
+                <span className="pi pi-cloud-download cursor-pointer hidden peer-hover:inline-block"></span>
+            </div>
+        </>
+    );
+
+    return (
+        <div className='flex-1'>
+            {processing ? <SpinnerCustom /> : null}
+            <div className="p-inputgroup flex-1">
+                <Fieldset className="w-full p-0 flex items-center">
+                    {attachments?.length > 0 ? <>
+                        <div className="flex flex-wrap gap-2">
+                            {attachments.map((file, index) => (
+                                <Chip template={ChipTemplate(file)} />
+                                // <Chip label={file.name} removable />
+                            ))}
+                        </div>
+                    </> : <p>Không có file được chọn.</p>
+                    }
+                </Fieldset>
+                <>
+                    <input
+                        type="file"
+                        accept="*/*"
+                        style={{ display: 'none' }}
+                        onChange={handleFileChange}
+                        ref={(fileInput) => (setFileInputRef(fileInput))}
+                    />
+                    <PrimeButton onClick={() => fileInputRef && fileInputRef.click()} disabled={processing} label="Tải lên" icon="pi pi-cloud-upload" className="w-[150px] bg-[#3366cc]" />
+                </>
+            </div>
+            {/* <div className='w-full flex justify-between items-center mb-2 relative h-[35px] border rounded-sm border-[#003a47]'>
+                
+            </div> */}
+        </div>
+    );
+}
 
 const VideoContent = ({ content, handleChange }) => {
     const [fileInputRef, setFileInputRef] = useState(null);
@@ -641,6 +757,7 @@ const CourseContent = ({ content, reload }) => {
     const [processing, setProcessing] = useState(false);
     const [level3Add, setLevel3Add] = useState(false);
     const [checked, setChecked] = useState(false);
+    const [change, setChange] = useState({});
     const handleInputChange = (event, index, level3Index = null) => {
         const newCourses = [...courses];
         if (level3Index !== null) {
@@ -794,6 +911,7 @@ const CourseContent = ({ content, reload }) => {
             //     parent_ids: content?.id,
             //     build_child: true,
             // };
+            console.log("reload ---");
             const paramsAPI = new URLSearchParams();
             paramsAPI.append('ids', content?.id);
             paramsAPI.append('build_child', true);
@@ -871,13 +989,19 @@ const CourseContent = ({ content, reload }) => {
         setCourses(newCourses);
         setProcessing(false);
     };
+    const [file, setFile] = useState({})
+    const handleFileChange = (file) => {
+        setFile(file);
+        console.log("file---", file);
+    }
     useEffect(() => {
         getCourseChild();
         console.log('---reload', reload);
+        console.log("change=====", change)
         return () => {
             setCourses([]);
         };
-    }, [reload]);
+    }, [reload, change, file]);
 
     return (
         <div className='relative flex items-center min-h-[250px]'>
@@ -1054,6 +1178,12 @@ const CourseContent = ({ content, reload }) => {
                                                                             }} />
                                                                         )} */}
                                                                     </div>
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <div className='flex-1'>
+                                                                    <Typography className='font-medium'>Tài liệu đính kèm</Typography>
+                                                                    <Attachment content={level3Course} handleChange={handleFileChange} />
                                                                 </div>
                                                             </div>
                                                         </div>
