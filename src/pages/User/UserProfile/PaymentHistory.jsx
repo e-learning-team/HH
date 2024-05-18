@@ -278,7 +278,7 @@ const UserHistory = () => {
         </ColumnGroup>
     );
     return (
-        <div className="bg-[url('../assets/insbg.png')] bg-no-repeat">
+        <div className="">
             <div className="rounded-lg  p-6 pt-2 border-1 border-[#dfe7ef] ">
                 {header}
                 <DataTable

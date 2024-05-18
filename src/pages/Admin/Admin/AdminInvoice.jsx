@@ -206,11 +206,11 @@ const AdminInvoice = () => {
                     <label htmlFor="from" className="font-bold">
                         Lọc từ ngày: &nbsp;
                     </label>
-                    <Calendar id="from" value={fromDate} onChange={(e) => {setFromDate(e.value); }} showTime dateFormat="dd/mm/yy" hourFormat="24"/>
+                    <Calendar id="from" value={fromDate} onChange={(e) => { setFromDate(e.value); }} showTime dateFormat="dd/mm/yy" hourFormat="24" />
                     <label htmlFor="from" className="font-bold">
                         &nbsp; đến ngày: &nbsp;
                     </label>
-                    <Calendar id="from" value={toDate} onChange={(e) => { setToDate(e.value);  }} showTime dateFormat="dd/mm/yy" hourFormat="24"/>
+                    <Calendar id="from" value={toDate} onChange={(e) => { setToDate(e.value); }} showTime dateFormat="dd/mm/yy" hourFormat="24" />
                 </div>
             </div>
         </div>
@@ -305,7 +305,7 @@ const AdminInvoice = () => {
                     totalRecords={invoiceList.total}
                     onPage={onPage}
                     paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-                    currentPageReportTemplate="Hiển thị {first} đến {last} của {totalRecords}"
+                    currentPageReportTemplate={invoiceList?.data ? 'Hiển thị {first} đến {last} của {totalRecords}' : 'Không có dữ liệu'}
                     rowsPerPageOptions={[10, 20, 50]}
                     onSort={onSort}
                     emptyMessage="Danh sách doanh thu rỗng"

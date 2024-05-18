@@ -32,6 +32,7 @@ import noImg from '../../assets/no-image-icon.jpg';
 import { apiGetComment } from '../../apis/comment';
 import { Comments } from '../../components/Comments/Comments';
 import { apiUserDetail } from '../../apis/user';
+import SpinnerCustom from '../../components/Spinner/SpinnerCustom';
 
 const CourseDeTail = () => {
     const { isLoggedIn, userData, token, isLoading, message } = useSelector((state) => state.user);
@@ -54,7 +55,17 @@ const CourseDeTail = () => {
     const dispatch = useDispatch();
     const getCurrentCourse = async () => {
         try {
-            const response = await apiGetCourse({ slug: slug, build_child: true });
+            const paramsAPI = new URLSearchParams();
+            paramsAPI.append('slug', slug);
+            paramsAPI.append('build_child', true);
+            paramsAPI.append('search_type', 'OFFICIAL');
+            paramsAPI.append('search_type', 'CHANGE_PRICE');
+            if (window.location.pathname.normalize().includes('admin') || window.location.pathname.normalize().includes('lecturer')) {
+                paramsAPI.append('search_type', 'DRAFT');
+                paramsAPI.append('search_type', 'WAITING');
+            }
+
+            const response = await apiGetCourse(paramsAPI);
             if (!response.data && !response.data && response.data.data?.length === 0 || response.data?.data[0]?.level != 1) {
                 // toast.error("Đã xảy ra lỗi", {
                 //     position: toast.POSITION.TOP_RIGHT,
@@ -207,7 +218,7 @@ const CourseDeTail = () => {
         <div className="bg-[url('../assets/insbg.png')]">
             {loading ? (
                 <div className=' flex justify-center h-screen items-center'>
-                    <Spinner className='w-20 h-auto' color="teal" />
+                    <SpinnerCustom />
                 </div>
             ) : (isError ? (
                 <div className=' absolute top-0 bottom-0 left-0 right-0 m-auto w-full h-full'>
@@ -324,7 +335,7 @@ const CourseDeTail = () => {
                             </div>
                             <div className='mt-4 max-w-[46rem]'>
                                 <div>
-                                    <div className='' dangerouslySetInnerHTML={{
+                                    <div className='prose' dangerouslySetInnerHTML={{
                                         __html: `${course.data[0].description || `Không có mô tả`}`
                                     }} />
                                     {/* <span>
@@ -347,7 +358,7 @@ const CourseDeTail = () => {
                                 </svg>
                                 </NavLink>
                             </div>
-                            <div className='mt-4 max-w-[46rem]'>
+                            <div className='mt-4  max-w-[46rem]'>
                                 {course.data.length > 0 && (
                                     <>
                                         {course.data[0].children.map((child) => (
@@ -365,7 +376,7 @@ const CourseDeTail = () => {
                                 </h1>
                             </div>
                             <div className='mt-4 max-w-[46rem]'>
-                                <div className='' dangerouslySetInnerHTML={{
+                                <div className='prose' dangerouslySetInnerHTML={{
                                     __html: `${course.data[0].requirement || `Không có yêu cầu`}`
                                 }} />
                             </div>
@@ -432,7 +443,7 @@ const CourseDeTail = () => {
                                     </div>
                                     <div className="leading-10 text-justify  text-[16px]">
                                         <div className={`prose w-full min-h-[200px]`} dangerouslySetInnerHTML={{
-                                            __html: `${lecturer?.description || `Chưa thêm mô tả`}`
+                                            __html: `${lecturer?.description || ``}`
                                         }} />
                                         {/* <strong>Giảng viên Hà Kế Tú - Haketu</strong> với kinh nghiệm 12 năm để chơi đàn và nghiên cứu về âm nhạc, 5 năm kinh nghiệm tổ chức các khóa học Guitar offline tại Úc và Hà Nội, đào tạo hàng trăm học viên trong những khóa: Guitar cổ điển, Fingerstyle và Đệm hát.
                                         <strong>Hà Kế Tú</strong>&nbsp;hay còn thường gọi là Haketu&nbsp;là một trong những Giảng viên, Youtuber có tên tuổi trong cộng đồng Guitar tại Việt Nam.&nbsp;
