@@ -212,7 +212,7 @@ const Home = () => {
                 <FontAwesomeIcon className='leading-[45px] text-center text-[20px] text-white' icon={faBook} />
               </a>
               <div className="py-[10px] pl-[13px]">
-                <h4 className="text-xl font-bold">409 Khóa học trực tuyến</h4>
+                <h4 className="text-xl font-bold">Khóa học trực tuyến</h4>
                 <p className="text-sm text-[#9f9f9f]">Khám phá nhiều chủ đề mới</p>
               </div>
             </div>
