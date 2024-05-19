@@ -330,7 +330,7 @@ const CourseDeTail = () => {
                         <div className='my-0 mx-auto py-12 max-w-6xl sm:px-6 sm:pb-6 md:px-6 md:pb-6'>
                             <div className='max-w-[46rem] '>
                                 <h1 className='font-bold text-2xl'>
-                                    TÓM TẮT
+                                    MÔ TẢ KHOÁ HỌC
                                 </h1>
                             </div>
                             <div className='mt-4 max-w-[46rem]'>

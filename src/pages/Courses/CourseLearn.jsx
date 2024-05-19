@@ -24,7 +24,8 @@ import { apiGetCourse } from '../../apis/course';
 import { apiGetComment } from '../../apis/comment';
 import { Comments } from '../../components/Comments/Comments';
 import Button from '../../components/Button/Button';
-
+import { Fieldset } from 'primereact/fieldset';
+import { Chip } from 'primereact/chip';
 const CourseLearn = () => {
     const { isLoggedIn, userData, token, isLoading, message } = useSelector((state) => state.user);
     const { slug } = useParams();
@@ -227,6 +228,18 @@ const CourseLearn = () => {
         }
     }
 
+    const ChipTemplate = (file) => (
+        <>
+            <a href={file?.download_link} target="_blank" className="flex flex-wrap gap-1 items-center hover:opacity-25 group/item">
+                {/* <span className="leading-normal my-1.5 font-medium">{file.name}</span> */}
+                <span rel="noopener noreferrer" className="leading-normal my-1.5 font-medium">
+                    {file.name}
+                </span>
+                <span className="pi pi-cloud-download hidden group-hover/item:inline-block"></span>
+            </a>
+        </>
+    );
+
     useEffect(() => {
         getCourseComment();
     }, [commentPage, currentCourse]);
@@ -326,25 +339,25 @@ const CourseLearn = () => {
                                                     <Typography className='font-bold text-base mb-4'>
                                                         <span>{currentCourse.name}</span>
                                                     </Typography>
+                                                    {currentCourse.attachments && (
+                                                        <div>
+                                                            <Typography className='font-medium'>Tài liệu đính kèm</Typography>
+                                                            <Fieldset className="w-full p-0 flex items-center">
+                                                                {currentCourse.attachments?.length > 0 ? <>
+                                                                    <div className="flex flex-wrap gap-2">
+                                                                        {currentCourse.attachments.map((file, index) => (
+                                                                            <Chip template={ChipTemplate(file)} />
+                                                                            // <Chip label={file.name} removable />
+                                                                        ))}
+                                                                    </div>
+                                                                </> : <p>Không có tài liệu đính kèm.</p>
+                                                                }
+                                                            </Fieldset>
+                                                        </div>
+                                                    )}
                                                     <div className='' dangerouslySetInnerHTML={{
                                                         __html: `${currentCourse.description || `Không có mô tả`}`
                                                     }} />
-                                                    {/* {Array.from({ length: 4 }).map((_, index) => (
-                                                        <Typography key={index} className='font-normal mb-4'>
-                                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                                                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                                        </Typography>
-                                                    ))} */}
                                                 </span>
                                             </TabPanel>
                                             <TabPanel header="Đánh giá">
@@ -439,9 +452,6 @@ const CourseLearn = () => {
                                                         ) : null}
                                                     </div>
                                                 </div>
-                                            </TabPanel>
-                                            <TabPanel header="Ghi Chú" disabled title="Sẽ cập nhật">
-
                                             </TabPanel>
                                         </TabView>
                                     </div>

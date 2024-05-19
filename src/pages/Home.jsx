@@ -407,7 +407,7 @@ const Home = () => {
                       // }}
                       >
                         <div className="w-[72px] h-[72px] rounded-full bg-white relative mx-auto flex flex-col justify-center items-center mb-8 group-hover:bg-[#E3F9F6]">
-                          <img src={category.image} alt="" className="w-[64px] h-[64px] object-contain" />
+                          <img src={category.image} alt="" className="rounded-full w-[64px] h-[64px] object-contain" />
                         </div>
                         <div className="">
                           <h4 className=" text-2xl  mb-2 font-medium">{category.title}</h4>

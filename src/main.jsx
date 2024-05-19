@@ -13,11 +13,13 @@ import "primeicons/primeicons.css";
 import { PrimeReactProvider } from 'primereact/api';
 import 'flowbite';
 import 'flowbite-react'
+import { ScrollTop } from 'primereact/scrolltop';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <PrimeReactProvider>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <BrowserRouter>
+          <ScrollTop />
           <ToastContainer />
           <App />
           {/* <Cursor/> */}

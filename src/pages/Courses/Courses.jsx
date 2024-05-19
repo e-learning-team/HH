@@ -15,6 +15,7 @@ import { Pagination } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { Dropdown } from 'primereact/dropdown';
 import noImg from "../../assets/no-image-icon.jpg";
+import emptySearch from "../../assets/empty_search.gif";
 import { extractIdSlug } from '../../utils/helper';
 import { Button } from 'primereact/button';
 //icon
@@ -163,7 +164,7 @@ const Courses = () => {
         document.title = searchParams.get('keyword') || "Tìm kiếm";
         searchCategory();
         searchCourse();
-        
+
     }, [searchParams, isLoggedIn]);
 
 
@@ -300,7 +301,7 @@ const Courses = () => {
                                         <>
                                             {categories?.map((category, index) => (
                                                 <li class="block">
-                                                    <span onClick={() => handleClickCategory(category)} className={`cursor-pointer flex justify-between items-center py-[17px] px-5 rounded hover:bg-[#4cbdff] hover:text-white transition-all duration-150 text-[#676e7b] ${(categoryId===category?.id)? "bg-[#4cbdff] text-white" : "bg-[#F8F8F8]"}`}>
+                                                    <span onClick={() => handleClickCategory(category)} className={`cursor-pointer flex justify-between items-center py-[17px] px-5 rounded hover:bg-[#4cbdff] hover:text-white transition-all duration-150 text-[#676e7b] ${(categoryId === category?.id) ? "bg-[#4cbdff] text-white" : "bg-[#F8F8F8]"}`}>
                                                         <span className="text-inherit">{category.title}</span>
                                                         <span class=" text-2xl">
                                                             <FontAwesomeIcon icon={faAngleRight} className="text-inherit" />
@@ -393,7 +394,20 @@ const Courses = () => {
                                 </>
                                 : (
                                     <>
-                                        Không có kết quả!
+                                        <div>
+                                            <div className="w-full px-4 mx-auto min-h-[200px] max-w-8xl lg:px-20 md:px-10 pt-12">
+                                                <h2 className="font-semibold text-3xl">Xin lỗi, chúng tôi không thấy kết quả cho "{keySearch}"</h2>
+                                                <div className="search_style mt-8"><p className="text-xl font-semibold">Hãy thử điều chỉnh tìm kiếm của bạn. Đây là một số gợi ý:</p>
+                                                    <ul className="list-disc mt-6 pl-5">
+                                                        <li className="leading-5">Hãy chắc chắn rằng tất cả các từ đều đúng chính tả.</li>
+                                                        <li className="leading-5">Hãy thử các cụm từ tìm kiếm khác nhau.</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-center">
+                                                <img className="max-h-[500px]" src={emptySearch}></img>
+                                            </div>
+                                        </div>
                                     </>
                                 )
                             )}
