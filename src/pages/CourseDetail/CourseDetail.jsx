@@ -134,7 +134,7 @@ const CourseDeTail = () => {
             return;
         }
         const data = {
-            user_id: userData.id,
+            user_id: userData?.id,
             course_id: extractIdSlug(slug),
         };
         //Kiểm tra nếu có giá tiền thì thanh toán trc khi enroll
@@ -285,11 +285,11 @@ const CourseDeTail = () => {
                                             <span className='font-mono font-semibold'>{course.data[0].price_sell ? course.data[0].price_sell.toLocaleString() + "₫" : (<>Miễn phí</>)}</span>
                                         </div>
                                         <div className='mb-6 flex gap-2'>
-                                            {(isEnrolled && !(userData.roles.includes("ROLE_ADMIN"))) ? (
+                                            {(isEnrolled && !(userData?.roles.includes("ROLE_ADMIN"))) ? (
                                                 <NavLink to={`/courses/learn/${slug}`} className="flex-1 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm ring-1 ring-inset bg-[#29abe2] shadow-lg w-full h-[60px] hover:bg-[#088ab7] font-bold text-white">Học ngay</NavLink>
                                             ) : (
                                                 <>
-                                                    {(userData.roles.includes("ROLE_ADMIN")) ? (
+                                                    {(userData?.roles?.includes("ROLE_ADMIN")) ? (
                                                         <>
                                                             <NavLink to={`/admin/courses/learn/${slug}/preview`} className="flex-1 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm ring-1 ring-inset bg-[#29abe2] shadow-lg w-full h-[60px] hover:bg-[#088ab7] font-bold text-white">Xem ngay</NavLink>
                                                         </>

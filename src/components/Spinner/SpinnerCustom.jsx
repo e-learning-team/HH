@@ -12,7 +12,7 @@ export default function SpinnerCustom() {
         };
     }, []);
     return (
-        <div wire:loading className="fixed bottom-0 left-0 right-0 mt-[80px] z-50 flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-gray-300 opacity-75">
+        <div  className="fixed bottom-0 left-0 right-0 mt-[80px] z-50 flex h-screen w-full flex-col items-center justify-center overflow-hidden bg-gray-300 opacity-75">
             <div className="relative top-[-80px] flex items-center justify-center">
                 <div className="absolute h-32 w-32 animate-spin rounded-full border-b-4 border-t-4 border-[#4cbdff]"></div>
                 <img src={image} className="h-28 w-28 rounded-full" />

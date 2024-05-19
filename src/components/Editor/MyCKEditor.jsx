@@ -18,7 +18,7 @@ export const MyCKEditor = ({handleData, data, parent_id, type, className}) => {
                     loader.file.then((file) => {
                         body.append("file", file);
                         const params = {
-                            parent_id: parent_id || userData.id,
+                            parent_id: parent_id || userData?.id,
                             parent_type: type || "USER_PROFILE_DESCRIPTION"
                         };
                         apiUploadFile(body, params)

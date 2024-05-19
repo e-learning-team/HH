@@ -43,7 +43,7 @@ const Admin = () => {
     useEffect(() => {
         if (isLoggedIn) {
             getUserDetail();
-            if (userData.roles.includes("ROLE_ADMIN") || userData.roles.includes("ROLE_MANAGER")) {
+            if (userData?.roles.includes("ROLE_ADMIN") || userData?.roles.includes("ROLE_MANAGER")) {
                 const currentPath = window.location.pathname.normalize();
                 if (currentPath === `${Path.ADMIN_P.trim()}` || currentPath === `/admin` || currentPath === `/admin/`) {
                     navigate(Path.ADMIN_P + Path.ADMIN_USER);

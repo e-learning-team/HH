@@ -51,7 +51,7 @@ const Login = () => {
     useEffect(() => {
         document.title = 'Đăng nhập';
         if (isLoggedIn) {
-            if (userData.roles.includes("ROLE_LECTURE")) {
+            if (userData?.roles.includes("ROLE_LECTURE")) {
                 navigate(`${Path.ADMIN_P}`)
             } else {
                 navigate(-1)

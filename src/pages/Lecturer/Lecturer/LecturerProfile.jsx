@@ -89,7 +89,7 @@ const LecturerProfile = () => {
     };
     const uploadAvatar = async () => {
         const params = {
-            parent_id: userData.id,
+            parent_id: userData?.id,
             parent_type: "USER_AVATAR"
         };
         try {
@@ -117,7 +117,7 @@ const LecturerProfile = () => {
         }
     };
     const handleUploadImg = async () => {
-        if (isLoggedIn && userData && userData.id) {
+        if (isLoggedIn && userData && userData?.id) {
             if (img) {
                 setImgLoading(true);
 
@@ -244,13 +244,13 @@ const LecturerProfile = () => {
         if (userData) {
             // getUserDetail();
             setProfilePayload({
-                email: userData.email || "",
-                full_name: userData.full_name || "",
-                address: userData.address || "",
-                phone_number: userData.phone_number || "",
-                profile_link: userData.profile_link || "",
-                description: userData.description || "",
-                specialization: userData.specialization || ""
+                email: userData?.email || "",
+                full_name: userData?.full_name || "",
+                address: userData?.address || "",
+                phone_number: userData?.phone_number || "",
+                profile_link: userData?.profile_link || "",
+                description: userData?.description || "",
+                specialization: userData?.specialization || ""
             });
         }
         // setprofileLoading(false);

@@ -45,7 +45,7 @@ const Lecturer = () => {
     useEffect(() => {
         if (isLoggedIn) {
             getUserDetail();
-            if (!userData.roles.includes("ROLE_LECTURE")) {
+            if (!userData?.roles.includes("ROLE_LECTURE")) {
                 navigate(Path.LECTURER_P + Path.LECTURER_REGISTER);
                 // toast.warning("Hãy đăng kí tài khoản giảng viên trước")
             } else {
@@ -71,7 +71,7 @@ const Lecturer = () => {
     }, [userData]);
     return (
         <>
-            {isLoggedIn && userData.roles.includes("ROLE_LECTURE") && (
+            {isLoggedIn && userData?.roles.includes("ROLE_LECTURE") && (
                 <div className="flex  w-full bg-[url('../assets/insbg.png')]">
                     <LectureSidebar className='' handleHover={handleHover} />
                     {/* <div className={`h-[999px] w-full duration-500  ml-20 ${isHover && 'ml-[13rem]'}`}> */}
