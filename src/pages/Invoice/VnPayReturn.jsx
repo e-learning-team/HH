@@ -24,9 +24,9 @@ const VnPayReturn = () => {
             if (searchParams.get('vnp_ResponseCode') === '00') {
                 const data = {
                     courseId: extractIdSlug(course_payment),
-                    customerId: userData.id,
+                    customerId: userData?.id,
                     pricePurchase: searchParams.get('vnp_Amount') / 100,
-                    createdBy: userData.id
+                    createdBy: userData?.id
                 };
                 const resp = await apiCreatePayment(data);
                 if (resp.status !== 0) {

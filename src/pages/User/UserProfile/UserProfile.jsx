@@ -75,7 +75,7 @@ const UserProfile = () => {
     };
     const uploadAvatar = async () => {
         const params = {
-            parent_id: userData.id,
+            parent_id: userData?.id,
             parent_type: "USER_AVATAR"
         };
         try {
@@ -103,7 +103,7 @@ const UserProfile = () => {
         }
     };
     const handleUploadImg = async () => {
-        if (isLoggedIn && userData && userData.id) {
+        if (isLoggedIn && userData && userData?.id) {
             if (img) {
                 setImgLoading(true);
 
@@ -248,10 +248,10 @@ const UserProfile = () => {
         // } else {
         if (userData) {
             setProfilePayload({
-                email: userData.email || "",
-                full_name: userData.full_name || "",
-                address: userData.address || "",
-                phone_number: userData.phone_number || ""
+                email: userData?.email || "",
+                full_name: userData?.full_name || "",
+                address: userData?.address || "",
+                phone_number: userData?.phone_number || ""
             });
         }
         setprofileLoading(false);

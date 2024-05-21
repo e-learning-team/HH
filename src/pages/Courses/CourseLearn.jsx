@@ -158,7 +158,7 @@ const CourseLearn = () => {
         setLoadingVideo(true);
         setCurrentCourse(clickedContent);
         const data = {
-            user_id: userData.id,
+            user_id: userData?.id,
             course_id: extractIdSlug(slug),
             current_course: clickedContent.id
         };

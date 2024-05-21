@@ -22,8 +22,8 @@ export function ProfileMenu({ handleLogout }) {
             <MenuHandler className='!max-w-[50px] !max-h-[50px] !h-[50px] !w-[50px]  rounded-[50%] overflow-hidden cursor-pointer shadow-lg'>
                 <Avatar
                     variant="rounded"
-                    alt={userData.full_name}
-                    title={userData.full_name}
+                    alt={userData?.full_name}
+                    title={userData?.full_name}
                     className=""
                     src={avatarURL}
                 />
@@ -34,12 +34,12 @@ export function ProfileMenu({ handleLogout }) {
                         <img src={avatarURL} className="h-20 !max-w-[80px] !max-h-[80px] w-20 object-cover !rounded-[50%]" />
                         <div className="flex flex-col h-full justify-start">
                             <p className="text-left text-lg max-w-[180px] group-hover/item:underline group-hover/item:text-[#003a47] line-clamp-2  font-medium "
-                                title={userData.full_name} >
-                                {userData.full_name}
+                                title={userData?.full_name} >
+                                {userData?.full_name}
                             </p>
                             <p className="text-left max-w-[180px] truncate font-light"
-                                title={userData.email} >
-                                {userData.email}
+                                title={userData?.email} >
+                                {userData?.email}
                             </p>
                         </div>
                     </MenuItem>

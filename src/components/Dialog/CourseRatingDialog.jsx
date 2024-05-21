@@ -31,7 +31,7 @@ export const CourseRatingDialog = ({ open, setOpen, course, changeRate }) => {
             if (newValue && course?.id && userData?.id) {
                 // console.log("Call api");
                 const data = {
-                    user_id: userData.id,
+                    user_id: userData?.id,
                     course_id: course?.id,
                     rate: newValue
                 };
