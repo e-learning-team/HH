@@ -10,7 +10,7 @@ const Footer = () => {
             </div>
 
             <p className="mt-4 max-w-xs text-gray-500">
-              Chia sẻ kiến thức, kết nối đam mê.
+              Theo đuổi tri thức, phát triển tương lai của bạn.
             </p>
 
             <ul className="mt-8 flex gap-6">
