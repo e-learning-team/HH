@@ -128,7 +128,7 @@ const Home = () => {
     setLoadingTopCategory(false);
   }
   useEffect(() => {
-    document.title = "Trang chủ";
+    document.title = "Wisdom | Theo đuổi tri thức, phát triển tương lai của bạn.";
     buildCouses();
     getTopCategory();
     // console.log(categoryColor[1])
