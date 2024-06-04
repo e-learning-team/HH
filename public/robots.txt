@@ -4,4 +4,4 @@ Disallow: /admin/
 User-agent: *
 Allow: /
 
-Sitemap: https://www.example.com/sitemap.xml
+Sitemap: https://www.wisdom.io.vn/sitemap.xml
