@@ -314,7 +314,7 @@ const CourseLearn = () => {
                                             className='absolute top-0 left-0 bottom-0 right-0 m-auto'
                                             src={currentCourse?.video_path}
                                             allowFullScreen
-                                            width="640"
+                                            width="860"
                                             height="480"
                                             onLoad={handleLoadingVideo}
                                             allow="autoplay"
