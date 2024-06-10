@@ -25,7 +25,7 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { apiTopCategory } from '../apis/category';
 import { useSelector } from 'react-redux';
-
+import {Helmet} from "react-helmet";
 
 
 const Home = () => {
@@ -137,6 +137,11 @@ const Home = () => {
 
   return (
     <div>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Wisdom</title>
+        <meta name="description" content="Theo đuổi tri thức, phát triển tương lai của bạn. Khám phá hàng nghìn khóa học với mức giá thấp nhất chưa từng có! Với các giảng viên chuyên nghiệp, cùng với những khoá học trọn đời!" />
+      </Helmet>
       {/* <div className="pt-[40px] lg:mx-32 px-4 grid justify-center gap-6">
         <div className="flex justify-center">
           <Carousel
