@@ -28,6 +28,7 @@
     "@tailwindcss/typography": "^0.5.10",
     "autoprefixer": "^10.4.16",
     "axios": "^0.24.0",
+    "caniuse-lite": "^1.0.30001632",
     "ckeditor5-custom-build": "file:./ckeditor5",
     "clsx": "^2.0.0",
     "cors": "^2.8.5",
