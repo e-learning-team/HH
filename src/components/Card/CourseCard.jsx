@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import noImg from '../../assets/no-image-icon.jpg';
 import { Rating, Tooltip, Typography } from "@mui/material";
 import Path from "../../utils/path";
-import { faEyeLowVision } from "@fortawesome/free-solid-svg-icons";
+import { faEyeLowVision, faRotateLeft, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import Button from '@mui/material/Button';
@@ -20,7 +20,7 @@ const CourseCard = ({ content, changed }) => {
     const { isLoggedIn, avatarURL, userData, token, isLoading, message } = useSelector((state) => state.user);
     const totalRatings = content?.course_ratings;
     const [openPublishDialog, setOpenPublishDialog] = useState(false);
-    console.log(content?.id, content?.attributes);
+    // console.log(content?.id, content?.attributes);
 
     const rejectCourse = async (is_rejected) => {
         let type = content?.courseType;
@@ -81,6 +81,9 @@ const CourseCard = ({ content, changed }) => {
                             Tên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa học
                             Tên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa họcTên khóa học */}
                         </Typography>
+                        <Typography className="font-medium underline line-clamp-2 text-[14px]">
+                            ID: <span className="font-thin">{content?.id}</span>
+                        </Typography>
                     </div>
                     <div className="flex gap-x-2 items-center">
                         <div className="flex gap-x-2">
@@ -97,13 +100,13 @@ const CourseCard = ({ content, changed }) => {
                                 <Typography className={`font-medium bg-[#f93016] text-sm text-white p-1 px-2 rounded-lg`}> Chờ duyệt giá tiền </Typography>
                             )}
                         </div>
-                        <div className="flex gap-x-2">
+                        {/* <div className="flex gap-x-2">
                             {content?.is_deleted ? (
                                 <Typography className="font-light underline italic"> Đã bị ẩn </Typography>
                             ) : (
                                 <Typography className="font-light "> Công khai </Typography>
                             )}
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
@@ -179,7 +182,7 @@ const CourseCard = ({ content, changed }) => {
                         {/* )} */}
                     </div>
                 </div>
-                {((userData.roles.includes("ROLE_ADMIN") || userData.roles.includes("ROLE_ADMIN")) && window.location.pathname.normalize().includes('admin')) && (
+                {((userData?.roles?.includes("ROLE_ADMIN") || userData?.roles?.includes("ROLE_ADMIN")) && window.location.pathname.normalize().includes('admin')) && (
                     <div className="min-w-[120px] flex gap-x-2 items-center justify-center">
                         {(content?.courseType == "WAITING" || content?.courseType == "CHANGE_PRICE") && (
                             <>
@@ -238,15 +241,15 @@ const CourseCard = ({ content, changed }) => {
                         )}
                         <div>
                             {content?.is_deleted ? (
-                                <Tooltip title="Hiện" arrow placement='right'>
-                                    <span onClick={() => handleHideCourse(false)}>
-                                        <FontAwesomeIcon icon={faEye} />
+                                <Tooltip className="cursor-pointer" title="Khôi phục" arrow placement='right'>
+                                    <span className="w-[24px] h-[24px] p-1 hover:bg-slate-200 rounded-full" onClick={() => handleHideCourse(false)}>
+                                        <FontAwesomeIcon icon={faRotateLeft} />
                                     </span>
                                 </Tooltip>
                             ) : (
-                                <Tooltip title="Ẩn" arrow placement='right'>
-                                    <span onClick={() => handleHideCourse(true)}>
-                                        <FontAwesomeIcon icon={faEyeLowVision} />
+                                <Tooltip className="cursor-pointer" title="Xóa" arrow placement='right'>
+                                    <span className="w-[24px] h-[24px] p-1 hover:bg-slate-200 rounded-full" onClick={() => handleHideCourse(true)}>
+                                        <FontAwesomeIcon icon={faTrash} />
                                     </span>
                                 </Tooltip>
                             )}
