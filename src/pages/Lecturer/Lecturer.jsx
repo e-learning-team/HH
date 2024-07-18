@@ -47,7 +47,7 @@ const Lecturer = () => {
             getUserDetail();
             if (!userData?.roles.includes("ROLE_LECTURE")) {
                 navigate(Path.LECTURER_P + Path.LECTURER_REGISTER);
-                // toast.warning("Hãy đăng kí tài khoản giảng viên trước")
+                // toast.warning("Hãy đăng ký tài khoản giảng viên trước")
             } else {
                 const currentPath = window.location.pathname.normalize();
                 // console.log(currentPath);

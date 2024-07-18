@@ -63,7 +63,7 @@ const LecturerRegister = () => {
                 roles: rs.data.roles,
                 // avatarURL: rs.data?.user?.avatar,
             }));
-            toast.success(`Đăng kí tài khoản giảng viên thành công`, {
+            toast.success(`đăng ký tài khoản giảng viên thành công`, {
                 position: toast.POSITION.TOP_RIGHT,
             });
             navigate(`${Path.LECTURER_P + Path.LECTURER_COURSE}`);
@@ -118,7 +118,7 @@ const LecturerRegister = () => {
                 <span className='w-full bg-slate-300 h-[1px] my-4'></span>
                 <div onClick={() => handleRegister()} className='h-[50px] relative border group/sort duration-200 hover:opacity-75 bg-[#3366cc] text-white cursor-pointer border-[#829093] flex justify-center items-center'>
                     <Typography className='font-semibold text-base text-white duration-200 '>
-                        Đăng kí
+                        đăng ký
                     </Typography>
                     {loading && (
                         <span className='bg-slate-400 absolute top-0 right-0 bottom-0 left-0 flex justify-center items-center'>

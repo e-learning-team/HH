@@ -30,7 +30,7 @@ const UserEnrollment = () => {
         setLoading(false);
     };
     useEffect(() => {
-        document.title = "Khóa học đã đăng kí";
+        document.title = "Khóa học đã đăng ký";
         if (isLoggedIn) {
             //     toast.error("Vui lòng đăng nhập", {
             //         position: toast.POSITION.TOP_RIGHT,
@@ -43,7 +43,7 @@ const UserEnrollment = () => {
     }, []);
     return (
         <div>
-            <h1 className="font-bold text-2xl uppercase">Khóa học đã đăng kí</h1>
+            <h1 className="font-bold text-2xl uppercase">Khóa học đã đăng ký</h1>
             <div className=' w-full my-6'>
                 <div className="container mx-1 md:max-w-7xl">
                     <div className="">

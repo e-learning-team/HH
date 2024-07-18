@@ -152,7 +152,7 @@ const CourseDeTail = () => {
         }
         const res = await apiSaveEnrollment(data);
         if (res.status == 1) {
-            toast.success(`Đăng kí thành công\nChuyển hướng đến trang học`, {
+            toast.success(`đăng ký thành công\nChuyển hướng đến trang học`, {
                 position: toast.POSITION.TOP_RIGHT,
             });
             setIsEnrolled(true);
@@ -238,7 +238,7 @@ const CourseDeTail = () => {
                                             <div className='text-1xl mb-4'>{course.data[0].short_description}</div>
                                             <div className='mb-2 flex gap-2 text-sm'>
                                                 <RatingBar value={totalRatings.averageRate.toFixed(1)} totalReview={totalRatings.totalRatings} />
-                                                <span>{course.data[0].subscriptions || 0} đã đăng kí.</span>
+                                                <span>{course.data[0].subscriptions || 0} đã đăng ký.</span>
                                             </div>
                                             <div className='font-normal text-sm mb-2'>
                                                 <span>
@@ -298,7 +298,7 @@ const CourseDeTail = () => {
                                                             {(course.data[0].created_by === userData?.id) ? (
                                                                 <NavLink to={`/lecturer/courses/learn/${slug}/preview`} className="flex-1 inline-flex items-center justify-center rounded-md px-3 py-2 text-sm ring-1 ring-inset bg-[#29abe2] shadow-lg w-full h-[60px] hover:bg-[#088ab7] font-bold text-white">Xem ngay</NavLink>
                                                             ) : (
-                                                                <Button handleOnClick={handleEnroll} style="flex-1 bg-[#29abe2] shadow-lg w-full h-[60px] hover:bg-[#088ab7] font-bold text-white" label="Đăng kí học" severity="info" rounded />
+                                                                <Button handleOnClick={handleEnroll} style="flex-1 bg-[#29abe2] shadow-lg w-full h-[60px] hover:bg-[#088ab7] font-bold text-white" label="Đăng ký học" severity="info" rounded />
                                                             )}
                                                         </>
                                                     )}

@@ -50,7 +50,7 @@ export function ProfileMenu({ handleLogout }) {
                 <NavLink to={Path.USER_P + Path.USER_ENROLLMENT} className={"hover:underline  !outline-none"}>
                     <MenuItem className="flex items-center gap-2 pt-2">
                         <Typography variant="small" className="font-medium">
-                            Khóa học đã đăng kí
+                            Khóa học đã đăng ký
                         </Typography>
                     </MenuItem>
                 </NavLink>
@@ -62,13 +62,13 @@ export function ProfileMenu({ handleLogout }) {
                         </Typography>
                     </MenuItem>
                 </NavLink> */}
-                <NavLink to={Path.USER_P + Path.USER_BOOKMARK} className={"hover:underline  !outline-none"}>
+                {/* <NavLink to={Path.USER_P + Path.USER_BOOKMARK} className={"hover:underline  !outline-none"}>
                     <MenuItem className="flex items-center gap-2 pt-2">
                         <Typography variant="small" className="font-medium">
                             Khóa học đã lưu
                         </Typography>
                     </MenuItem>
-                </NavLink>
+                </NavLink> */}
                 <hr className="relative left-0 right-0 my-2 border-black-200 focus-v !outline-none " />
                 <NavLink to={Path.USER_P + Path.USER_HISTORY} className={"hover:underline  !outline-none"}>
                     <MenuItem className="flex items-center gap-2 pt-2">

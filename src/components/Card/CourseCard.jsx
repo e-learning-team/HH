@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import noImg from '../../assets/no-image-icon.jpg';
 import { Rating, Tooltip, Typography } from "@mui/material";
 import Path from "../../utils/path";
-import { faEyeLowVision, faRotateLeft, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faCheck, faEyeLowVision, faRotateLeft, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import Button from '@mui/material/Button';
@@ -15,11 +15,14 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { apiChangeCourseType, apiDeleteCourse } from "../../apis/course";
 import { useSelector } from 'react-redux';
+import { formatTimeStampTo_DDMMYYY } from "../../utils/helper";
 
 const CourseCard = ({ content, changed }) => {
     const { isLoggedIn, avatarURL, userData, token, isLoading, message } = useSelector((state) => state.user);
     const totalRatings = content?.course_ratings;
     const [openPublishDialog, setOpenPublishDialog] = useState(false);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [openRestoreDialog, setOpenRestoreDialog] = useState(false);
     // console.log(content?.id, content?.attributes);
 
     const rejectCourse = async (is_rejected) => {
@@ -61,6 +64,8 @@ const CourseCard = ({ content, changed }) => {
             toast.success("Cập nhật thành công");
         }
         changed && changed(true);
+        setOpenDeleteDialog(false);
+        setOpenRestoreDialog(false);
 
     }
     // console.log(content.is_deleted);
@@ -107,6 +112,17 @@ const CourseCard = ({ content, changed }) => {
                                 <Typography className="font-light "> Công khai </Typography>
                             )}
                         </div> */}
+                        <span className="flex items-center gap-2 font-light underline italic">
+                            <Typography className='font-semibold'>{content?.price_sell ? content?.price_sell.toLocaleString() + "₫" : (<>Miễn phí</>)}</Typography>
+                            {content?.courseType == "CHANGE_PRICE" && (
+                                <>
+                                    <FontAwesomeIcon icon={faArrowRight} />
+                                    <Typography className='font-semibold'>{content?.attributes[0]?.attributeValue ? (parseInt(content?.attributes[0]?.attributeValue).toLocaleString()) : (content?.price_sell.toLocaleString())}₫</Typography>
+                                </>
+                            )}
+                        </span>
+
+
                     </div>
                 </div>
 
@@ -150,7 +166,7 @@ const CourseCard = ({ content, changed }) => {
                             {content?.courseType == "OFFICIAL" ? (
                                 <>
                                     {/* <Typography className='cursor-pointer hover:text-[#3366cc] font-medium text-[#373632] text-sm'>
-                                        <>Chi tiết đăng kí</>
+                                        <>Chi tiết đăng ký</>
                                     </Typography> */}
                                     <NavLink to={`${(window.location.pathname.normalize().includes('admin') ? Path.ADMIN_P : Path.LECTURER_P) + Path.LECTURER_NEW_COURSE + content.id}`}>
                                         <Typography className='cursor-pointer hover:text-[#3366cc] font-medium text-[#373632] text-sm'>
@@ -180,16 +196,32 @@ const CourseCard = ({ content, changed }) => {
 
                         </>
                         {/* )} */}
+                        <div className="flex justify-between min-w-full">
+                            <Typography className='font-medium text-[#7c7c7a] text-sm'>
+                                <span className="">Tạo lúc:</span>
+                                <span className="underline">{formatTimeStampTo_DDMMYYY(content?.created_at)}</span>
+                            </Typography>
+                            <Typography className='font-medium mx-[4px] text-[#373632] text-sm'>
+                                -
+                            </Typography>
+
+                            <Typography className='font-medium text-[#7c7c7a] text-sm'>
+                                <span>Cập nhật lúc:</span>
+                                <span className="underline">{formatTimeStampTo_DDMMYYY(content?.update_at)}</span>
+                            </Typography>
+                        </div>
                     </div>
                 </div>
                 {((userData?.roles?.includes("ROLE_ADMIN") || userData?.roles?.includes("ROLE_ADMIN")) && window.location.pathname.normalize().includes('admin')) && (
                     <div className="min-w-[120px] flex gap-x-2 items-center justify-center">
-                        {(content?.courseType == "WAITING" || content?.courseType == "CHANGE_PRICE") && (
+                        {((content?.courseType == "WAITING" || content?.courseType == "CHANGE_PRICE") && !content?.is_deleted) && (
                             <>
                                 <div onClick={() => setOpenPublishDialog(true)}>
-                                    <Typography className='cursor-pointer hover:text-[#3366cc] font-medium text-[#373632] text-sm'>
-                                        Duyệt
-                                    </Typography>
+                                    <Tooltip className="cursor-pointer" title="Duyệt" arrow placement='top'>
+                                        <span className="w-[24px] h-[24px] p-2 hover:bg-slate-200 rounded-full">
+                                            <FontAwesomeIcon className="w-[20px]" icon={faCheck} />
+                                        </span>
+                                    </Tooltip>
                                 </div>
                                 <Dialog
                                     open={openPublishDialog}
@@ -224,11 +256,6 @@ const CourseCard = ({ content, changed }) => {
                                                     <></>
                                                 )}
                                             </span>
-                                            {/* <span className='block font-normal text-lg mt-4'>
-                                            Xuất bản khóa học sẽ không thể chỉnh sửa lại được.
-                                            <br />
-                                            Bạn có chắc chắn muốn xuất bản khóa học này?
-                                        </span> */}
                                         </DialogContentText>
                                     </DialogContent>
                                     <DialogActions>
@@ -241,17 +268,73 @@ const CourseCard = ({ content, changed }) => {
                         )}
                         <div>
                             {content?.is_deleted ? (
-                                <Tooltip className="cursor-pointer" title="Khôi phục" arrow placement='right'>
-                                    <span className="w-[24px] h-[24px] p-1 hover:bg-slate-200 rounded-full" onClick={() => handleHideCourse(false)}>
-                                        <FontAwesomeIcon icon={faRotateLeft} />
-                                    </span>
-                                </Tooltip>
+                                <>
+                                    <Tooltip className="cursor-pointer" title="Khôi phục" arrow placement='top'>
+                                        <span className="w-[24px] h-[24px] p-1 hover:bg-slate-200 rounded-full" onClick={() => setOpenRestoreDialog(true)}>
+                                            <FontAwesomeIcon className="w-[20px]" icon={faRotateLeft} />
+                                        </span>
+                                    </Tooltip>
+                                    <Dialog
+                                        open={openRestoreDialog}
+                                        onClose={() => setOpenRestoreDialog(false)}
+                                        aria-labelledby="alert-dialog-title"
+                                        width='lg'
+                                        aria-describedby="alert-dialog-description" >
+                                        <DialogTitle id="alert-dialog-title">
+                                            {
+                                                <>
+                                                    <Typography className='font-bold text-lg text-[#9b9b9b]'>Khôi phục khóa học</Typography>
+                                                </>
+                                            }
+                                        </DialogTitle>
+                                        <DialogContent>
+                                            <DialogContentText id="alert-dialog-description">
+                                                <Typography className='font-semibold text-lg'>
+                                                    Bạn có chắc chắn muốn Khôi phục khóa học:
+                                                    <br />
+                                                    <span className='underline text-black'>{content?.name}</span>?
+                                                </Typography>
+                                            </DialogContentText>
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={() => handleHideCourse(false)} className='hover:opacity-70 text-white bg-[#3366cc] pt-2'>Xác nhận</Button>
+                                            <Button onClick={() => setOpenRestoreDialog(false)} className='hover:opacity-70 text-white bg-red-500 pt-2'>Hủy</Button>
+                                        </DialogActions>
+                                    </Dialog>
+                                </>
                             ) : (
-                                <Tooltip className="cursor-pointer" title="Xóa" arrow placement='right'>
-                                    <span className="w-[24px] h-[24px] p-1 hover:bg-slate-200 rounded-full" onClick={() => handleHideCourse(true)}>
-                                        <FontAwesomeIcon icon={faTrash} />
-                                    </span>
-                                </Tooltip>
+                                <>
+                                    <Tooltip className="cursor-pointer" title="Xóa" arrow placement='top'>
+                                        <span className="w-[24px] h-[24px] p-2 hover:bg-slate-200 rounded-full" onClick={() => setOpenDeleteDialog(true)}>
+                                            <FontAwesomeIcon className="w-[20px]" icon={faTrash} />
+                                        </span>
+                                    </Tooltip>
+                                    <Dialog
+                                        open={openDeleteDialog}
+                                        onClose={() => setOpenDeleteDialog(false)}
+                                        aria-labelledby="alert-dialog-title"
+                                        width='lg'
+                                        aria-describedby="alert-dialog-description" >
+                                        <DialogTitle id="alert-dialog-title">
+                                            {
+                                                <>
+                                                    <Typography className='font-bold text-lg text-[#9b9b9b]'>Xóa khóa học</Typography>
+                                                </>
+                                            }
+                                        </DialogTitle>
+                                        <DialogContent>
+                                            <DialogContentText id="alert-dialog-description">
+                                                <Typography className='font-semibold text-lg'>
+                                                    Bạn có chắc chắn muốn xóa khóa học: <span className='underline text-black'>{content?.name}</span>?
+                                                </Typography>
+                                            </DialogContentText>
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={() => handleHideCourse(true)} className='hover:opacity-70 text-white bg-[#3366cc] pt-2'>Xác nhận</Button>
+                                            <Button onClick={() => setOpenDeleteDialog(false)} className='hover:opacity-70 text-white bg-red-500 pt-2'>Hủy</Button>
+                                        </DialogActions>
+                                    </Dialog>
+                                </>
                             )}
                         </div>
                     </div>

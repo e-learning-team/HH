@@ -36,7 +36,6 @@ function App() {
           <Route path={Path.HOME} element={<Home />} />
           <Route path={Path.COURSES_DETAIL} element={<CourseDeTail />} />
           <Route path={Path.COURSES} element={<Courses />} />
-          <Route path={Path.VNPAY_RETURN} element={<VnPayReturn />} />
           <Route path={Path.USER_P} element={<User />}>
             <Route path={Path.USER_P + Path.USER_PROFILE} element={<UserProfile />} />
             <Route path={Path.USER_P + Path.USER_ENROLLMENT} element={<UserEnrollment />} />
@@ -45,6 +44,7 @@ function App() {
           </Route>
           <Route path={Path.USER_PROFILE_VIEW} element={<UserPrfileView />} />
         </Route>
+        <Route path={Path.VNPAY_RETURN} element={<VnPayReturn />} />
 
         <Route path={Path.LECTURER_P + Path.LECTURER_REGISTER} element={<LecturerRegister />} />
         
