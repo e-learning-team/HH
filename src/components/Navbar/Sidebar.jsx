@@ -23,15 +23,15 @@ export function Sidebar() {
 
                 <NavLink className={({ isActive }) => (isActive ? 'bg-[#003a47] text-[#fff]' : 'text-[#003a47]')} to={Path.USER_P + Path.USER_ENROLLMENT}  >
                     <ListItem>
-                        Khóa học đã đăng kí
+                        Khóa học đã đăng ký
                     </ListItem>
                 </NavLink>
 
-                <NavLink className={({ isActive }) => (isActive ? 'bg-[#003a47] text-[#fff]' : 'text-[#003a47]')} to={Path.USER_P + Path.USER_BOOKMARK}  >
+                {/* <NavLink className={({ isActive }) => (isActive ? 'bg-[#003a47] text-[#fff]' : 'text-[#003a47]')} to={Path.USER_P + Path.USER_BOOKMARK}  >
                     <ListItem>
                         Khóa học đã lưu
                     </ListItem>
-                </NavLink>
+                </NavLink> */}
 
                 <hr className="relative left-0 right-0 my-2 border-black-200 focus-v !outline-none " />
 

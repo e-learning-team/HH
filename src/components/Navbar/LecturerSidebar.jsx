@@ -38,14 +38,14 @@ export const LectureSidebar = ({ handleHover }) => {
                 <div className="flex px-5 gap-x-4 py-3 items-center hover:bg-[#3e4143]" onClick={() => navigate(`${Path.LECTURER_P}${Path.LECTURER_COURSE}`)}>
                     <img src={open ? fullLogoText : logoText} className={`cursor-pointer h-[55px]  ${!open && " "}`} />
                 </div>
-                <ul className="">
+                <ul className="truncate duration-500">
                     {Menus.map((Menu, index) => (
                         <Tooltip key={index} content={Menu.title} className={`bg-[#2d2f31] p-2`} placement="right">
                             <NavLink className={({ isActive }) => (isActive ? ' border-l-4 border-[#3366cc] ' : '') + `hover:bg-[#3e4143] relative flex items-center ${Menu.gap ? "mt-9" : "mb-2"} `} to={`${Menu.path}`}>
-                                <li className={`flex text-lg py-4 overflow-clip cursor-pointer px-6  text-white items-center gap-x-4 `}>
-                                    <div className="flex justify-between items-center line-clamp-1 py-1 gap-x-5 ">
-                                        <FontAwesomeIcon icon={Menu.src} className="" />
-                                        <span className={`${!open && "invisible"} line-clamp-1 truncate font-sans text-base font-normal origin-left duration-500`}>
+                                <li className={`flex text-lg py-4 truncate cursor-pointer px-6  text-white items-center gap-x-4 `}>
+                                    <div className="flex justify-between items-center line-clamp-1 py-1 gap-x-5 text-center">
+                                        <FontAwesomeIcon icon={Menu.src} className="self-center text-center" />
+                                        <span className={`${!open && "none"} line-clamp-1 truncate font-sans text-base font-normal origin-left duration-500`}>
                                             {Menu.title}
                                         </span>
                                     </div>

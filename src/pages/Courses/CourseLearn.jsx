@@ -64,8 +64,18 @@ const CourseLearn = () => {
             return true;
         } else {
             setLoading(true);
-            const res_lecture = await apiGetCourse({ slug: slug, build_child: true });
-            if ((res_lecture?.data?.data?.length > 0 && userData?.id == res_lecture.data.data[0].created_by) || isPreview) {
+            const paramsAPI = new URLSearchParams();
+            paramsAPI.append('slug', slug);
+            paramsAPI.append('build_child', true);
+            paramsAPI.append('search_type', 'OFFICIAL');
+            paramsAPI.append('search_type', 'CHANGE_PRICE');
+            if (window.location.pathname.normalize().includes('admin') || window.location.pathname.normalize().includes('lecturer')) {
+                paramsAPI.append('search_type', 'DRAFT');
+                paramsAPI.append('search_type', 'WAITING');
+            }
+            const res_lecture = await apiGetCourse(paramsAPI);
+            console.log("RES", res_lecture);
+            if ((res_lecture?.data?.data?.length > 0 && userData?.id === res_lecture.data.data[0].created_by) || (userData?.roles?.includes("ROLE_ADMIN")) || isPreview) {
                 console.log(res_lecture.data.data[0]);
                 setCourse(res_lecture.data.data[0]);
 
@@ -77,10 +87,10 @@ const CourseLearn = () => {
                 return false;
             }
             setIsEnrolled(res.data);
-            toast.error(`Cần phải đăng kí để bắt đầu học`, {
+            toast.error(`Cần phải đăng ký để bắt đầu học`, {
                 position: toast.POSITION.TOP_RIGHT,
             });
-            navigate(`/courses/${slug}`);
+            navigate(-1);
             return false;
         }
     };
@@ -283,7 +293,7 @@ const CourseLearn = () => {
                                         </Typography>
                                     )}
                                 </div>
-                                {!((userData?.id == course.created_by) || isPreview) && (
+                                {!((userData?.id == course.created_by) || (userData?.roles?.includes("ROLE_ADMIN")) || isPreview) && (
                                     <div className='h-full gap-2 flex  justify-center items-center'>
                                         {/* <CircularProgressBar progress={enrollmentData.percent_complete} /> */}
                                         <CircularProgressBar progress={Math.floor((completedCourse.length / enrollmentData.course?.total_lesson) * 100)} />
@@ -466,15 +476,15 @@ const CourseLearn = () => {
                                     {course.children.length > 0 && (
                                         <>
                                             {course.children.map((child) => (
-                                                <CourseAccordion key={child.id}
+                                                <CourseAccordion key={child?.id}
                                                     isEnrolled={true}
-                                                    enrollmentId={enrollmentData.id}
+                                                    enrollmentId={enrollmentData?.id}
                                                     title={child.name}
                                                     content={child.children}
                                                     onContentClick={handleContentClick}
                                                     onContentCheck={handleCheckComplete}
-                                                    currentCourse={enrollmentData.current_course}
-                                                    completeCourse={enrollmentData.completed_course_ids}
+                                                    currentCourse={enrollmentData?.current_course ? enrollmentData.current_course : child?.children[0].id }
+                                                    completeCourse={enrollmentData?.completed_course_ids}
                                                     isPreview={isPreview}
                                                 />
                                             ))}

@@ -27,6 +27,7 @@ import VnPayReturn from './pages/Invoice/VnPayReturn';
 import LecturerCourseEnroll from './pages/Lecturer/Lecturer/LecturerCourseEnroll';
 import AdminInvoice from './pages/Admin/Admin/AdminInvoice';
 import UserPrfileView from './pages/User/UserProfileView';
+import AdminDashboard from './pages/Admin/Admin/AdminDashboard';
 
 function App() {
   return (
@@ -36,7 +37,6 @@ function App() {
           <Route path={Path.HOME} element={<Home />} />
           <Route path={Path.COURSES_DETAIL} element={<CourseDeTail />} />
           <Route path={Path.COURSES} element={<Courses />} />
-          <Route path={Path.VNPAY_RETURN} element={<VnPayReturn />} />
           <Route path={Path.USER_P} element={<User />}>
             <Route path={Path.USER_P + Path.USER_PROFILE} element={<UserProfile />} />
             <Route path={Path.USER_P + Path.USER_ENROLLMENT} element={<UserEnrollment />} />
@@ -45,6 +45,7 @@ function App() {
           </Route>
           <Route path={Path.USER_PROFILE_VIEW} element={<UserPrfileView />} />
         </Route>
+        <Route path={Path.VNPAY_RETURN} element={<VnPayReturn />} />
 
         <Route path={Path.LECTURER_P + Path.LECTURER_REGISTER} element={<LecturerRegister />} />
         
@@ -59,6 +60,7 @@ function App() {
           <Route path={Path.LECTURER_P + Path.LECTURER_COURSE_PREVIEW_LEARN} element={<CourseLearn />} />
         </Route>
         <Route path={Path.ADMIN_P} element={<Admin/>}>
+          <Route path={Path.ADMIN_DASHBOARD} element={<AdminDashboard/>} />
           <Route path={Path.ADMIN_USER} element={<AdminUser/>}/>
           <Route path={Path.ADMIN_COURSE} element={<LecturerCourse />} />
           <Route path={Path.ADMIN_SAVE_COURSE} element={<LecturerCourseSave/>}/>

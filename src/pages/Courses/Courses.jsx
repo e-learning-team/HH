@@ -43,6 +43,7 @@ const Courses = () => {
     const [parentCategory, setParentCategory] = useState(null);
     const [deleteFilter, setDeleteFilter] = useState(false);
     const [filterNumber, setFilterNumber] = useState(0);
+    const [sortBy, setSortBy] = useState(null);
     const countFilters = () => {
         let count = 0;
         for (const [key] of searchParams.entries()) {
@@ -65,6 +66,17 @@ const Courses = () => {
         paramsAPI.set('current_page', pageIndex || 1);
         if (categoryId) {
             paramsAPI.append('categories_ids', categoryId);
+        }
+        if (sortBy) {
+            console.log(sortBy)
+            if(sortBy.code === "DESC_PRICE") {
+                paramsAPI.set('sort_by', 'PRICE');
+                paramsAPI.set('sort_order', 'DESC');
+            }
+            if(sortBy.code === "ASC_PRICE") {
+                paramsAPI.set('sort_by', 'PRICE');
+                paramsAPI.set('sort_order', 'ASC');
+            }
         }
         // setLoading(false)
         return paramsAPI;
@@ -165,15 +177,21 @@ const Courses = () => {
         searchCategory();
         searchCourse();
 
-    }, [searchParams, isLoggedIn]);
+    }, [searchParams, isLoggedIn, sortBy]);
 
 
-    const [sortBy, setSortBy] = useState(null);
     const sorts = [
         { name: 'Mặc định', code: sassNull },
         { name: 'Giá thấp đến cao', code: 'ASC_PRICE' },
         { name: 'Giá cao đến thấp', code: 'DESC_PRICE' }
     ];
+
+    const handleFilterChange = (value) => {
+        setLoading(true);
+        console.log("heheheheheheh")
+
+        setLoading(false);
+    };
 
     return (
         // <div className={`pt-[40px] relative pb-[80px] h-screen justify-center ${loading ? 'pointer-events-none bg-slate-200 opacity-60 ' : ''}`}>

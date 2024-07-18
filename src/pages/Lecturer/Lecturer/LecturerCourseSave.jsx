@@ -8,7 +8,7 @@ import { apiCategory } from '../../../apis/category';
 import { MultiSelect } from 'primereact/multiselect';
 import { apiChangeCourseType, apiChangePriceSell, apiDeleteCourse, apiGetCourse, apiLecturePublishCourse, apiSaveCourse, apiUpdateIsPreview } from '../../../apis/course';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faChevronUp, faFloppyDisk, faPen, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faChevronDown, faChevronUp, faFloppyDisk, faPen, faPenToSquare, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { apiDeleteFileByPathFile, apiUploadFile, apiDeleteFileById } from '../../../apis/fileRelationship';
 import { Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -270,7 +270,7 @@ const Attachment = ({ content, handleChange }) => {
                 formData.append('file', file);
                 const videoUrl = await apiUploadFile(formData, params);
                 if (videoUrl && videoUrl.data?.id) {
-                    if(attachments?.length > 0) {
+                    if (attachments?.length > 0) {
                         setAttachments((a) => [...a, videoUrl.data])
                     } else {
                         setAttachments([videoUrl.data])
@@ -1312,12 +1312,12 @@ const PriceContent = ({ content, handleChange }) => {
     useEffect(() => {
         if (content?.price_sell > 0) {
             setPriceType('PAID');
-            if (content?.courseType === "CHANGE_PRICE" && content?.attributes?.length > 0 && content?.attributes[0]?.attributeName === "COURSE_SELL_PRICE" && content?.attributes[0]?.attributeValue != content?.price_sell) {
-                setPriceValue(content?.attributes[0]?.attributeValue);
-            } else {
-                console.log('---price_sell', content?.price_sell);
+            // if (content?.courseType === "CHANGE_PRICE" && content?.attributes?.length > 0 && content?.attributes[0]?.attributeName === "COURSE_SELL_PRICE" && content?.attributes[0]?.attributeValue != content?.price_sell) {
+            //     setPriceValue(content?.attributes[0]?.attributeValue);
+            // } else {
+            //     console.log('---price_sell', content?.price_sell);
                 setPriceValue(content?.price_sell);
-            }
+            // }
         }
     }, [content]);
 
@@ -1347,6 +1347,7 @@ const PriceContent = ({ content, handleChange }) => {
                         />
                         <Typography className='font-bold'>Có phí</Typography>
                     </label>
+                    
                     {priceType === 'PAID' && (
                         <div className='flex items-center h-[40px] gap-3'>
                             <Tooltip title='Giá bán không bé hơn 10.000 Vnđ' placement='right'>
@@ -1374,6 +1375,13 @@ const PriceContent = ({ content, handleChange }) => {
                     {errors.price && (
                         <div>
                             <Typography className='text-red-500'>{errors.price}</Typography>
+                        </div>
+                    )}
+                    {content?.courseType == "CHANGE_PRICE" && (
+                        <div className='flex mt-4 gap-2 items-center underline'>
+                            <FontAwesomeIcon icon={faArrowRight} />
+                            <Typography className='font-bold'>Giá mới:</Typography>
+                            <Typography className='font-semibold'>{content?.attributes[0]?.attributeValue ? (parseInt(content?.attributes[0]?.attributeValue).toLocaleString()) : (content?.price_sell.toLocaleString())}₫</Typography>
                         </div>
                     )}
                     {(content?.courseType === "DRAFT" || content?.courseType === "OFFICIAL") && (
