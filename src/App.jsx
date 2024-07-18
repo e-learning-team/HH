@@ -27,6 +27,7 @@ import VnPayReturn from './pages/Invoice/VnPayReturn';
 import LecturerCourseEnroll from './pages/Lecturer/Lecturer/LecturerCourseEnroll';
 import AdminInvoice from './pages/Admin/Admin/AdminInvoice';
 import UserPrfileView from './pages/User/UserProfileView';
+import AdminDashboard from './pages/Admin/Admin/AdminDashboard';
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
           <Route path={Path.LECTURER_P + Path.LECTURER_COURSE_PREVIEW_LEARN} element={<CourseLearn />} />
         </Route>
         <Route path={Path.ADMIN_P} element={<Admin/>}>
+          <Route path={Path.ADMIN_DASHBOARD} element={<AdminDashboard/>} />
           <Route path={Path.ADMIN_USER} element={<AdminUser/>}/>
           <Route path={Path.ADMIN_COURSE} element={<LecturerCourse />} />
           <Route path={Path.ADMIN_SAVE_COURSE} element={<LecturerCourseSave/>}/>

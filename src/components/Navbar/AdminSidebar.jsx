@@ -10,6 +10,7 @@ export const AdminSidebar = ({ handleHover }) => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const Menus = [
+        { title: "Tổng quan", src: faArrowTrendUp, path: Path.ADMIN_P + Path.ADMIN_DASHBOARD, gap: true },
         { title: "Người dùng", src: faUsers, path: Path.ADMIN_P + Path.ADMIN_USER},
         { title: "Khoá học", src: faBook, path: Path.ADMIN_P + Path.ADMIN_COURSE},
         { title: "Danh mục", src: faList, path: Path.ADMIN_P + Path.ADMIN_CATEGORY},
